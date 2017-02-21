@@ -1,14 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace codecov.Coverage
 {
-    public class Report : IReport
+    public static class Report
     {
-        public string Coverage { get; }
+        private const string Footer = "<<<<<< EOF";
 
-        public Report(string file)
+        private const string Header = "<<<<<< network";
+
+        public static string CreateReport(IEnumerable<string> files)
         {
-            Coverage = Read(file);
+            var report = $"{Header}\n";
+            foreach (var file in files)
+            {
+                report += $"{Read(file)}\n{Footer}\n";
+            }
+
+            return report;
         }
 
         private static string Read(string file)
@@ -18,12 +27,7 @@ namespace codecov.Coverage
                 throw new ArgumentException(nameof(file));
             }
 
-            return Map(System.IO.File.ReadAllText(file));
-        }
-
-        private static string Map(string report)
-        {
-            return $"<<<<<< network\n{report}\n<<<<<< EOF";
+            return System.IO.File.ReadAllText(file);
         }
     }
 }

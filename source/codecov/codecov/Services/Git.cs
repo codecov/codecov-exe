@@ -4,7 +4,7 @@ using codecov.Services.Utils;
 
 namespace codecov.Services
 {
-    internal class Git : Url, IDetect
+    internal class Git : Query, IService
     {
         public Git()
         {

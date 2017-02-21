@@ -3,7 +3,7 @@ using codecov.Services.Utils;
 
 namespace codecov.Services
 {
-    internal class AppVeyor : Url, IDetect
+    internal class AppVeyor : Query, IService
     {
         public AppVeyor()
         {

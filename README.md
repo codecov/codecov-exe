@@ -7,19 +7,18 @@ This repository is currently under active development working towards version 0.
 
 ## ToDoList
 
-- [x] Upload a coverage report locally using Git/Hg.
-- [ ] Upload coverage report using AppVeyor.
-- [ ] Implement Codecov command line interface.
-- [ ] Implement V2 endpoint as backup upload.
+- [x] Upload a coverage report locally using Git.
+- [ ] Upload a coverage report locally using Hg.
+- [x] Upload coverage report using AppVeyor - not tested very well.
+- [ ] Upload coverage report using Travis-CI.
 - [ ] Upload a coverage report using TeamCity.
-- [ ] Upload a coverage report using Travis-Ci (Mono).
-- [ ] Unit and integration tests.
+- [x] Implement Codecov command line interface. - VERY basic CLI.
 - [ ] Get an AppVeyor build setup (using Cake Script). Add some development tooling.
-- [ ] See if PowerShell for Linux works?
-- Three way to obtain the .exe
-    - [ ] Add .exe to NuGet (For .NET developers).
+- [ ] Unit and integration tests.
+- Three ways to obtain the .exe
+    - [x] Add .exe to NuGet (For .NET developers). [![NuGet](https://img.shields.io/nuget/v/Codecov.svg)](https://www.nuget.org/packages/Codecov/)
     - [ ] Add .exe to Choco (like apt-get or homebrew but for windows).
-    - [ ] Create a PowerShell bootstraper script to download the .exe. The .exe will be an assest on a release.
+    - [x] Create a PowerShell bootstraper script to download the .exe. The .exe will be an assest on a release. - It's an assest on the release.
     
 ## CI Providers
 |                       Company                       |                                                                                     Supported                                                                                      |  Token Required  |

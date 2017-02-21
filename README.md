@@ -18,7 +18,7 @@ This repository is currently under active development working towards version 0.
 - Three ways to obtain the .exe
     - [x] Add .exe to NuGet (For .NET developers). [![NuGet](https://img.shields.io/nuget/v/Codecov.svg)](https://www.nuget.org/packages/Codecov/)
     - [ ] Add .exe to Choco (like apt-get or homebrew but for windows).
-    - [x] Create a PowerShell bootstraper script to download the .exe. The .exe will be an assest on a release. - It's an assest on the release.
+    - [x] Create a PowerShell bootstraper script to download the .exe. The .exe will be an assest on a release. - In PowerShell run `(New-Object System.Net.WebClient).DownloadFile("https://github.com/codecov/codecov-exe/releases/download/0.1.0-beta/codecov.exe", "codecov.exe")` and then `.\codecov.exe ...`
     
 ## CI Providers
 |                       Company                       |                                                                                     Supported                                                                                      |  Token Required  |

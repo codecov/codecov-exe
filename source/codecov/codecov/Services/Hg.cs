@@ -3,7 +3,7 @@ using codecov.Services.Utils;
 
 namespace codecov.Services
 {
-    internal class Hg : Url, IDetect
+    internal class Hg : Query, IService
     {
         public Hg()
         {

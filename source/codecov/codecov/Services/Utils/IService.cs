@@ -1,7 +1,11 @@
-﻿namespace codecov.Services.Utils
+﻿using codecov.Program;
+
+namespace codecov.Services.Utils
 {
     public interface IService
     {
-        IUrl Find { get; }
+        bool Detect { get; }
+
+        string CreateQuery(Options options);
     }
 }

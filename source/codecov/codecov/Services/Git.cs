@@ -4,7 +4,7 @@ using codecov.Services.Utils;
 
 namespace codecov.Services
 {
-    internal class Git : Query, IService
+    internal class Git : Service
     {
         public Git()
         {
@@ -13,7 +13,7 @@ namespace codecov.Services
             QueryParameters["slug"] = Slug;
         }
 
-        public bool Detect
+        public override bool Detect
         {
             get
             {

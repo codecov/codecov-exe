@@ -3,7 +3,7 @@ using codecov.Services.Utils;
 
 namespace codecov.Services
 {
-    internal class Hg : Query, IService
+    internal class Hg : Service
     {
         public Hg()
         {
@@ -11,7 +11,7 @@ namespace codecov.Services
             QueryParameters["commit"] = Commit;
         }
 
-        public bool Detect
+        public override bool Detect
         {
             get
             {

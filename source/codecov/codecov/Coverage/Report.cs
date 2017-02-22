@@ -1,24 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using codecov.Program;
 
 namespace codecov.Coverage
 {
-    public static class Report
+    public class Report
     {
         private const string Footer = "<<<<<< EOF";
-
         private const string Header = "<<<<<< network";
 
-        public static string CreateReport(IEnumerable<string> files)
+        public Report(Options options)
         {
-            var report = $"{Header}\n";
-            foreach (var file in files)
-            {
-                report += $"{Read(file)}\n{Footer}\n";
-            }
-
-            return report;
+            Options = options;
         }
+
+        public string Reporter
+        {
+            get
+            {
+                var report = $"{GetFiles()}\n{Header}\n";
+                foreach (var file in Options.File)
+                {
+                    report += $"{Read(file)}\n{Footer}\n";
+                }
+
+                return report.TrimEnd('\n');
+            }
+        }
+
+        private Options Options { get; }
 
         private static string Read(string file)
         {
@@ -27,7 +38,13 @@ namespace codecov.Coverage
                 throw new ArgumentException(nameof(file));
             }
 
-            return System.IO.File.ReadAllText(file);
+            return File.ReadAllText(file);
+        }
+
+        private string GetFiles()
+        {
+            var files = Directory.GetFiles(Options.Root, "*.*", SearchOption.AllDirectories).Select(f => f.Replace(Options.Root, string.Empty).TrimStart('\\').TrimStart('/')).Where(file => !(file.StartsWith(".git/") || file.StartsWith(".git\\")));
+            return string.Join("\n", files);
         }
     }
 }

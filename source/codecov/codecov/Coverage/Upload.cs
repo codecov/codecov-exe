@@ -5,11 +5,18 @@ using codecov.Services.Utils;
 
 namespace codecov.Coverage
 {
-    public static class Uploder
+    public class Upload
     {
-        public static void Upload(Options options, string report, IService service)
+        public Upload(Options options)
         {
-            var url = $"https://codecov.io/upload/v4?{service.CreateQuery(options)}";
+            Options = options;
+        }
+
+        private Options Options { get; }
+
+        public void Uploader(string report, IService service)
+        {
+            var url = $"https://codecov.io/upload/v4?{service.CreateQuery(Options)}";
 
             //Post: Ping
             var post = new WebClient();

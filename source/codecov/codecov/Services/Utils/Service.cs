@@ -4,8 +4,10 @@ using codecov.Program;
 
 namespace codecov.Services.Utils
 {
-    public class Query
+    public abstract class Service : IService
     {
+        public abstract bool Detect { get; }
+
         protected IDictionary<string, string> QueryParameters { get; } =
             new Dictionary<string, string>
             {

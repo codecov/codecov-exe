@@ -3,7 +3,7 @@ using codecov.Services.Utils;
 
 namespace codecov.Services
 {
-    internal class AppVeyor : Query, IService
+    internal class AppVeyor : Service
     {
         public AppVeyor()
         {
@@ -16,7 +16,7 @@ namespace codecov.Services
             QueryParameters["service"] = "appveyor";
         }
 
-        public bool Detect
+        public override bool Detect
         {
             get
             {

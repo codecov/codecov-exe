@@ -47,6 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Coverage\Report.cs" />
+    <Compile Include="Services\TeamCity.cs" />
+    <Compile Include="Services\Travis.cs" />
     <Compile Include="Services\Utils\IService.cs" />
     <Compile Include="Coverage\Upload.cs" />
     <Compile Include="Program\Options.cs" />

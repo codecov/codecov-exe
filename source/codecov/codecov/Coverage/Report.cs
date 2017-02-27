@@ -1,50 +1,58 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using codecov.Program;
 
 namespace codecov.Coverage
 {
-    public class Report
+    public static class Report
     {
-        private const string Footer = "<<<<<< EOF";
-        private const string Header = "<<<<<< network";
-
-        public Report(Options options)
+        public static string Reporter(string[] files, string[] enviornmentVariables, string root)
         {
-            Options = options;
+            var report = GetEnviornmentVariables(enviornmentVariables) + GetSourceCodeFiles(root);
+            report = files.Aggregate(report, (current, file) => current + GetCoverageReport(file));
+            return report.TrimEnd('\n');
         }
 
-        public string Reporter
+        private static string GetCoverageReport(string file)
         {
-            get
+            const string eof = "<<<<<< EOF";
+            return $"{File.ReadAllText(file.Trim())}\n{eof}\n";
+        }
+
+        private static string GetEnviornmentVariables(IEnumerable<string> enviornmentVariables)
+        {
+            const string env = "<<<<<< ENV";
+            var enviornmentvariableNames = new HashSet<string>();
+
+            foreach (var enviornmentvariableName in enviornmentVariables)
             {
-                var report = $"{GetFiles()}\n{Header}\n";
-                foreach (var file in Options.File)
+                if (!string.IsNullOrWhiteSpace(enviornmentvariableName))
                 {
-                    report += $"{Read(file)}\n{Footer}\n";
+                    enviornmentvariableNames.Add(enviornmentvariableName.Trim());
                 }
-
-                return report.TrimEnd('\n');
             }
-        }
 
-        private Options Options { get; }
-
-        private static string Read(string file)
-        {
-            if (string.IsNullOrWhiteSpace(file))
+            var codeCovEnviornmenVariableNames = Environment.GetEnvironmentVariable("CODECOV_ENV");
+            if (!string.IsNullOrWhiteSpace(codeCovEnviornmenVariableNames))
             {
-                throw new ArgumentException(nameof(file));
+                foreach (var codeCovEnviornmenVariableName in codeCovEnviornmenVariableNames.Split(','))
+                {
+                    enviornmentvariableNames.Add(codeCovEnviornmenVariableName.Trim());
+                }
             }
 
-            return File.ReadAllText(file);
+            var enviornmentVariablesNamesAndValues = (from name in enviornmentvariableNames let value = Environment.GetEnvironmentVariable(name) where !string.IsNullOrWhiteSpace(value) select $"{name.Trim()}={value.Trim()}").ToList();
+
+            return enviornmentVariablesNamesAndValues.Count > 0 ? $"{string.Join("\n", enviornmentVariablesNamesAndValues)}\n{env}\n" : string.Empty;
         }
 
-        private string GetFiles()
+        private static string GetSourceCodeFiles(string root)
         {
-            var files = Directory.GetFiles(Options.Root, "*.*", SearchOption.AllDirectories).Select(f => f.Replace(Options.Root, string.Empty).TrimStart('\\').TrimStart('/')).Where(file => !(file.StartsWith(".git/") || file.StartsWith(".git\\")));
-            return string.Join("\n", files);
+            var gitRoot = root.Trim();
+            const string network = "<<<<<< network";
+            var files = Directory.GetFiles(gitRoot, "*.*", SearchOption.AllDirectories).Select(f => f.Replace(gitRoot, string.Empty).TrimStart('\\').TrimStart('/')).Where(file => !(file.StartsWith(".git/") || file.StartsWith(".git\\")));
+            return $"{string.Join("\n", files)}\n{network}\n";
         }
     }
 }

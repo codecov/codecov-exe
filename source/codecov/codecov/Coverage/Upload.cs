@@ -1,23 +1,12 @@
 ﻿using System;
 using System.Net;
-using codecov.Program;
-using codecov.Services.Utils;
 
 namespace codecov.Coverage
 {
-    public class Upload
+    public class Upload : IUpload
     {
-        public Upload(Options options)
+        public void Uploader(string report, string url)
         {
-            Options = options;
-        }
-
-        private Options Options { get; }
-
-        public void Uploader(string report, IService service)
-        {
-            var url = $"https://codecov.io/upload/v4?{service.CreateQuery(Options)}";
-
             //Post: Ping
             var post = new WebClient();
             post.Headers.Add("Content-Type: text/plain");

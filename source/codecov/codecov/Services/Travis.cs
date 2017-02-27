@@ -1,4 +1,5 @@
 ﻿using System;
+using codecov.Program;
 using codecov.Services.Utils;
 
 namespace codecov.Services
@@ -34,7 +35,7 @@ namespace codecov.Services
                 {
                     return false;
                 }
-                Console.WriteLine("==> Travis CI detected.");
+                Log.Information("Travis CI detected.");
                 return true;
             }
         }

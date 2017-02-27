@@ -1,4 +1,5 @@
 ﻿using System;
+using codecov.Program;
 using codecov.Services.Utils;
 
 namespace codecov.Services
@@ -25,7 +26,7 @@ namespace codecov.Services
                     return false;
                 }
 
-                Console.WriteLine("==> TeamCity CI detected.");
+                Log.Information("TeamCity CI detected.");
                 return true;
             }
         }

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using codecov.Program;
 using codecov.Services.Utils;
 
 namespace codecov.Services
@@ -21,7 +21,7 @@ namespace codecov.Services
                     return false;
                 }
 
-                Console.WriteLine("==> No CI provider detected, using Mercurial.");
+                Log.Information("No CI provider detected, using Mercurial.");
                 return true;
             }
         }

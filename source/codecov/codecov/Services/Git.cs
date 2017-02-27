@@ -1,5 +1,5 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using codecov.Program;
 using codecov.Services.Utils;
 
 namespace codecov.Services
@@ -23,7 +23,7 @@ namespace codecov.Services
                     return false;
                 }
 
-                Console.WriteLine("==> No CI provider detected, using Git.");
+                Log.Information("No CI provider detected, using Git.");
                 return true;
             }
         }

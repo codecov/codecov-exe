@@ -1,4 +1,5 @@
 ﻿using System;
+using codecov.Program;
 using codecov.Services.Utils;
 
 namespace codecov.Services
@@ -33,7 +34,7 @@ namespace codecov.Services
                 {
                     return false;
                 }
-                Console.WriteLine("==> Appveyor CI detected.");
+                Log.Information("Appveyor CI detected.");
                 return true;
             }
         }

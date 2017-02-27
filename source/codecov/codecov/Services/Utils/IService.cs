@@ -6,6 +6,6 @@ namespace codecov.Services.Utils
     {
         bool Detect { get; }
 
-        string CreateQuery(Options options);
+        string CreateQuery(Options options, ICodecovYml codeCovYml);
     }
 }

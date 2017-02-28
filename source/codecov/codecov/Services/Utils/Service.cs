@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using codecov.Program;
 
 namespace codecov.Services.Utils
@@ -23,7 +24,9 @@ namespace codecov.Services.Utils
                 {"flags", string.Empty},
                 {"pr", string.Empty},
                 {"job", string.Empty},
-                {"token", string.Empty}
+                {"token", string.Empty},
+                {"package", string.Empty},
+                {"name", string.Empty}
             };
 
         public string CreateQuery(Options options, ICodecovYml codeCovYml)
@@ -33,12 +36,13 @@ namespace codecov.Services.Utils
             OverrideIfNotEmptyOrNull("build", options.Build);
             OverrideIfNotEmptyOrNull("tag", options.Tag);
             OverrideIfNotEmptyOrNull("pr", options.Pr);
+            OverrideIfNotEmptyOrNull("name", options.Name);
             SetFlags(options.Flag);
             SetSlug(options.Slug, codeCovYml.Slug);
             SetToken(options.Token, codeCovYml.Token);
+            SetPackage();
 
-            var query = string.Join("&", QueryParameters.Select(x => $"{x.Key}={x.Value ?? string.Empty}"));
-            return $"package=exe-beta&{query}";
+            return string.Join("&", QueryParameters.Select(x => $"{x.Key}={x.Value ?? string.Empty}"));
         }
 
         private void OverrideIfNotEmptyOrNull(string key, string value)
@@ -61,6 +65,11 @@ namespace codecov.Services.Utils
             {
                 QueryParameters["flags"] = flags;
             }
+        }
+
+        private void SetPackage()
+        {
+            QueryParameters["package"] = $"exe-{Assembly.GetExecutingAssembly().GetName().Version}";
         }
 
         private void SetSlug(string slugCommandLine, string slugYaml)

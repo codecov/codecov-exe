@@ -26,7 +26,14 @@ namespace codecov.Services
                     return false;
                 }
 
-                Log.Information("TeamCity CI detected.");
+                Log.Information("    TeamCity CI detected.");
+                Log.Information("    Teamcity does not automatically make build parameters available as environment variables.");
+                Log.Information("    Add the following environment parameters to the build configuration");
+                Log.Information("    env.TEAMCITY_BUILD_BRANCH = %teamcity.build.branch%");
+                Log.Information("    env.TEAMCITY_BUILD_ID = %teamcity.build.id%");
+                Log.Information("    env.TEAMCITY_BUILD_URL = %teamcity.serverUrl%/viewLog.html?buildId=%teamcity.build.id%");
+                Log.Information("    env.TEAMCITY_BUILD_COMMIT = %system.build.vcs.number%");
+                Log.Information("    env.TEAMCITY_BUILD_REPOSITORY = %vcsroot.<YOUR TEAMCITY VCS NAME>.url%");
                 return true;
             }
         }
@@ -41,13 +48,6 @@ namespace codecov.Services
                     return branch;
                 }
 
-                Console.WriteLine("    Teamcity does not automatically make build parameters available as environment variables.");
-                Console.WriteLine("    Add the following environment parameters to the build configuration");
-                Console.WriteLine("    env.TEAMCITY_BUILD_BRANCH = %teamcity.build.branch%");
-                Console.WriteLine("    env.TEAMCITY_BUILD_ID = %teamcity.build.id%");
-                Console.WriteLine("    env.TEAMCITY_BUILD_URL = %teamcity.serverUrl%/viewLog.html?buildId=%teamcity.build.id%");
-                Console.WriteLine("    env.TEAMCITY_BUILD_COMMIT = %system.build.vcs.number%");
-                Console.WriteLine("    env.TEAMCITY_BUILD_REPOSITORY = %vcsroot.<YOUR TEAMCITY VCS NAME>.url%");
                 return string.Empty;
             }
         }

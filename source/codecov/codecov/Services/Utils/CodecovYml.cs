@@ -35,6 +35,11 @@ namespace codecov.Services.Utils
 
         private static string FindFile(string root)
         {
+            if (string.IsNullOrWhiteSpace(root))
+            {
+                return string.Empty;
+            }
+
             var gitRoot = root.Trim();
             var yml = Directory.GetFiles(gitRoot, "*.*", SearchOption.AllDirectories).FirstOrDefault(f => f.Equals("codecov.yml") || f.Equals(".codecov.yml"));
 

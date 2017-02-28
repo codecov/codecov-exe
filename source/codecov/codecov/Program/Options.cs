@@ -19,11 +19,17 @@ namespace codecov.Program
         [OptionArray('f', "file", HelpText = "Target file(s) to upload. (1) -f 'path/to/file'. Only upload this file. (2) -f 'path/to/file1 path/to/file2'. Only upload these files.")]
         public string[] File { get; set; }
 
-        [OptionArray('F', "flag", HelpText = "Flag the upload to group coverage metrics. (1) -F unittests. This upload is only unittests. (2) -F integration. This upload is only integration tests. (3) -F ut,chrome. This upload is chrome - UI tests.")]
+        [OptionArray("flag", HelpText = "Flag the upload to group coverage metrics. (1) -F unittests. This upload is only unittests. (2) -F integration. This upload is only integration tests. (3) -F ut,chrome. This upload is chrome - UI tests.")]
         public string[] Flag { get; set; }
+
+        [Option('n', "name", HelpText = "Custom defined name of the upload. Visible in Codecov UI.")]
+        public string Name { get; set; }
 
         [Option('p', "pr", HelpText = "Specify the pull request number.")]
         public string Pr { get; set; }
+
+        [Option('Z', "required", DefaultValue = false, HelpText = "Exit with 1 if not successful. Default will Exit with 0")]
+        public bool Required { get; set; }
 
         [Option('R', "root", DefaultValue = ".", HelpText = "Used when not in git/hg project to identify project root directory.")]
         public string Root { get; set; }

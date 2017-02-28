@@ -8,17 +8,17 @@ namespace codecov.Program
 
         public static void ConsoleWriteLine(string message)
         {
-            Console.WriteLine("{message}");
+            Console.WriteLine($"{message}");
         }
 
         public static void Information(string message)
         {
-            ConsoleWriteLine($"==>{message}");
+            ConsoleWriteLine($" ==> {message}");
         }
 
         public static void Message(string message)
         {
-            ConsoleWriteLine("\t{message}");
+            ConsoleWriteLine($"\t{message}");
         }
 
         public static void Verbose(string message)

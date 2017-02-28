@@ -17,11 +17,11 @@ This repository is currently under active development working towards version 0.
 
 ## ToDoList
 
-	- [ ] Test the code!
-    - [ ] Add .exe to Choco (like apt-get or homebrew but for windows).
-    - [ ] Create a PowerShell bootstraper script to download the .exe. The .exe will be an assest on a release. - In PowerShell run `(New-Object System.Net.WebClient).DownloadFile("https://github.com/codecov/codecov-exe/releases/download/0.1.0-beta/codecov.exe", "codecov.exe")` and then `.\codecov.exe ...`
-    - [ ] Implimented the entire command line interface.
-    - [ ] Support more than .NET 4.5
+	- Test the code!
+    - Add .exe to Choco (like apt-get or homebrew but for windows).
+    - Create a PowerShell bootstraper script to download the .exe. The .exe will be an assest on a release. - In PowerShell run `(New-Object System.Net.WebClient).DownloadFile("https://github.com/codecov/codecov-exe/releases/download/0.1.0-beta/codecov.exe", "codecov.exe")` and then `.\codecov.exe ...`
+    - Implimented the entire command line interface.
+    - Support more than .NET 4.5
 
 [1]: https://codecov.io/
 [2]: https://twitter.com/codecov

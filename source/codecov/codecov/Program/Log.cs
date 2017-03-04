@@ -6,27 +6,34 @@ namespace codecov.Program
     {
         internal static bool IsVerboseMode { get; set; }
 
-        public static void ConsoleWriteLine(string message)
+        public static void Arrow(string message)
         {
-            Console.WriteLine($"{message}");
-        }
-
-        public static void Information(string message)
-        {
-            ConsoleWriteLine($" ==> {message}");
+            Console.WriteLine($"==> {message}");
         }
 
         public static void Message(string message)
         {
-            ConsoleWriteLine($"\t{message}");
+            Console.WriteLine($"    {message}");
         }
 
         public static void Verbose(string message)
         {
             if (IsVerboseMode)
             {
-                Message(message);
+                Console.WriteLine("\n====");
+                Console.WriteLine($"{message}");
+                Console.WriteLine("====\n");
             }
+        }
+
+        public static void WriteLine(string message)
+        {
+            Console.WriteLine(message);
+        }
+
+        public static void X(string message)
+        {
+            Console.WriteLine($"x>  {message}");
         }
     }
 }

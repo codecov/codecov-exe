@@ -1,12 +1,12 @@
 ﻿using System;
 using codecov.Program;
-using codecov.Services.Utils;
+using codecov.Services.Helpers;
 
 namespace codecov.Services
 {
     internal class AppVeyor : Service
     {
-        public AppVeyor()
+        public AppVeyor(Options options) : base(options)
         {
             QueryParameters["branch"] = Environment.GetEnvironmentVariable("APPVEYOR_REPO_BRANCH");
             QueryParameters["commit"] = Environment.GetEnvironmentVariable("APPVEYOR_REPO_COMMIT");
@@ -34,7 +34,7 @@ namespace codecov.Services
                 {
                     return false;
                 }
-                Log.Information("Appveyor CI detected.");
+                Log.X("Appveyor CI detected.");
                 return true;
             }
         }

@@ -1,12 +1,12 @@
 ﻿using System.Text.RegularExpressions;
 using codecov.Program;
-using codecov.Services.Utils;
+using codecov.Services.Helpers;
 
 namespace codecov.Services
 {
     internal class Git : Service
     {
-        public Git()
+        public Git(Options options) : base(options)
         {
             QueryParameters["branch"] = Branch;
             QueryParameters["commit"] = Commit;
@@ -22,13 +22,23 @@ namespace codecov.Services
                 {
                     return false;
                 }
-
-                Log.Information("No CI provider detected, using Git.");
+                Log.X("No CI provider detected, using Git.");
                 return true;
             }
         }
 
-        private static string Branch
+        public override string RepoRoot => !Utils.RemoveAllWhiteSpaceFromString(Options.Root).Equals(".") ? Utils.NormalizePath(Options.Root) : Utils.RunCmd("git", "rev-parse --show-toplevel");
+
+        public override string SourceCodeFiles
+        {
+            get
+            {
+                Log.Message($"Project root: {RepoRoot}");
+                return RunGit("ls-tree --full-tree -r HEAD --name-only");
+            }
+        }
+
+        private string Branch
         {
             get
             {
@@ -42,7 +52,7 @@ namespace codecov.Services
             }
         }
 
-        private static string Commit
+        private string Commit
         {
             get
             {
@@ -51,7 +61,7 @@ namespace codecov.Services
             }
         }
 
-        private static string Slug
+        private string Slug
         {
             get
             {
@@ -73,9 +83,9 @@ namespace codecov.Services
             }
         }
 
-        private static string RunGit(string commandArguments)
+        private string RunGit(string commandArguments)
         {
-            return Cmd.Run("git", commandArguments);
+            return Utils.RunCmd("git", $"-C {RepoRoot} {commandArguments}");
         }
     }
 }

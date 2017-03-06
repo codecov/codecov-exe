@@ -1,21 +1,28 @@
 ﻿using System;
+using codecov.Program;
 
 namespace codecov.Coverage
 {
-    public static class Url
+    public class Url : IUrl
     {
-        public static string GetUrl(string baseUrlCommandLine, string baseUrlYml, string query)
+        public Url(Options options, string query)
         {
-            var baseUrl = GetBaseUrl(baseUrlCommandLine, baseUrlYml);
-            return $"{baseUrl}/upload/v4?{query}";
+            BaseUrl = CreateBaseUrl(options.Url);
+            Query = query;
         }
 
-        private static string GetBaseUrl(string baseUrlCommandLine, string baseUrlYml)
+        public Uri FullUrl => new Uri($"{BaseUrl}/upload/v4?{Query}");
+
+        private string BaseUrl { get; }
+
+        private string Query { get; }
+
+        private static string CreateBaseUrl(string baseUrl)
         {
             // Command line
-            if (!string.IsNullOrWhiteSpace(baseUrlCommandLine))
+            if (!string.IsNullOrWhiteSpace(baseUrl))
             {
-                return baseUrlCommandLine.Trim().TrimEnd('/');
+                return baseUrl.Trim().TrimEnd('/');
             }
 
             // Enviornment variable
@@ -23,12 +30,6 @@ namespace codecov.Coverage
             if (!string.IsNullOrWhiteSpace(urlEnv))
             {
                 return urlEnv.Trim().TrimEnd('/');
-            }
-
-            // yaml file
-            if (!string.IsNullOrWhiteSpace(baseUrlYml))
-            {
-                return baseUrlYml.Trim();
             }
 
             return "https://codecov.io";

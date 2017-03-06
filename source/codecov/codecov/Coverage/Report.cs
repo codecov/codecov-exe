@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using codecov.Program;
 
 namespace codecov.Coverage
 {
     public static class Report
     {
-        public static string Reporter(IEnumerable<string> files, IEnumerable<string> enviornmentVariables, string root)
+        public static string Reporter(IEnumerable<string> files, IEnumerable<string> enviornmentVariables, string sourceCodeFiles)
         {
-            var report = GetEnviornmentVariables(enviornmentVariables) + GetSourceCodeFiles(root);
+            Log.Arrow("Reading reports.");
+            var names = $"    + {string.Join("\n    + ", files)}";
+            Log.WriteLine(names);
+            const string network = "<<<<<< network";
+            var report = $"{GetEnviornmentVariables(enviornmentVariables)}{GetSourceCodeFiles(sourceCodeFiles)}{network}\n";
             report = files.Aggregate(report, (current, file) => current + GetCoverageReport(file));
             return report.TrimEnd('\n');
         }
@@ -22,14 +27,14 @@ namespace codecov.Coverage
             }
 
             const string eof = "<<<<<< EOF";
-            return $"{File.ReadAllText(file.Trim())}\n{eof}\n";
+            return $"# path={file}\n{File.ReadAllText(file.Trim())}\n{eof}\n";
         }
 
         private static string GetEnviornmentVariables(IEnumerable<string> enviornmentVariables)
         {
             if (enviornmentVariables == null)
             {
-                return string.Empty;
+                enviornmentVariables = Enumerable.Empty<string>();
             }
 
             const string env = "<<<<<< ENV";
@@ -54,20 +59,20 @@ namespace codecov.Coverage
 
             var enviornmentVariablesNamesAndValues = (from name in enviornmentvariableNames let value = Environment.GetEnvironmentVariable(name) where !string.IsNullOrWhiteSpace(value) select $"{name.Trim()}={value.Trim()}").ToList();
 
-            return enviornmentVariablesNamesAndValues.Count > 0 ? $"{string.Join("\n", enviornmentVariablesNamesAndValues)}\n{env}\n" : string.Empty;
-        }
-
-        private static string GetSourceCodeFiles(string root)
-        {
-            if (string.IsNullOrWhiteSpace(root))
+            if (enviornmentVariablesNamesAndValues.Count < 1)
             {
                 return string.Empty;
             }
 
-            var gitRoot = root.Trim();
-            const string network = "<<<<<< network";
-            var files = Directory.GetFiles(gitRoot, "*.*", SearchOption.AllDirectories).Select(f => f.Replace(gitRoot, string.Empty).TrimStart('\\').TrimStart('/')).Where(file => !(file.StartsWith(".git/") || file.StartsWith(".git\\")));
-            return $"{string.Join("\n", files)}\n{network}\n";
+            Log.Arrow("Appending build variables");
+            var validEnviornmentVariableNames = (from name in enviornmentvariableNames let value = Environment.GetEnvironmentVariable(name) where !string.IsNullOrWhiteSpace(value) select name.Trim()).ToList();
+
+            var names = $"    + {string.Join("\n    + ", validEnviornmentVariableNames)}";
+            Log.WriteLine(names);
+
+            return $"{string.Join("\n", enviornmentVariablesNamesAndValues)}\n{env}\n";
         }
+
+        private static string GetSourceCodeFiles(string sourceCodeFiles) => !string.IsNullOrWhiteSpace(sourceCodeFiles) ? $"{sourceCodeFiles}\n" : string.Empty;
     }
 }

@@ -1,12 +1,12 @@
 ﻿using System;
 using codecov.Program;
-using codecov.Services.Utils;
+using codecov.Services.Helpers;
 
 namespace codecov.Services
 {
     internal class Travis : Service
     {
-        public Travis()
+        public Travis(Options options) : base(options)
         {
             QueryParameters["branch"] = Environment.GetEnvironmentVariable("TRAVIS_BRANCH");
             QueryParameters["commit"] = Environment.GetEnvironmentVariable("TRAVIS_COMMIT");
@@ -35,7 +35,7 @@ namespace codecov.Services
                 {
                     return false;
                 }
-                Log.Information("Travis CI detected.");
+                Log.X("Travis CI detected.");
                 return true;
             }
         }

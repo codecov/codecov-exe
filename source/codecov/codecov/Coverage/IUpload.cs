@@ -2,6 +2,6 @@
 {
     public interface IUpload
     {
-        void Uploader(string report, string url);
+        void Uploader(string report);
     }
 }

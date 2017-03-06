@@ -1,12 +1,12 @@
 ﻿using System;
 using codecov.Program;
-using codecov.Services.Utils;
+using codecov.Services.Helpers;
 
 namespace codecov.Services
 {
     internal class TeamCity : Service
     {
-        public TeamCity()
+        public TeamCity(Options options) : base(options)
         {
             QueryParameters["branch"] = Branch;
             QueryParameters["commit"] = Commit;
@@ -26,14 +26,15 @@ namespace codecov.Services
                     return false;
                 }
 
-                Log.Information("    TeamCity CI detected.");
-                Log.Information("    Teamcity does not automatically make build parameters available as environment variables.");
-                Log.Information("    Add the following environment parameters to the build configuration");
-                Log.Information("    env.TEAMCITY_BUILD_BRANCH = %teamcity.build.branch%");
-                Log.Information("    env.TEAMCITY_BUILD_ID = %teamcity.build.id%");
-                Log.Information("    env.TEAMCITY_BUILD_URL = %teamcity.serverUrl%/viewLog.html?buildId=%teamcity.build.id%");
-                Log.Information("    env.TEAMCITY_BUILD_COMMIT = %system.build.vcs.number%");
-                Log.Information("    env.TEAMCITY_BUILD_REPOSITORY = %vcsroot.<YOUR TEAMCITY VCS NAME>.url%");
+                Log.X("TeamCity CI detected.");
+
+                Log.Message("Teamcity does not automatically make build parameters available as environment variables.");
+                Log.Message("Add the following environment parameters to the build configuration");
+                Log.Message("env.TEAMCITY_BUILD_BRANCH = %teamcity.build.branch%");
+                Log.Message("env.TEAMCITY_BUILD_ID = %teamcity.build.id%");
+                Log.Message("env.TEAMCITY_BUILD_URL = %teamcity.serverUrl%/viewLog.html?buildId=%teamcity.build.id%");
+                Log.Message("env.TEAMCITY_BUILD_COMMIT = %system.build.vcs.number%");
+                Log.Message("env.TEAMCITY_BUILD_REPOSITORY = %vcsroot.<YOUR TEAMCITY VCS NAME>.url%");
                 return true;
             }
         }

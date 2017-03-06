@@ -48,23 +48,24 @@
   <ItemGroup>
     <Compile Include="Coverage\Report.cs" />
     <Compile Include="Coverage\IUpload.cs" />
+    <Compile Include="Coverage\UploadFactory.cs" />
+    <Compile Include="Coverage\IUrl.cs" />
     <Compile Include="Coverage\Url.cs" />
     <Compile Include="Program\Cli.cs" />
     <Compile Include="Program\Log.cs" />
+    <Compile Include="Program\Run.cs" />
     <Compile Include="Services\TeamCity.cs" />
     <Compile Include="Services\Travis.cs" />
-    <Compile Include="Services\Utils\IService.cs" />
+    <Compile Include="Program\Utls.cs" />
+    <Compile Include="Services\Helpers\IService.cs" />
     <Compile Include="Coverage\Upload.cs" />
     <Compile Include="Program\Options.cs" />
-    <Compile Include="Services\Utils\ServiceFactory.cs" />
-    <Compile Include="Services\Hg.cs" />
-    <Compile Include="Services\Utils\Cmd.cs" />
+    <Compile Include="Services\Helpers\ServiceFactory.cs" />
     <Compile Include="Services\AppVeyor.cs" />
-    <Compile Include="Services\Utils\Service.cs" />
+    <Compile Include="Services\Helpers\Service.cs" />
     <Compile Include="Program\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Git.cs" />
-    <Compile Include="Services\Utils\CodecovYml.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

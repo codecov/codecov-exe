@@ -52,6 +52,7 @@ namespace codecov.Coverage
                 post.Headers.Add("Content-Type: text/plain");
                 var response = post.UploadString(url, "POST", string.Empty);
 
+                Log.Verbose(response);
                 var resp = response.Split('\n');
                 var s3 = new Uri(resp[1]);
 

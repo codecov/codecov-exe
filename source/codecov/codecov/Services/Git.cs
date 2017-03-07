@@ -27,17 +27,6 @@ namespace codecov.Services
             }
         }
 
-        public override string RepoRoot => !Utils.RemoveAllWhiteSpaceFromString(Options.Root).Equals(".") ? Utils.NormalizePath(Options.Root) : Utils.RunCmd("git", "rev-parse --show-toplevel");
-
-        public override string SourceCodeFiles
-        {
-            get
-            {
-                Log.Message($"Project root: {RepoRoot}");
-                return RunGit("ls-tree --full-tree -r HEAD --name-only");
-            }
-        }
-
         private string Branch
         {
             get

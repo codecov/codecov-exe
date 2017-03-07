@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using codecov.Program;
 
@@ -34,17 +33,14 @@ namespace codecov.Services.Helpers
             }
         }
 
-        public virtual string RepoRoot => Options.Root;
+        public string RepoRoot => !Utils.RemoveAllWhiteSpaceFromString(Options.Root).Equals(".") ? Utils.NormalizePath(Options.Root) : Utils.RunCmd("git", "rev-parse --show-toplevel");
 
-        public virtual string SourceCodeFiles
+        public string SourceCodeFiles
         {
             get
             {
-                var repoRoot = RepoRoot;
-                Log.Message($"Project root: {Options.Root}");
-                var files = Directory.GetFiles(repoRoot, "*.*", SearchOption.AllDirectories);
-                var relativeFilePaths = files.Select(f => f.Replace(repoRoot, string.Empty).TrimStart('\\').TrimStart('/'));
-                return string.Join("\n", relativeFilePaths);
+                Log.Message($"Project root: {RepoRoot}");
+                return Utils.RunCmd("git", $"-C {RepoRoot} ls-tree --full-tree -r HEAD --name-only");
             }
         }
 

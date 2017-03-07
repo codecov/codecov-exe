@@ -57,6 +57,12 @@ namespace codecov.Coverage
                 }
             }
 
+            var travis = Environment.GetEnvironmentVariable("TRAVIS_OS_NAME");
+            if (!string.IsNullOrWhiteSpace(travis))
+            {
+                enviornmentvariableNames.Add("TRAVIS_OS_NAME");
+            }
+
             var enviornmentVariablesNamesAndValues = (from name in enviornmentvariableNames let value = Environment.GetEnvironmentVariable(name) where !string.IsNullOrWhiteSpace(value) select $"{name.Trim()}={value.Trim()}").ToList();
 
             if (enviornmentVariablesNamesAndValues.Count < 1)

@@ -30,7 +30,7 @@ namespace codecov.Services
                     return false;
                 }
 
-                var isTravis = travis.Equals("True") && ci.Equals("True");
+                var isTravis = travis.Equals("true") && ci.Equals("true");
                 if (!isTravis)
                 {
                     return false;

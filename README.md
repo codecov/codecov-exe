@@ -1,4 +1,4 @@
-Codecov Global Executable (.exe) Uploader for PowerShell, Windows Command Line (cmd), .NET and Mono.
+Codecov Global Executable (.exe) Uploader: PowerShell, Windows Command Line (cmd), .NET 4.5 and Mono.
 =======
 | [https://codecov.io/][1] | [@codecov][2] | [hello@codecov.io][3] |
 | ------------------------ | ------------- | --------------------- |
@@ -7,21 +7,20 @@ This repository is currently under active development working towards version 0.
 
 ## Current features
 
-- Upload a coverage report locally using Git. Support for Hg is not implimented yet.
-- Upload coverage report using AppVeyor.
-- Upload coverage report using Travis Ci.
-- Upload coverage report using TeamCity. This has not been tested.
-- Implement Codecov command line interface. A lot of commands are supported, see [Options.cs](https://github.com/codecov/codecov-exe/blob/master/source/codecov/codecov/Program/Options.cs) for a full list. Or run `.\codecov`in powershell.
-- You can obtain the .exe via nuget [![NuGet](https://img.shields.io/nuget/v/Codecov.svg)](https://www.nuget.org/packages/Codecov/). Supports .NET 4.5 (more to come later).
-- Support for codecov.yaml or .codecov.yaml files.
+- Upload a coverage report using the following services: AppVeyor, Travis Ci (using mono), TeamCity (not tested), Git.
+- Many Codecov CLI options are supported. Run `.\codecov.exe` or see [Options.cs](https://github.com/codecov/codecov-exe/blob/master/source/codecov/codecov/Program/Options.cs) for more details.
+- You can obtain the uploader via 
+    - nuget [![NuGet](https://img.shields.io/nuget/v/Codecov.svg)](https://www.nuget.org/packages/Codecov/)
+    - [Chocolatey](https://chocolatey.org/) (package has been submitted for review) `choco install codecov`.
+    - Downloading it as an asset from the GitHub release (may not support this feature in later releases) `(New-Object System.Net.WebClient).DownloadFile("<url>", "codecov.exe")`.
 
-## ToDoList
+## ToDoList in order of priority
 
-	- Test the code!
-    - Add .exe to Choco (like apt-get or homebrew but for windows).
-    - Create a PowerShell bootstraper script to download the .exe. The .exe will be an assest on a release. - In PowerShell run `(New-Object System.Net.WebClient).DownloadFile("https://github.com/codecov/codecov-exe/releases/download/0.1.0-beta/codecov.exe", "codecov.exe")` and then `.\codecov.exe ...`
-    - Implimented the entire command line interface.
-    - Support more than .NET 4.5
+- Implement (if any) must have CLI options.
+- Bug fixes and code cleanup in order to release version 0.1.0
+- Support more platforms (in addition to .NET 4.5): .NET Core and .NET 4.0 (maybe).
+- Unit Tests, build scripts, and automation.
+- Support Mercurial and other CI services.
 
 [1]: https://codecov.io/
 [2]: https://twitter.com/codecov

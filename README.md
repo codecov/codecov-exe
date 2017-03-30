@@ -19,7 +19,7 @@ This uploader supports Windows Command Line and PowerShell on Windows 7 (x64) an
 For the last option, the following PowerShell (version 5) commands might be helpful
 
 ```PowerShell
-(New-Object System.Net.WebClient).DownloadFile('<url>',".\Codecov.zip") # Download Codecov.zip from github release.
+(New-Object System.Net.WebClient).DownloadFile("<url>", (Join-Path $pwd "Codecov.zip")) # Download Codecov.zip from github release.
 Expand-Archive .\Codecov.zip -DestinationPath . # UnZip the file.
 .\Codecov\codecov.exe ... # Run codecov.exe with whatever commands you need.
 ```

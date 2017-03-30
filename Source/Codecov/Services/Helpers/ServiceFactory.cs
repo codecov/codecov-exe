@@ -15,6 +15,6 @@ namespace Codecov.Services.Helpers
 
         private Options Options { get; }
 
-        private IEnumerable<IService> Services => new IService[] { new AppVeyor(Options), new TeamCity(Options), new Git(Options) };
+        private IEnumerable<IService> Services => new IService[] { new AppVeyor(Options), new TeamCity(Options), new Git(Options), new Service(Options) };
     }
 }

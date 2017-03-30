@@ -8,23 +8,27 @@ namespace Codecov.Services
     {
         public Git(Options options) : base(options)
         {
-            QueryParameters["branch"] = Branch;
-            QueryParameters["commit"] = Commit;
-            QueryParameters["slug"] = Slug;
         }
 
         public override bool Detect
         {
             get
             {
-                var isGit = !string.IsNullOrWhiteSpace(RunGit("--version"));
+                var isGit = !string.IsNullOrWhiteSpace(Utils.RunCmd("git", "rev-parse --git-dir"));
                 if (!isGit)
                 {
                     return false;
-                }
-                Log.X("No CI provider detected, using Git.");
+                }   
                 return true;
             }
+        }
+
+        public override void SetQueryParams()
+        {
+            Log.X("No CI provider detected, using Git.");
+            QueryParameters["branch"] = Branch;
+            QueryParameters["commit"] = Commit;
+            QueryParameters["slug"] = Slug;
         }
 
         private string Branch

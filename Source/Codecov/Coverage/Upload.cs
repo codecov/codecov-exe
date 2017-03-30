@@ -71,7 +71,7 @@ namespace Codecov.Coverage
                     reportUrl = splitResponse[0];
                 }
 
-                //Put: Upload report.
+                // Put: Upload report.
                 var putRequest = (HttpWebRequest)WebRequest.Create(s3);
                 putRequest.ContentType = "text/plain";
                 putRequest.Method = "PUT";

@@ -9,5 +9,7 @@
         string RepoRoot { get; }
 
         string SourceCodeFiles { get; }
+
+        void SetQueryParams();
     }
 }

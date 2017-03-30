@@ -32,7 +32,8 @@ namespace Codecov.Program
                 var startInfo = new ProcessStartInfo(command, commandArguments)
                 {
                     UseShellExecute = false,
-                    RedirectStandardOutput = true
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true
                 };
 
                 using (var process = Process.Start(startInfo))

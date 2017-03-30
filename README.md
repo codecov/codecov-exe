@@ -9,8 +9,8 @@ This uploader supports Windows Command Line and PowerShell on Windows 7 (x64) an
 
 ## Current features
 
-- Upload a coverage report using the following services: AppVeyor, TeamCity (not tested), Git.
-- Many Codecov CLI options are supported. Run `.\codecov.exe` or see [Options.cs](https://github.com/codecov/codecov-exe/blob/master/source/codecov/codecov/Program/Options.cs) for more details.
+- Upload a coverage report using the following services: AppVeyor, TeamCity, Git.
+- Many Codecov CLI options are supported. Run `.\codecov.exe --help` or see [Options.cs](https://github.com/codecov/codecov-exe/blob/master/Source/Codecov/Program/Options.cs) for more details.
 - You can obtain the uploader via
 	- NuGet [![NuGet](https://img.shields.io/nuget/v/Codecov.svg)](https://www.nuget.org/packages/Codecov/)
 	- Chocolatey [![Chocolatey](https://img.shields.io/chocolatey/v/codecov.svg)](https://chocolatey.org/packages/codecov)
@@ -21,7 +21,7 @@ For the last option, the following PowerShell (version 5) commands might be help
 ```PowerShell
 (New-Object System.Net.WebClient).DownloadFile("<url>", (Join-Path $pwd "Codecov.zip")) # Download Codecov.zip from github release.
 Expand-Archive .\Codecov.zip -DestinationPath . # UnZip the file.
-.\Codecov\codecov.exe ... # Run codecov.exe with whatever commands you need.
+.\Codecov\codecov.exe # Run codecov.exe with whatever commands you need.
 ```
 
 ## ToDoList
@@ -31,4 +31,4 @@ Expand-Archive .\Codecov.zip -DestinationPath . # UnZip the file.
     - Bug fixes and code cleanup in order to release version 0.1.0.
 - Lower Priority
     - Unit Tests, build scripts, and automation.
-    - Support Mercurial and other CI services.
+    - Support Mercurial and other CI windows services.

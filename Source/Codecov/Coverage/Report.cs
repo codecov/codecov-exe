@@ -13,8 +13,7 @@ namespace Codecov.Coverage
             Log.Arrow("Reading reports.");
             var names = $"    + {string.Join("\n    + ", files)}";
             Log.WriteLine(names);
-            const string network = "<<<<<< network";
-            var report = $"{GetEnviornmentVariables(enviornmentVariables)}{GetSourceCodeFiles(sourceCodeFiles)}{network}\n";
+            var report = $"{GetEnviornmentVariables(enviornmentVariables)}{GetSourceCodeFiles(sourceCodeFiles)}";
             report = files.Aggregate(report, (current, file) => current + GetCoverageReport(file));
             return report.TrimEnd('\n');
         }

@@ -8,6 +8,10 @@ namespace Codecov.Services
     {
         public AppVeyor(Options options) : base(options)
         {
+        }
+
+        public override void SetQueryParams()
+        {
             QueryParameters["branch"] = Environment.GetEnvironmentVariable("APPVEYOR_REPO_BRANCH");
             QueryParameters["commit"] = Environment.GetEnvironmentVariable("APPVEYOR_REPO_COMMIT");
             QueryParameters["job"] = Job;

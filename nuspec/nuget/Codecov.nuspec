@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Codecov</id>
+    <version>0.3.0-beta</version>
+    <title>Codecov</title>
+    <authors>Larz White</authors>
+    <owners>Larz White</owners>
+    <licenseUrl>https://github.com/codecov/codecov-exe/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/codecov/codecov-exe</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/codecov/media/master/logos/pink.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>Codecov global executable uploader.</summary>
+    <description>Codecov global executable uploader for PowerShell and Windows Command Line.</description>
+    <releaseNotes>Initial Beta Release.</releaseNotes>
+    <copyright>Copyright (c) 2017 Larz White</copyright>
+    <releaseNotes>Initial Beta Release.</releaseNotes>
+    <tags>coverage codecov</tags>
+  </metadata>
+  <files>
+    <file src="..\Source\Codecov\bin\win7-x64\**" target="tools" />
+  </files>
+</package>

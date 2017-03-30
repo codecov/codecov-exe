@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>codecov</id>
+    <version>0.3.0-beta</version>
+    <owners>Larz White</owners>
+    <title>Codecov</title>
+    <authors>Larz White</authors>
+    <projectUrl>https://github.com/codecov/codecov-exe</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/codecov/media/master/logos/pink.png</iconUrl>
+    <copyright>Copyright (c) 2017 Larz White</copyright>
+    <licenseUrl>https://github.com/codecov/codecov-exe/blob/master/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/codecov/codecov-exe</projectSourceUrl>
+    <docsUrl>https://github.com/codecov/codecov-exe</docsUrl>
+    <bugTrackerUrl>https://github.com/codecov/codecov-exe/issues</bugTrackerUrl>
+    <tags>coverage codecov admin</tags>
+    <summary>Codecov global executable uploader.</summary>
+    <description>[Codecov](https://codecov.io) global executable uploader for PowerShell and Windows Command Line (cmd). Supports Windows 7 (x64) and above.</description>
+    <releaseNotes>Initial Beta Release.</releaseNotes>
+  </metadata>
+</package>

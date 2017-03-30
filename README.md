@@ -13,7 +13,7 @@ This uploader supports Windows Command Line and PowerShell on Windows 7 (x64) an
 - Many Codecov CLI options are supported. Run `.\codecov.exe` or see [Options.cs](https://github.com/codecov/codecov-exe/blob/master/source/codecov/codecov/Program/Options.cs) for more details.
 - You can obtain the uploader via
 	- NuGet [![NuGet](https://img.shields.io/nuget/v/Codecov.svg)](https://www.nuget.org/packages/Codecov/)
-	- Chocolatey [![Chocolatey](https://img.shields.io/chocolatey/v/codecov.svg)](https://chocolatey.org/packages/codecov/0.2.0-beta)
+	- Chocolatey [![Chocolatey](https://img.shields.io/chocolatey/v/codecov.svg)](https://chocolatey.org/packages/codecov)
 	- As the asset *Codecov.zip* under the release.
 
 For the last option, the following PowerShell (version 5) commands might be helpful

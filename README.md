@@ -32,3 +32,19 @@ Expand-Archive .\Codecov.zip -DestinationPath . # UnZip the file.
 - Lower Priority
     - Unit Tests, build scripts, and automation.
     - Support Mercurial and other CI windows services.
+
+## TeamCity
+
+TeamCity does not automatically make build parameters available as environment variables. You will need to add the [following environment parameters](https://github.com/codecov/support/wiki/TeamCity) to the build configuration. To do this make sure your *Branch specification* under the VCS Root is configured correctly,
+
+<p>
+  <img src="./Images/branch-spec.png" width="1000em"/>
+</p>
+
+Then set your environment variables,
+
+<p>
+  <img src="./Images/envs.png" width="1000em"/>
+</p>
+
+Where *env.TEAMCITY_BUILD_REPOSITORY* is used to get the slug. The value should be the same as the git clone address (https or ssh). Note that, **all** of the above environment variables can be set via the command line.

@@ -47,4 +47,11 @@ Then set your environment variables,
   <img src="./Images/envs.png" width="1000em"/>
 </p>
 
-Where *env.TEAMCITY_BUILD_REPOSITORY* is used to get the slug. The value should be the same as the git clone address (https or ssh). Note that, **all** of the above environment variables can be set via the command line.
+Note that, the above environment variables (except for `env.TEAMCITY_BUILD_URL`) can alternatively be set via the command line,
+
+```
+env.TEAMCITY_BUILD_BRANCH => --branch
+env.TEAMCITY_BUILD_ID => --build
+env.TEAMCITY_BUILD_COMMIT => --sha
+env.TEAMCITY_BUILD_REPOSITORY => --slug
+```

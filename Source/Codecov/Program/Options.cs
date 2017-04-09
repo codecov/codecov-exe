@@ -11,6 +11,9 @@ namespace Codecov.Program
         [Option('b', "build", HelpText = "Specify the build number.")]
         public string Build { get; set; }
 
+        [Option("disable", HelpText = "Toggle functionalities. (1) --disable network. Disable uploading the file network.")]
+        public IEnumerable<string> Disable { get; set; }
+
         [Option('d', "dump", HelpText = "Don't upload and dump to stdin.")]
         public bool Dump { get; set; }
 

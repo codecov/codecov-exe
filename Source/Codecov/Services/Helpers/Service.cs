@@ -2,17 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using Codecov.Program;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Codecov.Services.Helpers
 {
-    public abstract class Service : IService
+    public class Service : IService
     {
-        protected Service(Options options)
+        public Service(Options options)
         {
             Options = options;
         }
 
-        public abstract bool Detect { get; }
+        public virtual bool Detect => true;
+
+        public virtual void SetQueryParams()
+        {
+            
+        }
 
         public string Query
         {
@@ -33,14 +40,96 @@ namespace Codecov.Services.Helpers
             }
         }
 
-        public string RepoRoot => !Utils.RemoveAllWhiteSpaceFromString(Options.Root).Equals(string.Empty) ? Utils.NormalizePath(Options.Root) : Utils.RunCmd("git", "rev-parse --show-toplevel");
+        public string RepoRoot
+        {
+            get
+            {
+                var repoRoot = ".";
+                if (!Utils.RemoveAllWhiteSpaceFromString(Options.Root).Equals(string.Empty))
+                {
+                    repoRoot = Utils.NormalizePath(Options.Root);
+                }
+                else
+                {
+                    var git = new Git(Options);
+                    if (git.Detect)
+                    {
+                        repoRoot = Utils.RunCmd("git", "rev-parse --show-toplevel");
+                    }
+                }
+
+                return repoRoot;
+            }
+        }
 
         public string SourceCodeFiles
         {
             get
             {
-                Log.Message($"Project root: {RepoRoot}");
-                return Utils.RunCmd("git", $"-C {RepoRoot} ls-tree --full-tree -r HEAD --name-only");
+                var repoRoot = RepoRoot;
+                Log.Message($"Project root: {repoRoot}");
+                if (Options.Disable.Contains("network", StringComparer.OrdinalIgnoreCase))
+                {
+                    Log.Verbose("Skipping obtaining a list of source files.");
+                    return string.Empty;
+                }
+
+                const string network = "<<<<<< network";
+
+                var git = new Git(Options);
+                if (git.Detect)
+                {
+                    Log.Verbose("Obtaining a list of source files using git.");
+                    var file = Utils.RunCmd("git", $"-C {repoRoot} ls-tree --full-tree -r HEAD --name-only");
+                    return file.Trim() + "\n" + network;
+                }
+                else
+                {
+                    Log.Verbose("Obtaining a list of source files manually.");
+                    // Read file system.
+                    var files = Directory.EnumerateFiles(repoRoot, "*.*", SearchOption.AllDirectories)
+                        .Where(file => !file.ToUpper().Contains(@"\.GIT\"))
+                        .Where(file => !file.ToUpper().Contains(@"\BIN\DEBUG\"))
+                        .Where(file => !file.ToUpper().Contains(@"\BIN\RELEASE\"))
+                        .Where(file => !file.ToUpper().Contains(@"\OBJ\DEBUG\"))
+                        .Where(file => !file.ToUpper().Contains(@"\OBJ\RELEASE\"))
+                        .Where(file => !file.ToUpper().Contains(@"\.VSCODE\"))
+                        .Where(file => !file.ToUpper().Contains(@"\.VS\"))
+                        .Where(file => !file.ToUpper().Contains(@"\OBJ\PROJECT.ASSETS.JSON"))
+                        .Where(file => !file.ToUpper().EndsWith(".CSPROJ.NUGET.G.TARGETS"))
+                        .Where(file => !file.ToUpper().EndsWith(".CSPROJ.NUGET.G.PROPS"))
+                        .Where(file => !Path.GetExtension(file).Equals(".csproj.nuget.g.props", StringComparison.OrdinalIgnoreCase))
+                        .Where(file => !Path.GetExtension(file).Equals(".dll", StringComparison.OrdinalIgnoreCase))
+                        .Where(file => !Path.GetExtension(file).Equals(".exe", StringComparison.OrdinalIgnoreCase))
+                        .Where(file => !Path.GetExtension(file).Equals(".gif", StringComparison.OrdinalIgnoreCase))
+                        .Where(file => !Path.GetExtension(file).Equals(".jpg", StringComparison.OrdinalIgnoreCase))
+                        .Where(file => !Path.GetExtension(file).Equals(".jpeg", StringComparison.OrdinalIgnoreCase))
+                        .Where(file => !Path.GetExtension(file).Equals(".md", StringComparison.OrdinalIgnoreCase))
+                        .Where(file => !file.ToUpper().Contains(@"\VIRTUALENV\"))
+                        .Where(file => !file.ToUpper().Contains(@"\.VIRTUALENV\"))
+                        .Where(file => !file.ToUpper().Contains(@"\VIRTUALENVS\"))
+                        .Where(file => !file.ToUpper().Contains(@"\.VIRTUALENVS\"))
+                        .Where(file => !file.ToUpper().Contains(@"\ENV\"))
+                        .Where(file => !file.ToUpper().Contains(@"\.ENV\"))
+                        .Where(file => !file.ToUpper().Contains(@"\ENVS\"))
+                        .Where(file => !file.ToUpper().Contains(@"\.ENVS\"))
+                        .Where(file => !file.ToUpper().Contains(@"\VENV\"))
+                        .Where(file => !file.ToUpper().Contains(@"\.VENV\"))
+                        .Where(file => !file.ToUpper().Contains(@"\VENVS\"))
+                        .Where(file => !file.ToUpper().Contains(@"\.VENVS\"))
+                        .Where(file => !file.ToUpper().Contains(@"\BUILD\LIB\"))
+                        .Where(file => !file.ToUpper().Contains(@"\.egg-info\"))
+                        .Where(file => !file.ToUpper().Contains(@"\shunit2-2.1.6\"))
+                        .Where(file => !file.ToUpper().Contains(@"\vendor\"))
+                        .Where(file => !file.ToUpper().Contains(@"\js\generated\coverage\"))
+                        .Where(file => !file.ToUpper().Contains(@"\__pycache__\"))
+                        .Where(file => !file.ToUpper().Contains(@"\__pycache__\"))
+                        .Where(file => !file.ToUpper().Contains(@"\node_modules\"))
+                        .Where(file => !Path.GetExtension(file).Equals(".png", StringComparison.OrdinalIgnoreCase));
+
+                    var removedRelativePath = files.Select(f => f.TrimStart('.').TrimStart('\\').Replace("\\","/"));
+                    return string.Join("\n", removedRelativePath).Trim() + "\n" + network;
+                }
             }
         }
 

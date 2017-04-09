@@ -1,5 +1,4 @@
-﻿using System;
-using Codecov.Coverage;
+﻿using Codecov.Coverage;
 using Codecov.Services.Helpers;
 
 namespace Codecov.Program
@@ -21,6 +20,7 @@ namespace Codecov.Program
             DisplayFiglet();
             var serviceFactory = new ServiceFactory(Options);
             var service = serviceFactory.CreateService;
+            service.SetQueryParams();
             var report = Report.Reporter(Options.File, Options.Env, service.SourceCodeFiles);
             var uploadFactory = new UploadFactory(Options, service.Query);
             var upload = uploadFactory.CreateUpload;

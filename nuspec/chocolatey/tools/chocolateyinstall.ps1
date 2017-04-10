@@ -1,5 +1,5 @@
 ﻿$packageName = 'codecov'
-$url = 'https://github.com/codecov/codecov-exe/releases/download/0.3.0-Beta/Codecov.zip'
+$url = 'https://github.com/codecov/codecov-exe/releases/download/0.4.0-Beta/Codecov.zip'
 $toolsDir = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 $splitUrl = $url.Split('/');
 $zipFileName = $splitUrl[$splitUrl.Length - 1]

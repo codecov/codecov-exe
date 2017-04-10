@@ -1,8 +1,8 @@
-<?xml version="1.0"?>
-<package>
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>Codecov</id>
-    <version>0.3.0-beta</version>
+    <version>0.4.0-beta</version>
     <title>Codecov</title>
     <authors>Larz White</authors>
     <owners>Larz White</owners>
@@ -12,12 +12,11 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>Codecov global executable uploader.</summary>
     <description>Codecov global executable uploader for PowerShell and Windows Command Line.</description>
-    <releaseNotes>Initial Beta Release.</releaseNotes>
     <copyright>Copyright (c) 2017 Larz White</copyright>
     <releaseNotes>Initial Beta Release.</releaseNotes>
     <tags>coverage codecov</tags>
   </metadata>
   <files>
-    <file src="..\Source\Codecov\bin\win7-x64\**" target="tools" />
+    <file src="..\..\Source\Codecov\bin\Release\netcoreapp1.1\win7-x64\publish\**" target="tools" />
   </files>
 </package>

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>Codecov</id>
-    <version>0.4.0-beta</version>
+    <version>1.0.0</version>
     <title>Codecov</title>
     <authors>Larz White</authors>
     <owners>Larz White</owners>
@@ -13,7 +13,7 @@
     <summary>Codecov global executable uploader.</summary>
     <description>Codecov global executable uploader for PowerShell and Windows Command Line.</description>
     <copyright>Copyright (c) 2017 Larz White</copyright>
-    <releaseNotes>Initial Beta Release.</releaseNotes>
+    <releaseNotes>See GitHub Release Notes.</releaseNotes>
     <tags>coverage codecov</tags>
   </metadata>
   <files>

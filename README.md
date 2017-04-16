@@ -3,20 +3,20 @@
 | [https://codecov.io/](https://codecov.io/) | [@codecov](https://twitter.com/codecov) | [hello@codecov.io](mailto:hello@codecov.io) |
 | ------------------------ | ------------- | --------------------- |
 
-**This repository is currently under active development working towards version 0.1.0. All types of contributions are welcome! Feel free to open an issue or ask a question.**
+## Introduction
 
-This uploader supports Windows Command Line and PowerShell on Windows 7 (x64) and above. If you need support for OS X or Linux use the [bash global uploader](https://github.com/codecov/codecov-bash).
+[![AppVeyor branch](https://img.shields.io/appveyor/ci/larzw/codecov-exe/master.svg)](https://ci.appveyor.com/project/larzw/codecov-exe/branch/master)
+[![NuGet](https://img.shields.io/nuget/v/Codecov.svg)](https://www.nuget.org/packages/Codecov/)
+[![Chocolatey](https://img.shields.io/chocolatey/v/codecov.svg)](https://chocolatey.org/packages/codecov)
+[![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000)](https://gitter.im/codecov/support)
 
-## Current features
+1. This uploader supports Windows Command Line and PowerShell on Windows 7 (x64) and above. If you need support for OS X or Linux use the [bash global uploader](https://github.com/codecov/codecov-bash). However, since this is a .NET Core app, builds for OS X and Linux will eventually come.
 
-- Upload a coverage report using the following services: AppVeyor, TeamCity, Git.
-- Many Codecov CLI options are supported. Run `.\codecov.exe --help` or see [Options.cs](https://github.com/codecov/codecov-exe/blob/master/Source/Codecov/Program/Options.cs) for more details.
-- You can obtain the uploader via
-	- NuGet [![NuGet](https://img.shields.io/nuget/v/Codecov.svg)](https://www.nuget.org/packages/Codecov/)
-	- Chocolatey [![Chocolatey](https://img.shields.io/chocolatey/v/codecov.svg)](https://chocolatey.org/packages/codecov)
-	- As the asset *Codecov.zip* under the release.
+2. The following Services are supported: AppVeyor, TeamCity (see section on TeamCity), and Git.
 
-For the last option, the following PowerShell (version 5) commands might be helpful
+3. Many Codecov CLI options are supported. Run `.\codecov.exe --help` or see [Options.cs](https://github.com/codecov/codecov-exe/blob/master/Source/Codecov/Program/Options.cs) for more details.
+
+4. You can download the exe from NuGet or Chocolatey. As an alternative to NuGet or Chocolatey you can download the exe as the asset *Codecov.zip* under the release. The following PowerShell (version 5) commands might be helpful
 
 ```PowerShell
 (New-Object System.Net.WebClient).DownloadFile("<url>", (Join-Path $pwd "Codecov.zip")) # Download Codecov.zip from github release.
@@ -24,14 +24,15 @@ Expand-Archive .\Codecov.zip -DestinationPath . # UnZip the file.
 .\Codecov\codecov.exe # Run codecov.exe with whatever commands you need.
 ```
 
-## ToDoList
+## Quick Start
 
-- High Priority
-    - Implement (if any) must have CLI options.
-    - Bug fixes and code cleanup in order to release version 0.1.0.
-- Lower Priority
-    - Unit Tests, build scripts, and automation.
-    - Support Mercurial and other CI windows services.
+In PowerShell run the following commands.
+```PowerShell 
+choco install codecov
+
+# Note that, the token is not needed for AppVeyor.
+.\codecov.exe -f <path to coverage report> -t <Codecov upload token>
+```
 
 ## TeamCity
 
@@ -55,3 +56,19 @@ env.TEAMCITY_BUILD_ID => --build
 env.TEAMCITY_BUILD_COMMIT => --sha
 env.TEAMCITY_BUILD_REPOSITORY => --slug
 ```
+
+## Questions and Contributions
+
+All types of contributions are welcome! Feel free to open an [issue](https://github.com/codecov/codecov-exe/issues) or **@larzw** me via [Gitter](https://gitter.im/codecov/support)
+
+## Maintainers
+
+To create a release (to be automated)
+1. Update chocolatey nuspec version.
+2. Update the version url in `chocolateyinstall.ps1`.
+3. Update nuget nuspec version.
+4. Update Codecov.csproj version.
+5. In PowerShell run `.\build.ps1`.
+6. Zip contents of `.\codecov-exe\Source\Codecov\bin\Release\netcoreapp1.1\win7-x64\publish` into a folder called `Codecov`.
+7. Push changes to Github, tag the release, and add #6 as an asset.
+8. Upload the artifacts to Nuget.org and/or chocolatey.org.

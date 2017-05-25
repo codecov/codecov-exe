@@ -1,24 +1,24 @@
-﻿using System;
-
-namespace Codecov.Program
+﻿namespace Codecov.Program
 {
-    internal static class Program
+    /// <summary>
+    /// Main entry point for program.
+    /// </summary>
+    public static class Program
     {
-        private static int Main(string[] args)
+        /// <summary>
+        /// Main entry point for program
+        /// </summary>
+        /// <param name="args">Command line arguments.</param>
+        /// <returns>0 if successfull and 1 otherwise</returns>
+        public static int Main(string[] args)
         {
-            var kill = 0;
             try
             {
-                var run = new Run(args);
-                kill = run.SuccessIsRequired;
-                run.Runner();
-                return 0;
+                return Run.Runner(args);
             }
-            catch (Exception e)
+            catch
             {
-                Log.Verbose(e.Message);
-                Log.Verbose(e.StackTrace);
-                return kill;
+                return 0;
             }
         }
     }

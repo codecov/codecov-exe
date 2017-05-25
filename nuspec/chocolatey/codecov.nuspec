@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>codecov</id>
-    <version>0.4.0-beta</version>
+    <version>1.0.0</version>
     <owners>Larz White</owners>
     <title>Codecov</title>
     <authors>Larz White</authors>
@@ -18,6 +18,6 @@
     <tags>coverage codecov</tags>
     <summary>Codecov global executable uploader.</summary>
     <description>[Codecov](https://codecov.io) global executable uploader for PowerShell and Windows Command Line (cmd). Supports Windows 7 (x64) and above.</description>
-    <releaseNotes>Initial Beta Release.</releaseNotes>
+    <releaseNotes>See GitHub Release Notes.</releaseNotes>
   </metadata>
 </package>

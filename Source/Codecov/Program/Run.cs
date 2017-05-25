@@ -1,43 +1,54 @@
-﻿using Codecov.Coverage;
-using Codecov.Services.Helpers;
+﻿using System;
+using System.Collections.Generic;
+using Codecov.Logger;
+using Codecov.Utilities;
+using CommandLine;
 
 namespace Codecov.Program
 {
-    internal class Run
+    internal static class Run
     {
-        public Run(string[] args)
+        private static CommandLineOptions _commandLineOptions;
+        private static int _kill;
+
+        internal static int Runner(IEnumerable<string> args)
         {
-            Options = Cli.GetOptions(args);
+            try
+            {
+                Init(args);
+                Uploader();
+                return _kill;
+            }
+            catch (Exception e)
+            {
+                Log.Fatal($"{e.Message}\n{e.StackTrace}");
+                return _kill;
+            }
         }
 
-        public int SuccessIsRequired => Options.Required ? 1 : 0;
-
-        private Options Options { get; }
-
-        public void Runner()
+        private static void ConfigureHowProgramExitsOnFail()
         {
-            Log.IsVerboseMode = Options.Verbose;
-            DisplayFiglet();
-            var serviceFactory = new ServiceFactory(Options);
-            var service = serviceFactory.CreateService;
-            service.SetQueryParams();
-            var report = Report.Reporter(Options.File, Options.Env, service.SourceCodeFiles);
-            var uploadFactory = new UploadFactory(Options, service.Query);
-            var upload = uploadFactory.CreateUpload;
-            upload.Uploader(report);
+            _kill = _commandLineOptions.Required ? 1 : 0;
         }
 
-        private static void DisplayFiglet()
+        private static void Init(IEnumerable<string> args)
         {
-            Log.WriteLine($@"
-              _____          _
-             / ____|        | |
-            | |     ___   __| | ___  ___ _____   __
-            | |    / _ \ / _  |/ _ \/ __/ _ \ \ / /
-            | |___| (_) | (_| |  __/ (_| (_) \ V /
-             \_____\___/ \____|\___|\___\___/ \_/
-                                         {Utils.Version}
-            ");
+            ParseAndSetCommandLineArgs(args);
+            ConfigureHowProgramExitsOnFail();
+            Log.Create(_commandLineOptions.Verbose, _commandLineOptions.NoColor);
+            About.DisplayFiglet();
+        }
+
+        private static void ParseAndSetCommandLineArgs(IEnumerable<string> args)
+        {
+            var result = (Parsed<CommandLineOptions>)Parser.Default.ParseArguments<CommandLineOptions>(args);
+            _commandLineOptions = result.Value;
+        }
+
+        private static void Uploader()
+        {
+            var upload = new UploadFacade(_commandLineOptions);
+            upload.Uploader();
         }
     }
 }

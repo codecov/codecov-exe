@@ -14,7 +14,7 @@
 
 2. The following Services are supported: AppVeyor, TeamCity (see section on TeamCity), and Git.
 
-3. Many Codecov CLI options are supported. Run `.\codecov.exe --help` or see [Options.cs](https://github.com/codecov/codecov-exe/blob/master/Source/Codecov/Program/Options.cs) for more details.
+3. Many Codecov CLI options are supported. Run `.\codecov.exe --help` or see [CommandLineOptions.cs](https://github.com/codecov/codecov-exe/blob/master/Source/Codecov/Program/CommandLineOptions.cs) for more details.
 
 4. You can download the exe from NuGet or Chocolatey. As an alternative to NuGet or Chocolatey you can download the exe as the asset *Codecov.zip* under the release. The following PowerShell (version 5) commands might be helpful
 

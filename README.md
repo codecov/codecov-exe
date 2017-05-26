@@ -12,7 +12,7 @@
 
 1. This uploader supports Windows Command Line and PowerShell on Windows 7 (x64) and above. If you need support for OS X or Linux use the [bash global uploader](https://github.com/codecov/codecov-bash). However, since this is a .NET Core app, builds for OS X and Linux will eventually come.
 
-2. The following Services are supported: AppVeyor, TeamCity (see section on TeamCity), and Git.
+2. The following Services are supported: AppVeyor, TeamCity ([see section on TeamCity](#teamcity)), and Git.
 
 3. Many Codecov CLI options are supported. Run `.\codecov.exe --help` or see [CommandLineOptions.cs](https://github.com/codecov/codecov-exe/blob/master/Source/Codecov/Program/CommandLineOptions.cs) for more details.
 
@@ -26,13 +26,26 @@ Expand-Archive .\Codecov.zip -DestinationPath . # UnZip the file.
 
 ## Quick Start
 
-In PowerShell run the following commands.
-```PowerShell 
-choco install codecov
+For a basic use case, in PowerShell run the following commands,
 
-# Note that, the token is not needed for AppVeyor.
-.\codecov.exe -f <path to coverage report> -t <Codecov upload token>
+```PowerShell 
+> choco install codecov
+> .\codecov.exe -f <path to coverage report> -t <Codecov upload token>
 ```
+
+For an AppVeyor build, the *appveyor.yml* file would look something like
+
+```yml
+before_build:
+- choco install codecov
+test_script:
+# Note that, a Codecov upload token is not required.
+- codecov -f <path to coverage report>
+```
+
+## Cake Addin
+
+If you use [Cake](http://cakebuild.net/) (C# Make) for your builds, you may be intrested in the [Cake.Codecov](https://github.com/cake-contrib/Cake.Codecov) addin.
 
 ## TeamCity
 

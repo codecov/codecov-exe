@@ -17,7 +17,7 @@
     <bugTrackerUrl>https://github.com/codecov/codecov-exe/issues</bugTrackerUrl>
     <tags>coverage codecov</tags>
     <summary>Codecov global executable uploader.</summary>
-    <description>[Codecov](https://codecov.io) global executable uploader for PowerShell and Windows Command Line (cmd). Supports Windows 7 (x64) and above.</description>
+    <description>A global executable uploader for PowerShell and Windows Command Line (cmd), which allows users to upload code coverage reports to [Codecov](https://codecov.io). This uploader supports Windows 7 (x64) and above.</description>
     <releaseNotes>See GitHub Release Notes.</releaseNotes>
   </metadata>
 </package>

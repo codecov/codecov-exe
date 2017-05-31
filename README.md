@@ -9,6 +9,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Codecov.svg)](https://www.nuget.org/packages/Codecov/)
 [![Chocolatey](https://img.shields.io/chocolatey/v/codecov.svg)](https://chocolatey.org/packages/codecov)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000)](https://gitter.im/codecov/support)
+[![codecov](https://codecov.io/gh/codecov/codecov-exe/branch/master/graph/badge.svg)](https://codecov.io/gh/codecov/codecov-exe)
 
 1. This uploader supports Windows Command Line and PowerShell on Windows 7 (x64) and above. If you need support for OS X or Linux use the [bash global uploader](https://github.com/codecov/codecov-bash). However, since this is a .NET Core app, builds for OS X and Linux will eventually come.
 

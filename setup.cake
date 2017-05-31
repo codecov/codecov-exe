@@ -1,3 +1,6 @@
+#tool nuget:?package=OpenCover
+#tool nuget:?package=Codecov
+#addin nuget:?package=Cake.Codecov
 #addin nuget:?package=Cake.Figlet
 
 var target = Argument("target", "Default");
@@ -10,6 +13,7 @@ Setup(context =>
 Task("Clean").Does(() =>
 {
 	DeleteFiles("./nuspec/**/*.nupkg");
+	DeleteFile("./coverage.xml");
 	CleanDirectories(new[]{"./Source/Codecov/bin","./Source/Codecov.Tests/bin"});
 });
 
@@ -31,7 +35,19 @@ Task("Build-Release").IsDependentOn("Restore").Does(() =>
 
 Task("Tests").IsDependentOn("Build").Does(() =>
 {
-	DotNetCoreTest("./Source/Codecov.Tests/Codecov.Tests.csproj");
+	OpenCover(tool => tool.DotNetCoreTest("./Source/Codecov.Tests/Codecov.Tests.csproj"), new FilePath("coverage.xml"), new OpenCoverSettings { OldStyle = true }.WithFilter("+[codecov]*"));
+});
+
+Task("Push-Coverage").IsDependentOn("Tests").Does(() =>
+{
+	if(AppVeyor.IsRunningOnAppVeyor)
+	{
+		Codecov("coverage.xml");
+	}
+	else
+	{
+		Information("Skipping pushing coverage reports.");
+	}
 });
 
 Task("NuGet-Pack").IsDependentOn("Build-Release").Does(() =>
@@ -44,6 +60,6 @@ Task("Chocolatey-Pack").IsDependentOn("Build-Release").Does(() =>
 	ChocolateyPack("./nuspec/chocolatey/codecov.nuspec", new ChocolateyPackSettings{OutputDirectory = "./nuspec/chocolatey"});
 });
 
-Task("Default").IsDependentOn("Tests").IsDependentOn("NuGet-Pack").IsDependentOn("Chocolatey-Pack");
+Task("Default").IsDependentOn("Push-Coverage").IsDependentOn("NuGet-Pack").IsDependentOn("Chocolatey-Pack");
 
 RunTarget(target);

@@ -14,9 +14,8 @@ Task("Clean").Does(() =>
 {
 	DeleteFiles("./nuspec/**/*.nupkg");
 	
-	if(FileExists("./coverage.xml")
+	if(FileExists("./coverage.xml"))
 	{
-	//
 		DeleteFile("./coverage.xml");
 	}
 	

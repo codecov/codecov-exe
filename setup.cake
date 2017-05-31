@@ -13,7 +13,13 @@ Setup(context =>
 Task("Clean").Does(() =>
 {
 	DeleteFiles("./nuspec/**/*.nupkg");
-	DeleteFile("./coverage.xml");
+	
+	if(FileExists("./coverage.xml")
+	{
+	//
+		DeleteFile("./coverage.xml");
+	}
+	
 	CleanDirectories(new[]{"./Source/Codecov/bin","./Source/Codecov.Tests/bin"});
 });
 

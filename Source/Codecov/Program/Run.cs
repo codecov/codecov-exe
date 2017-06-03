@@ -17,7 +17,7 @@ namespace Codecov.Program
             {
                 Init(args);
                 Uploader();
-                return _kill;
+                return 0;
             }
             catch (Exception e)
             {

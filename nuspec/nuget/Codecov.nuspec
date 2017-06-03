@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>Codecov</id>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <title>Codecov</title>
     <authors>Larz White</authors>
     <owners>Larz White</owners>

@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using System;
+using Serilog;
 
 namespace Codecov.Logger
 {
@@ -13,6 +14,8 @@ namespace Codecov.Logger
         public static void Information(string message) => _logger.Information(message);
 
         public static void Verboase(string message) => _logger.Verbose(message);
+
+        public static void VerboaseException(Exception ex) => Verboase($"{ex.Message}\n{ex.StackTrace}");
 
         public static void Warning(string message) => _logger.Warning(message);
 

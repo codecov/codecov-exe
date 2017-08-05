@@ -25,13 +25,13 @@ namespace Codecov.Program
             CommandLineCommandLineOptions = commandLineOptions;
         }
 
-        private static ITerminal Terminal => new Terminal.Terminal();
+        private static IDictionary<TerminalName, ITerminal> Terminals => TerminalFactory.Create();
 
-        private IContinuousIntegrationServer ContinuousIntegrationServer => ContinuousIntegrationServerFactory.Create();
+        private static IContinuousIntegrationServer ContinuousIntegrationServer => ContinuousIntegrationServerFactory.Create();
 
         private ICoverage Coverage => new Coverage.Tool.Coverage(CommandLineCommandLineOptions);
 
-        private IUpload Upload => new Upload.Upload(Url, Report);
+        private IUpload Upload => new Uploads(Url, Report, Terminals);
 
         private IUrl Url => new Url.Url(new Host(CommandLineCommandLineOptions), new Route(), new Query(CommandLineCommandLineOptions, Repositories, ContinuousIntegrationServer, Yaml));
 
@@ -47,7 +47,7 @@ namespace Codecov.Program
 
         private ISourceCode SourceCode => new SourceCode(VersionControlSystem);
 
-        private IVersionControlSystem VersionControlSystem => VersionControlSystemFactory.Create(CommandLineCommandLineOptions, Terminal);
+        private IVersionControlSystem VersionControlSystem => VersionControlSystemFactory.Create(CommandLineCommandLineOptions, Terminals[TerminalName.Generic]);
 
         private string DisplayUrl
         {

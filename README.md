@@ -29,7 +29,7 @@ Expand-Archive .\Codecov.zip -DestinationPath . # UnZip the file.
 
 For a basic use case, in PowerShell run the following commands,
 
-```PowerShell 
+```PowerShell
 > choco install codecov
 > .\codecov.exe -f <path to coverage report> -t <Codecov upload token>
 ```
@@ -78,11 +78,9 @@ All types of contributions are welcome! Feel free to open an [issue](https://git
 ## Maintainers
 
 To create a release (to be automated)
-1. Update chocolatey nuspec version.
-2. Update the version url in `chocolateyinstall.ps1`.
-3. Update nuget nuspec version.
-4. Update Codecov.csproj version.
-5. In PowerShell run `.\build.ps1`.
-6. Zip contents of `.\codecov-exe\Source\Codecov\bin\Release\netcoreapp1.1\win7-x64\publish` into a folder called `Codecov`.
-7. Push changes to Github, tag the release, and add #6 as an asset.
-8. Upload the artifacts to Nuget.org and/or chocolatey.org.
+* Update chocolatey nuspec version.
+* Update nuget nuspec version.
+* Update Codecov.csproj version.
+* In PowerShell run `.\build.ps1`.
+* Push changes to Github, tag the release, and add ./nuspec/chocolatey/tools/Codecov.zip as an asset.
+* Upload the artifacts to Nuget.org and/or chocolatey.org.

@@ -259,3 +259,6 @@ paket-files/
 tools/**
 !tools/packages.config
 coverage.xml
+
+# Choco
+nuspec/chocolatey/tools/Codecov.zip

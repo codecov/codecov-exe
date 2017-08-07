@@ -17,6 +17,6 @@
     <tags>coverage codecov</tags>
   </metadata>
   <files>
-    <file src="..\..\Source\Codecov\bin\Release\netcoreapp1.1\win7-x64\publish\**" target="tools" />
+    <file src="..\..\Source\Codecov\bin\Release\netcoreapp1.1\win7-x64\publish\Codecov\**" target="tools" />
   </files>
 </package>

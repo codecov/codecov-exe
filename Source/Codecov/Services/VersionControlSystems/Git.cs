@@ -103,6 +103,6 @@ namespace Codecov.Services.VersionControlSystems
             return string.IsNullOrWhiteSpace(sourceCode) ? Enumerable.Empty<string>() : sourceCode.Trim('\n').Split('\n').Select(FileSystem.NormalizedPath);
         }
 
-        private string RunGit(string commandArguments) => Terminal.Run("git", $"-C {RepoRoot} {commandArguments}");
+        private string RunGit(string commandArguments) => Terminal.Run("git", $"-C \"{RepoRoot}\" {commandArguments}");
     }
 }

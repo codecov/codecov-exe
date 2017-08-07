@@ -13,12 +13,17 @@ Setup(context =>
 Task("Clean").Does(() =>
 {
 	DeleteFiles("./nuspec/**/*.nupkg");
-	
+
 	if(FileExists("./coverage.xml"))
 	{
 		DeleteFile("./coverage.xml");
 	}
-	
+
+    if(FileExists("./nuspec/chocolatey/tools/Codecov.zip"))
+    {
+        DeleteFile("./nuspec/chocolatey/tools/Codecov.zip");
+    }
+
 	CleanDirectories(new[]{"./Source/Codecov/bin","./Source/Codecov.Tests/bin"});
 });
 
@@ -35,7 +40,7 @@ Task("Build").IsDependentOn("Restore").Does(() =>
 Task("Build-Release").IsDependentOn("Restore").Does(() =>
 {
 	DotNetCoreBuild("./Source/Codecov", new DotNetCoreBuildSettings{Runtime = "win7-x64"});
-	DotNetCorePublish("./Source/Codecov",new DotNetCorePublishSettings{Runtime = "win7-x64",Configuration = "Release"});
+	DotNetCorePublish("./Source/Codecov",new DotNetCorePublishSettings{Runtime = "win7-x64", Configuration = "Release", OutputDirectory = "./Source/Codecov/bin/Release/netcoreapp1.1/win7-x64/publish/Codecov"});
 });
 
 Task("Tests").IsDependentOn("Build").Does(() =>
@@ -60,7 +65,13 @@ Task("NuGet-Pack").IsDependentOn("Build-Release").Does(() =>
 	NuGetPack("./nuspec/nuget/Codecov.nuspec", new NuGetPackSettings{OutputDirectory = "./nuspec/nuget"});
 });
 
-Task("Chocolatey-Pack").IsDependentOn("Build-Release").Does(() =>
+Task("Zip-Source").IsDependentOn("Build-Release").Does(() =>
+{
+
+    Zip("./Source/Codecov/bin/Release/netcoreapp1.1/win7-x64/publish", "./nuspec/chocolatey/tools/Codecov.zip");
+});
+
+Task("Chocolatey-Pack").IsDependentOn("Zip-Source").Does(() =>
 {
 	ChocolateyPack("./nuspec/chocolatey/codecov.nuspec", new ChocolateyPackSettings{OutputDirectory = "./nuspec/chocolatey"});
 });

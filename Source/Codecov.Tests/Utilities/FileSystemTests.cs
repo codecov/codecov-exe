@@ -85,5 +85,18 @@ namespace Codecov.Tests.Utilities
             // Then
             normalizedPath.Should().Be(@"c:\fake\github");
         }
+
+        [Fact]
+        public void NormalizedPath_Should_Work_If_Path_Has_Spaces_In_It()
+        {
+            // Given
+            const string path = @"C:\fake path\github";
+
+            // When
+            var normalizedPath = FileSystem.NormalizedPath(path);
+
+            // Then
+            normalizedPath.Should().Be(@"C:\fake path\github");
+        }
     }
 }

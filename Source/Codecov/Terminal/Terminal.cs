@@ -1,10 +1,19 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using Codecov.Logger;
 
 namespace Codecov.Terminal
 {
     internal class Terminal : ITerminal
     {
-        public string Run(string command, string commandArguments)
+        public virtual bool Exits => true;
+
+        public string RunScript(string script)
+        {
+            return Run(script, string.Empty);
+        }
+
+        public virtual string Run(string command, string commandArguments)
         {
             try
             {
@@ -22,14 +31,24 @@ namespace Codecov.Terminal
                         return string.Empty;
                     }
 
+                    using (var reader = process.StandardError)
+                    {
+                        var error = reader.ReadToEnd().Trim();
+                        if (!string.IsNullOrWhiteSpace(error))
+                        {
+                            throw new Exception(error);
+                        }
+                    }
+
                     using (var reader = process.StandardOutput)
                     {
                         return reader.ReadToEnd().Trim();
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Log.VerboaseException(ex);
                 return string.Empty;
             }
         }

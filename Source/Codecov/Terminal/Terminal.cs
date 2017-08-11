@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text;
+using System.Threading;
 using Codecov.Logger;
 
 namespace Codecov.Terminal
@@ -17,32 +19,65 @@ namespace Codecov.Terminal
         {
             try
             {
-                var startInfo = new ProcessStartInfo(command.Trim(), commandArguments.Trim())
+                using (var process = new Process())
                 {
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true
-                };
-
-                using (var process = Process.Start(startInfo))
-                {
-                    if (process == null)
+                    process.StartInfo = new ProcessStartInfo(command.Trim(), commandArguments.Trim())
                     {
-                        return string.Empty;
-                    }
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true
+                    };
 
-                    using (var reader = process.StandardError)
+                    var output = new StringBuilder();
+                    var error = new StringBuilder();
+
+                    using (var outputWaitHandle = new AutoResetEvent(false))
+                    using (var errorWaitHandle = new AutoResetEvent(false))
                     {
-                        var error = reader.ReadToEnd().Trim();
-                        if (!string.IsNullOrWhiteSpace(error))
+                        process.OutputDataReceived += (sender, e) =>
                         {
-                            throw new Exception(error);
-                        }
-                    }
+                            if (e.Data == null)
+                            {
+                                // ReSharper disable AccessToDisposedClosure
+                                outputWaitHandle.Set(); // ReSharper restore AccessToDisposedClosure
+                            }
+                            else
+                            {
+                                output.AppendLine(e.Data);
+                            }
+                        };
 
-                    using (var reader = process.StandardOutput)
-                    {
-                        return reader.ReadToEnd().Trim();
+                        process.ErrorDataReceived += (sender, e) =>
+                        {
+                            if (e.Data == null)
+                            {
+                                // ReSharper disable AccessToDisposedClosure
+                                errorWaitHandle.Set(); // ReSharper restore AccessToDisposedClosure
+                            }
+                            else
+                            {
+                                error.AppendLine(e.Data);
+                            }
+                        };
+
+                        process.Start();
+
+                        process.BeginOutputReadLine();
+                        process.BeginErrorReadLine();
+
+                        const int timeout = 300000; // 5 mins
+                        if (!process.WaitForExit(timeout) || !outputWaitHandle.WaitOne(timeout) || !errorWaitHandle.WaitOne(timeout))
+                        {
+                            throw new Exception("Terminal process timed out.");
+                        }
+
+                        var errorAsString = error.ToString().Trim();
+                        if (!string.IsNullOrWhiteSpace(errorAsString))
+                        {
+                            throw new Exception(errorAsString);
+                        }
+
+                        return output.ToString().Trim();
                     }
                 }
             }

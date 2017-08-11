@@ -7,4 +7,4 @@ in verifying that this package's contents are trustworthy.
 1. choco install checksum
 2. cd into the tools folder
 3. checksum.exe -f "Codecov.zip"
-4. checksum = 56591F1ECE4F71EA97490B2CB121B96C
+4. checksum = 180F8B9AC13F2ADE1CCA9882F536AB6C

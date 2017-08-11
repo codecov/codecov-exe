@@ -82,5 +82,6 @@ To create a release (to be automated)
 * Update nuget nuspec version.
 * Update Codecov.csproj version.
 * In PowerShell run `.\build.ps1`.
+* Update the checksum in VERIFICATION.txt.
 * Push changes to Github, tag the release, and add ./nuspec/chocolatey/tools/Codecov.zip as an asset.
 * Upload the artifacts to Nuget.org and/or chocolatey.org.

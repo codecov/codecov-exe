@@ -9,7 +9,7 @@ using CommandLine;
 namespace Codecov.Program
 {
     /// <summary>
-    /// The command line api. <see href="https://docs.codecov.io/v4.3.6/reference#section-upload-query-as-seen-as-query-below"/>
+    /// The command line api. <see href="https://docs.codecov.io/v4.3.6/reference#section-upload-query-as-seen-as-query-below"/>.
     /// </summary>
     public class CommandLineOptions : IVersionControlSystemOptions, ICoverageOptions, IEnviornmentVariablesOptions, IHostOptions, IQueryOptions, IReportOptions
     {

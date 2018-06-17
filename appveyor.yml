@@ -13,6 +13,6 @@ skip_commits:
     - .gitignore
 
 build_script:
-- ps: .\build.ps1
+- ps: .\build.ps1 -Target AppVeyor
 
 cache: tools -> setup.cake,appveyor.yml,tools\packages.config

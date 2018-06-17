@@ -89,6 +89,24 @@ namespace Codecov.Tests.Url
         }
 
         [Fact]
+        public void Should_Not_Escape_Pluss_Sign_In_Job()
+        {
+            // Given
+            var queryOptions = Substitute.For<IQueryOptions>();
+            var repository = Substitute.For<IEnumerable<IRepository>>();
+            var build = Substitute.For<IBuild>();
+            build.Build.Returns("123");
+            build.BuildUrl.Returns("www.google.com");
+            build.Job.Returns("codecov/codecov-exe/1.0.4-beta.1+5.build.63");
+            var yaml = Substitute.For<IYaml>();
+            var query = new Query(queryOptions, repository, build, yaml);
+
+            // When
+            var getQuery = query.GetQuery.Split('&');
+
+            // Then
+            getQuery.FirstOrDefault(x => x.StartsWith("job=")).Should().Be("job=codecov%2Fcodecov-exe%2F1.0.4-beta.1+5.build.63");
+        }
         public void Should_Set_From_Commandline()
         {
             // Given

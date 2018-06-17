@@ -12,6 +12,9 @@
   <PropertyGroup>
     <CodeAnalysisRuleSet>.\Codecov.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Scripts\**" />
     <EmbeddedResource Remove="Scripts\**" />

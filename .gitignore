@@ -263,3 +263,6 @@ coverage.xml
 
 # Choco
 nuspec/chocolatey/tools/Codecov.zip
+
+# Visual Studio Launch Settings
+launchSettings.json

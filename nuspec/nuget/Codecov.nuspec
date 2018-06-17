@@ -4,15 +4,15 @@
     <id>Codecov</id>
     <version>$version$</version>
     <title>Codecov</title>
-    <authors>Larz White</authors>
-    <owners>Larz White</owners>
+    <authors>Larz White, Kim J. Nordmo</authors>
+    <owners>Larz White, Kim J. Nordmo</owners>
     <licenseUrl>https://github.com/codecov/codecov-exe/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/codecov/codecov-exe</projectUrl>
     <iconUrl>https://cdn.rawgit.com/codecov/media/0953f4e0d5315fb6d526a248bc88e1bc16506a37/logos/pink.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>Codecov global executable uploader.</summary>
     <description>Codecov global executable uploader for PowerShell and Windows Command Line.</description>
-    <copyright>Copyright (c) 2017 Larz White</copyright>
+    <copyright>Copyright (c) 2017-Present Larz White, Kim J. Nordmo</copyright>
     <releaseNotes>All release notes for Codecov can be found on the GitHub site - https://github.com/codecov/codecov-exe/releases/tag/$version$</releaseNotes>
     <tags>coverage codecov</tags>
   </metadata>

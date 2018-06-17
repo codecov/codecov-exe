@@ -107,6 +107,30 @@ namespace Codecov.Tests.Url
             // Then
             getQuery.FirstOrDefault(x => x.StartsWith("job=")).Should().Be("job=codecov%2Fcodecov-exe%2F1.0.4-beta.1+5.build.63");
         }
+
+        [Fact]
+        public void Should_Escape_Hash_Token_In_Branch()
+        {
+            // Given
+            var queryOptions = Substitute.For<IQueryOptions>();
+            var repository = Substitute.For<IRepository>();
+            var repositoryRange = new[] { repository };
+            var build = Substitute.For<IBuild>();
+            build.Build.Returns("123");
+            build.BuildUrl.Returns("www.google.com");
+            build.Job.Returns("0");
+            repository.Branch.Returns("#8-move-docs");
+            var yaml = Substitute.For<IYaml>();
+            var query = new Query(queryOptions, repositoryRange, build, yaml);
+
+            // When
+            var getQuery = query.GetQuery.Split('&');
+
+            // Then
+            getQuery.FirstOrDefault(x => x.StartsWith("branch=")).Should().Be("branch=%238-move-docs");
+        }
+
+        [Fact]
         public void Should_Set_From_Commandline()
         {
             // Given

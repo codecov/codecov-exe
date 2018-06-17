@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text;
 using Codecov.Services;
 using Codecov.Services.ContinuousIntegrationServers;
 using Codecov.Utilities;
@@ -35,6 +36,30 @@ namespace Codecov.Url
 
         private IYaml Yaml { get; }
 
+        private static string EscapeKnownProblematicCharacters(string data)
+        {
+            var knownChars = new Dictionary<char, string>
+            {
+                { '#', "%23" },
+            };
+
+            var result = new StringBuilder();
+
+            foreach (var c in data)
+            {
+                if (knownChars.ContainsKey(c))
+                {
+                    result.Append(knownChars[c]);
+                }
+                else
+                {
+                    result.Append(c);
+                }
+            }
+
+            return result.ToString();
+        }
+
         private void OverrideIfNotEmptyOrNull(string key, string value)
         {
             if (!string.IsNullOrWhiteSpace(value))
@@ -46,12 +71,15 @@ namespace Codecov.Url
         private void SetBranch()
         {
             QueryParameters["branch"] = string.Empty;
+            var charReplacement = new[] { '#' };
 
             foreach (var repository in Repositories)
             {
                 if (!string.IsNullOrWhiteSpace(repository.Branch))
                 {
-                    QueryParameters["branch"] = repository.Branch;
+                    // We also need to take into account that '#' needs to be escaped for parameters
+                    // to work, but not '/'
+                    QueryParameters["branch"] = EscapeKnownProblematicCharacters(repository.Branch);
                     break;
                 }
             }

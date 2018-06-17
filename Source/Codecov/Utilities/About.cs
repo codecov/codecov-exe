@@ -9,9 +9,8 @@ namespace Codecov.Utilities
         {
             get
             {
-                var assemblyVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion.Split('.');
-                var version = $"{assemblyVersion[0]}.{assemblyVersion[1]}.{assemblyVersion[2]}";
-                return $"exe-{version}";
+                var assemblyVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+                return $"exe-{assemblyVersion}";
             }
         }
 

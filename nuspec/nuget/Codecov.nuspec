@@ -2,21 +2,21 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>Codecov</id>
-    <version>1.0.3</version>
+    <version>$version$</version>
     <title>Codecov</title>
     <authors>Larz White</authors>
     <owners>Larz White</owners>
     <licenseUrl>https://github.com/codecov/codecov-exe/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/codecov/codecov-exe</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/codecov/media/master/logos/pink.png</iconUrl>
+    <iconUrl>https://cdn.rawgit.com/codecov/media/0953f4e0d5315fb6d526a248bc88e1bc16506a37/logos/pink.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>Codecov global executable uploader.</summary>
     <description>Codecov global executable uploader for PowerShell and Windows Command Line.</description>
     <copyright>Copyright (c) 2017 Larz White</copyright>
-    <releaseNotes>See GitHub Release Notes.</releaseNotes>
+    <releaseNotes>All release notes for Codecov can be found on the GitHub site - https://github.com/codecov/codecov-exe/releases/tag/$version$</releaseNotes>
     <tags>coverage codecov</tags>
   </metadata>
   <files>
-    <file src="..\..\Source\Codecov\bin\Release\netcoreapp1.1\win7-x64\publish\Codecov\**" target="tools" />
+    <file src="publish\**\*" target="tools" />
   </files>
 </package>

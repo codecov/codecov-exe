@@ -1,10 +1,9 @@
-﻿
-
-VERIFICATION
+﻿VERIFICATION
 Verification is intended to assist the Chocolatey moderators and community
 in verifying that this package's contents are trustworthy.
 
-1. choco install checksum
-2. cd into the tools folder
-3. checksum.exe -f "Codecov.zip"
-4. checksum = 180F8B9AC13F2ADE1CCA9882F536AB6C
+This package is being officially provided by the developers of Codecov exe.
+The zip archive included in the package should match the same files
+provided on our github release page: https://github.com/codecov/codecov-exe/releases
+
+The included license is also available at: <https://github.com/codecov/codecov-exe/blob/e631d74555dcf89c3de9ea83884610e2a2375482/LICENSE>

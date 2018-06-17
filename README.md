@@ -5,7 +5,7 @@
 
 ## Introduction
 
-[![AppVeyor branch](https://img.shields.io/appveyor/ci/larzw/codecov-exe/master.svg)](https://ci.appveyor.com/project/larzw/codecov-exe/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/589rt9yq1p1e43di?svg=true)](https://ci.appveyor.com/project/AdmiringWorm/codecov-exe)
 [![NuGet](https://img.shields.io/nuget/v/Codecov.svg)](https://www.nuget.org/packages/Codecov/)
 [![Chocolatey](https://img.shields.io/chocolatey/v/codecov.svg)](https://chocolatey.org/packages/codecov)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000)](https://gitter.im/codecov/support)
@@ -73,7 +73,7 @@ env.TEAMCITY_BUILD_REPOSITORY => --slug
 
 ## Questions and Contributions
 
-All types of contributions are welcome! Feel free to open an [issue](https://github.com/codecov/codecov-exe/issues) or **@larzw** me via [Gitter](https://gitter.im/codecov/support)
+All types of contributions are welcome! Feel free to open an [issue](https://github.com/codecov/codecov-exe/issues) or contact either **@larzw** or **AdmiringWorm** via [Gitter](https://gitter.im/codecov/support)
 
 ## Maintainers
 

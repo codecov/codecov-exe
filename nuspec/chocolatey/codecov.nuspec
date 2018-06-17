@@ -2,12 +2,12 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>codecov</id>
-    <version>1.0.3</version>
+    <version>$version$</version>
     <owners>Larz White</owners>
     <title>Codecov</title>
     <authors>Larz White</authors>
     <projectUrl>https://codecov.io</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/codecov/media/master/logos/pink.png</iconUrl>
+    <iconUrl>https://cdn.rawgit.com/codecov/media/0953f4e0d5315fb6d526a248bc88e1bc16506a37/logos/pink.png</iconUrl>
     <copyright>Copyright (c) 2017 Larz White</copyright>
     <licenseUrl>https://github.com/codecov/codecov-exe/blob/master/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -18,6 +18,11 @@
     <tags>coverage codecov</tags>
     <summary>Codecov global executable uploader.</summary>
     <description>A global executable uploader for PowerShell and Windows Command Line (cmd), which allows users to upload code coverage reports to [Codecov](https://codecov.io). This uploader supports Windows 7 (x64) and above.</description>
-    <releaseNotes>See GitHub Release Notes.</releaseNotes>
+    <releaseNotes>All release notes for Codecov can be found on the GitHub site - https://github.com/codecov/codecov-exe/releases/tag/$version$</releaseNotes>
   </metadata>
+  <files>
+    <file src="..\..\BuildArtifacts\Codecov.zip" target="tools" />
+    <file src="..\..\LICENSE.txt" target="tools" />
+    <file src="tools\**" target="tools" />
+  </files>
 </package>

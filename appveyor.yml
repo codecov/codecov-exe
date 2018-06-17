@@ -4,5 +4,15 @@ build: off
 test: off
 deploy: off
 
+skip_commits:
+  files:
+    - '*.md'
+    - LICENSE
+    - .editorconfig
+    - .gitattributes
+    - .gitignore
+
 build_script:
 - ps: .\build.ps1
+
+cache: tools -> setup.cake,appveyor.yml,tools\packages.config

@@ -5,16 +5,12 @@
     <RuntimeIdentifiers>win7-x64</RuntimeIdentifiers>
     <AssemblyName>codecov</AssemblyName>
     <Product>codecov-exe</Product>
-    <Version>1.0.3.0</Version>
-    <FileVersion>1.0.0.0</FileVersion>
     <Copyright>Copyright (c) 2017 Larz White</Copyright>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <PropertyGroup>
     <CodeAnalysisRuleSet>.\Codecov.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp1.1\.xml</DocumentationFile>
-	<DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Scripts\**" />

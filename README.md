@@ -77,12 +77,11 @@ All types of contributions are welcome! Feel free to open an [issue](https://git
 
 ## Maintainers
 
-To create a release (to be automated)
-* Update chocolatey nuspec version.
-* Update nuget nuspec version.
-* Update Codecov.csproj version.
-* In PowerShell run `.\build.ps1`.
-* Update the checksum in VERIFICATION.txt.
-* Run `.\build.ps1` AGAIN.
-* Push changes to Github, tag the release, and add ./nuspec/chocolatey/tools/Codecov.zip as an asset.
-* Upload the artifacts to Nuget.org and/or chocolatey.org.
+To create a relase, please do the following:
+* Set the following environment variables:
+  * `GITHUB_USERNAME` to your username on github
+  * `GITHUB_PASSWORD` to either your password, or a Personal access token
+* In PowerShell run `.\build.ps1 -Target releasenotes`
+* Navigate to the release page and view the drafted release.
+* Make necessary changes, the push the latest master branch to github (do not create any tags)
+* Publish the draft release on GitHub, targeting the master branch.

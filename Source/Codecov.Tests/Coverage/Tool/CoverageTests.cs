@@ -25,7 +25,7 @@ namespace Codecov.Tests.Coverage.Tool
             };
 
             // Then
-            coverageReport.ShouldThrow<Exception>().WithMessage("No Report detected.");
+            coverageReport.Should().Throw<Exception>().WithMessage("No Report detected.");
         }
 
         [Fact]

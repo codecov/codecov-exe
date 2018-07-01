@@ -28,6 +28,8 @@ ToolSettings.SetToolSettings(context: Context,
 
 // We want to do our own publishing of Codecov-exe
 
+var publishDirectory = BuildParameters.Paths.Directories.PublishedApplications + "/CodeCov/publish";
+
 Task("DotNetCore-Publish")
     .IsDependentOn("DotNetCore-Test")
     .Does(() =>
@@ -42,7 +44,7 @@ Task("DotNetCore-Publish")
     {
         Configuration = BuildParameters.Configuration,
         Runtime = "win7-x64",
-        OutputDirectory = BuildParameters.Paths.Directories.PublishedApplications + "/CodeCov/publish",
+        OutputDirectory = publishDirectory,
         MSBuildSettings = msBuildSettings
     });
 });
@@ -51,10 +53,9 @@ Task("Create-ZipArchive")
     .IsDependentOn("DotNetCore-Publish")
     .Does(() =>
 {
-    var directory = BuildParameters.Paths.Directories.PublishedApplications + "/Codecov/publish";
     var output = BuildParameters.Paths.Directories.Build + "/Codecov.zip";
 
-    Zip(directory, output);
+    Zip(publishDirectory, output);
 });
 
 BuildParameters.Tasks.CreateChocolateyPackagesTask.IsDependentOn("Create-ZipArchive");
@@ -78,6 +79,37 @@ BuildParameters.Tasks.PublishGitHubReleaseTask.Does(() => RequireTool(GitRelease
         }
     }
 }));
+
+// We want to dog food codecov so we can push using the built binaries
+// This means we have to re-implement the whole task
+BuildParameters.Tasks.UploadCodecovReportTask.Task.Actions.Clear();
+BuildParameters.Tasks.UploadCodecovReportTask.Does(() => {
+    var codecovExec = GetFiles(publishDirectory + "/*.exe").First();
+
+    var settings = new CodecovSettings {
+        Files = new[] { BuildParameters.Paths.Files.TestCoverageOutputFilePath.ToString() },
+        Required = true,
+        ToolPath = codecovExec
+    };
+
+    if (BuildParameters.Version != null &&
+        !string.IsNullOrEmpty(BuildParameters.Version.FullSemVersion) &&
+        BuildParameters.IsRunningOnAppVeyor)
+    {
+        // Required to work correctly with appveyor because environment changes isn't detected until cake is done running.
+        var buildVersion = string.Format("{0}.build.{1}",
+            BuildParameters.Version.FullSemVersion,
+            BuildSystem.AppVeyor.Environment.Build.Number);
+        settings.EnvironmentVariables = new Dictionary<string, string> { { "APPVEYOR_BUILD_VERSION", buildVersion }};
+    }
+
+    Codecov(settings);
+
+}).Finally(() => {
+    if (publishingError) {
+        throw new Exception("Uploading to codecov failed");
+    }
+});
 
 BuildParameters.PrintParameters(Context);
 Build.RunDotNetCore();

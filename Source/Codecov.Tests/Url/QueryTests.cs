@@ -89,7 +89,7 @@ namespace Codecov.Tests.Url
         }
 
         [Fact]
-        public void Should_Not_Escape_Pluss_Sign_In_Job()
+        public void Should_Double_Encode_Pluss_Signs()
         {
             // Given
             var queryOptions = Substitute.For<IQueryOptions>();
@@ -105,7 +105,7 @@ namespace Codecov.Tests.Url
             var getQuery = query.GetQuery.Split('&');
 
             // Then
-            getQuery.FirstOrDefault(x => x.StartsWith("job=")).Should().Be("job=codecov%2Fcodecov-exe%2F1.0.4-beta.1+5.build.63");
+            getQuery.FirstOrDefault(x => x.StartsWith("job=")).Should().Be("job=codecov%2Fcodecov-exe%2F1.0.4-beta.1%252B5.build.63");
         }
 
         [Fact]

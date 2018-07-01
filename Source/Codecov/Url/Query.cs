@@ -133,7 +133,7 @@ namespace Codecov.Url
             var escapedJob = Uri.EscapeDataString(Build.Job);
 
             // Due to the + sign being escaped, we need to unescape that character
-            escapedJob = escapedJob.Replace("%2B", "+");
+            escapedJob = escapedJob.Replace("%2B", "%252B");
 
             QueryParameters["job"] = escapedJob;
         }

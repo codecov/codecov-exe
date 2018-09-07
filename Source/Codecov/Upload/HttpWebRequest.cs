@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
+using System.Text;
 using Codecov.Coverage.Report;
 using Codecov.Logger;
 using Codecov.Url;
@@ -19,8 +21,9 @@ namespace Codecov.Upload
             Log.Verboase("Trying to upload using HttpWebRequest.");
 
             var postRequest = (System.Net.HttpWebRequest)WebRequest.Create(Url.GetUrl);
-            postRequest.ContentType = "text/plain";
             postRequest.Method = "POST";
+            postRequest.Headers["X-Reduced-Redundancy"] = "false";
+            postRequest.Headers["X-Content-Type"] = "application/x-gzip";
             using (var postStreamWriter = new StreamWriter(postRequest.GetRequestStreamAsync().Result))
             {
                 postStreamWriter.Write(string.Empty);
@@ -41,13 +44,14 @@ namespace Codecov.Upload
         protected override bool Put(Uri url)
         {
             var putRequest = (System.Net.HttpWebRequest)WebRequest.Create(url);
-            putRequest.ContentType = "text/plain";
+            putRequest.ContentType = "application/x-gzip";
             putRequest.Method = "PUT";
+            putRequest.Headers["Content-Encoding"] = "gzip";
             putRequest.Headers["x-amz-acl"] = "public-read";
-            putRequest.Headers["x-amz-storage-class"] = "REDUCED_REDUNDANCY";
-            using (var putStreamWriter = new StreamWriter(putRequest.GetRequestStreamAsync().Result))
+            using (var putStreamWriter = new GZipStream(putRequest.GetRequestStreamAsync().Result, CompressionLevel.Optimal))
             {
-                putStreamWriter.Write(Report.Reporter);
+                var content = Encoding.UTF8.GetBytes(Report.Reporter);
+                putStreamWriter.Write(content, 0, content.Length);
             }
 
             var putResponse = (HttpWebResponse)putRequest.GetResponseAsync().Result;

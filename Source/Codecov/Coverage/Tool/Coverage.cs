@@ -21,9 +21,26 @@ namespace Codecov.Coverage.Tool
 
         private ICoverageOptions CoverageOptions { get; }
 
+        private static bool VerifyReportFile(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                Logger.Log.Warning("Invalid report path.");
+                return false;
+            }
+
+            if (!File.Exists(path))
+            {
+                Logger.Log.Warning($"The file {path} does not exist.");
+                return false;
+            }
+
+            return true;
+        }
+
         private IEnumerable<ReportFile> LoadReportFile()
         {
-            var report = CoverageOptions.Files.Where(x => !string.IsNullOrWhiteSpace(x) && File.Exists(x)).Select(x => new ReportFile(x, File.ReadAllText(x))).ToArray();
+            var report = CoverageOptions.Files.Where(x => VerifyReportFile(x)).Select(x => new ReportFile(x, File.ReadAllText(x))).ToArray();
             if (!report.Any())
             {
                 throw new Exception("No Report detected.");

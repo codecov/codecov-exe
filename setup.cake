@@ -82,7 +82,7 @@ BuildParameters.Tasks.PublishGitHubReleaseTask.Does(() => RequireTool(GitRelease
 
 // We want to dog food codecov so we can push using the built binaries
 // This means we have to re-implement the whole task
-BuildParameters.Tasks.UploadCodecovReportTask.Task.Actions.Clear();
+((CakeTask)BuildParameters.Tasks.UploadCodecovReportTask.Task).Actions.Clear();
 BuildParameters.Tasks.UploadCodecovReportTask.Does(() => {
     var codecovExec = GetFiles(publishDirectory + "/*.exe").First();
 

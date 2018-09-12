@@ -15,6 +15,7 @@ namespace Codecov.Tests.Coverage.Tool
         {
             // Given
             var options = Substitute.For<ICoverageOptions>();
+            Logger.Log.Create(false, false);
             options.Files.Returns(new[] { fileData });
             var coverage = new Codecov.Coverage.Tool.Coverage(options);
 

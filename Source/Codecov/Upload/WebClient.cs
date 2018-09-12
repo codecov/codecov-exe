@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
+using System.Text;
 using Codecov.Coverage.Report;
 using Codecov.Logger;
 using Codecov.Terminal;
@@ -23,7 +25,8 @@ namespace Codecov.Upload
 
             var script = $@"
                 $client = New-Object System.Net.WebClient;
-                $client.Headers.add('Content-Type','text/plain');
+                $client.Headers.add('X-Content-Type','application/x-gzip');
+                $client.Headers.add('X-Reduced-Redundancy','false');
                 $client.UploadString('{Url.GetUrl}', 'POST', '');
             ";
 
@@ -61,9 +64,9 @@ namespace Codecov.Upload
                 Add-Type -TypeDefinition $source -Language CSharp
 
                 $client = New-Object ExtendedWebClient;
-                $client.Headers.add('Content-Type','text/plain');
+                $client.Headers.add('Content-Type','application/x-gzip');
+                $client.Headers.add('Content-Encoding','gzip');
                 $client.Headers.add('x-amz-acl','public-read');
-                $client.Headers.add('x-amz-storage-class','REDUCED_REDUNDANCY');
                 $client.UploadFile('{url}', 'PUT', '{tempFilePath}');
             ";
 
@@ -74,7 +77,12 @@ namespace Codecov.Upload
         private string WriteReport2TempFile()
         {
             var tempFilePath = Path.GetTempFileName();
-            File.WriteAllText(tempFilePath, Report.Reporter);
+            using (var stream = new GZipStream(new FileStream(tempFilePath, FileMode.Create, FileAccess.Write, FileShare.None), CompressionLevel.Optimal))
+            {
+                var content = Encoding.UTF8.GetBytes(Report.Reporter);
+                stream.Write(content, 0, content.Length);
+            }
+
             return tempFilePath;
         }
     }

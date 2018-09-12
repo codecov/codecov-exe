@@ -73,7 +73,7 @@ env.TEAMCITY_BUILD_REPOSITORY => --slug
 
 ## Questions and Contributions
 
-All types of contributions are welcome! Feel free to open an [issue](https://github.com/codecov/codecov-exe/issues) or contact either **@larzw** or **AdmiringWorm** via [Gitter](https://gitter.im/codecov/support)
+All types of contributions are welcome! Feel free to open an [issue](https://github.com/codecov/codecov-exe/issues) or contact either **[@larzw](https://gitter.im/larzw)** or **[@AdmiringWorm](https://gitter.im/admiringworm)** via [Gitter](https://gitter.im/)
 
 ## Maintainers
 

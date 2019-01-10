@@ -69,6 +69,17 @@ BuildParameters.Tasks.UploadAppVeyorArtifactsTask.Does(() =>
     }
 });
 
+// We'll need to remove the chocolatey package before trying to publish the github releases
+Task("Remove-Unneeded Github Releases")
+    .IsDependentOn("Publish-MyGet-Packages")
+    .IsDependentOn("Publish-Nuget-Packages")
+    .WithCriteria(() => BuildParameters.ShouldPublishGitHub)
+    .Does(() =>
+{
+    DeleteFiles(BuildParameters.Paths.Directories.ChocolateyPackages + "/*");
+});
+
+BuildParameters.Tasks.PublishGitHubReleaseTask.IsDependentOn("Remove-Unneeded Github Releases");
 BuildParameters.Tasks.PublishGitHubReleaseTask.Does(() => RequireTool(GitReleaseManagerTool, () =>
 {
     if (BuildParameters.CanUseGitReleaseManager)

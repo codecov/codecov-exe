@@ -40,7 +40,7 @@ namespace Codecov.Upload
 
             if (terminals[TerminalName.Powershell].Exits)
             {
-                uploaders.Add(new WebClient(url, report, terminals[TerminalName.Powershell]));
+                uploaders.Add(new WebClient(url, report));
             }
 
             return uploaders;

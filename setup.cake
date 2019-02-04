@@ -47,6 +47,15 @@ Task("DotNetCore-Publish")
         OutputDirectory = publishDirectory,
         MSBuildSettings = msBuildSettings
     });
+
+    DotNetCorePack(BuildParameters.SourceDirectoryPath + "/Codecov.Tool", new DotNetCorePackSettings
+    {
+        Configuration = BuildParameters.Configuration,
+        NoBuild = true,
+        NoRestore = true,
+        OutputDirectory = BuildParameters.Paths.Directories.NuGetPackages,
+        MSBuildSettings = msBuildSettings
+    });
 });
 
 Task("Create-ZipArchive")

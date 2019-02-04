@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <AssemblyName>codecov</AssemblyName>
+        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+        <DebugType>pdbonly</DebugType>
+        <CheckForOverflowUnderflow Condition="'$(Configuration)' == 'Release'">true</CheckForOverflowUnderflow>
+        <CodeAnalysisRuleSet>.\Codecov.ruleset</CodeAnalysisRuleSet>
+        <PackageId>Codecov.Tool</PackageId>
+        <ToolCommandName>codecov</ToolCommandName>
+        <PackAsTool>true</PackAsTool>
+        <Authors>admiringworm;mathphysics</Authors>
+        <PackageLicenseUrl>https://github.com/codecov/codecov-exe/blob/master/LICENSE.txt</PackageLicenseUrl>
+        <PackageProjectUrl>https://github.com/codecov/codecov-exe</PackageProjectUrl>
+        <PackageIconUrl>https://cdn.rawgit.com/codecov/media/0953f4e0d5315fb6d526a248bc88e1bc16506a37/logos/pink.png</PackageIconUrl>
+        <Description>Codecov global executable uploader.</Description>
+        <Copyright>Copyright (c) 2017-Present Larz White, Kim J. Nordmo</Copyright>
+        <PackageReleaseNotes>All release notes for Codecov can be found on the GitHub site - https://github.com/codecov/codecov-exe/releases/tag/$(Version)</PackageReleaseNotes>
+        <PackageTags>coverage;codecov</PackageTags>
+        <RepositoryUrl>https://github.com/codecov/codecov-exe</RepositoryUrl>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="../Codecov/**/*.cs" />
+        <Compile Remove="../Codecov/Scripts/**;../Codecov/obj/**;../Codecov/bin/**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CommandLineParser" Version="2.2.1" />
+        <PackageReference Include="Serilog" Version="2.7.1" />
+        <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+        <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" PrivateAssets="All" />
+    </ItemGroup>
+</Project>

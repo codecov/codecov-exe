@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codecov", "Codecov\Codecov.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codecov.Tests", "Codecov.Tests\Codecov.Tests.csproj", "{40F9A3D1-0324-4CBD-BA86-6CF043A8A8E4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codecov.Tool", "Codecov.Tool\Codecov.Tool.csproj", "{D9701D7A-9FA1-4CCD-8357-A1FC8894918A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{40F9A3D1-0324-4CBD-BA86-6CF043A8A8E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40F9A3D1-0324-4CBD-BA86-6CF043A8A8E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40F9A3D1-0324-4CBD-BA86-6CF043A8A8E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9701D7A-9FA1-4CCD-8357-A1FC8894918A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9701D7A-9FA1-4CCD-8357-A1FC8894918A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9701D7A-9FA1-4CCD-8357-A1FC8894918A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9701D7A-9FA1-4CCD-8357-A1FC8894918A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

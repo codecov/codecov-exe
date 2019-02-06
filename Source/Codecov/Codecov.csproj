@@ -1,30 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
+    <PropertyGroup Condition="'$(TargetFramework)' == ''">
         <TargetFramework>netcoreapp2.1</TargetFramework>
         <RuntimeIdentifiers>win7-x64</RuntimeIdentifiers>
+    </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
         <AssemblyName>codecov</AssemblyName>
         <Product>codecov-exe</Product>
         <Copyright>Copyright (c) 2017-Present Larz White, Kim J. Nordmo</Copyright>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
         <DebugType>pdbonly</DebugType>
-    </PropertyGroup>
-    <PropertyGroup>
-        <CodeAnalysisRuleSet>.\Codecov.ruleset</CodeAnalysisRuleSet>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+        <CheckForOverflowUnderflow Condition="'$(Configuration)' == 'Release'">true</CheckForOverflowUnderflow>
+        <CodeAnalysisRuleSet>$(SolutionDir)\Codecov\Codecov.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Remove="Scripts\**" />
-        <EmbeddedResource Remove="Scripts\**" />
-        <None Remove="Scripts\**" />
+        <Compile Remove="$(SolutionDir)\Codecov\Scripts\**" />
+        <EmbeddedResource Remove="$(SolutionDir)\Codecov\Scripts\**" />
+        <None Remove="$(SolutionDir)\Codecov\Scripts\**" />
     </ItemGroup>
     <ItemGroup>
-        <None Remove="stylecop.json" />
+        <None Remove="$(SolutionDir)\Codecov\stylecop.json" />
     </ItemGroup>
     <ItemGroup>
-        <AdditionalFiles Include="stylecop.json" />
+        <AdditionalFiles Include="$(SolutionDir)\Codecov\stylecop.json" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="CommandLineParser" Version="2.2.1" />

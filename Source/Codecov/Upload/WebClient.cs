@@ -1,76 +1,40 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using System.Net;
 using System.Text;
 using Codecov.Coverage.Report;
 using Codecov.Logger;
-using Codecov.Terminal;
 using Codecov.Url;
 
 namespace Codecov.Upload
 {
     internal class WebClient : Upload
     {
-        public WebClient(IUrl url, IReport report, ITerminal powerShell)
+        public WebClient(IUrl url, IReport report)
             : base(url, report)
         {
-            PowerShell = powerShell;
         }
-
-        private ITerminal PowerShell { get; }
 
         protected override string Post()
         {
-            Log.Verboase("Trying to upload using WebClient in PowerShell.");
+            Log.Verboase("Trying to upload using WebClient.");
 
-            var script = $@"
-                $client = New-Object System.Net.WebClient;
-                $client.Headers.add('X-Content-Type','application/x-gzip');
-                $client.Headers.add('X-Reduced-Redundancy','false');
-                $client.UploadString('{Url.GetUrl}', 'POST', '');
-            ";
-
-            return PowerShell.RunScript(script);
+            var client = new System.Net.WebClient();
+            client.Headers.Add("X-Content-Type", "application/x-gzip");
+            client.Headers.Add("X-Reduced-Redundancy", "false");
+            return client.UploadString(Url.GetUrl, "POST", string.Empty);
         }
 
         protected override bool Put(Uri url)
         {
             var tempFilePath = WriteReport2TempFile();
-            var command = $@"
-                $source = '
-                    using System.Net;
 
-	                public class ExtendedWebClient : WebClient
-	                {{
-		                public int Timeout;
+            var client = new ExtendedWebClient();
+            client.Headers.Add("Content-Type", "application/x-gzip");
+            client.Headers.Add("Content-Encoding", "gzip");
+            client.UploadFile(url, "PUT", tempFilePath);
 
-		                protected override WebRequest GetWebRequest(System.Uri address)
-		                {{
-			                WebRequest request = base.GetWebRequest(address);
-			                if (request != null)
-			                {{
-				                request.Timeout = Timeout;
-			                }}
-			                return request;
-                        }}
-
-		                public ExtendedWebClient()
-		                {{
-			                Timeout = 1000000;
-		                }}
-	                }}
-                ';
-
-                Add-Type -TypeDefinition $source -Language CSharp
-
-                $client = New-Object ExtendedWebClient;
-                $client.Headers.add('Content-Type','application/x-gzip');
-                $client.Headers.add('Content-Encoding','gzip');
-                $client.Headers.add('x-amz-acl','public-read');
-                $client.UploadFile('{url}', 'PUT', '{tempFilePath}');
-            ";
-
-            PowerShell.RunScript(command);
             return true;
         }
 
@@ -84,6 +48,27 @@ namespace Codecov.Upload
             }
 
             return tempFilePath;
+        }
+
+        private class ExtendedWebClient : System.Net.WebClient
+        {
+            public ExtendedWebClient()
+            {
+                this.Timeout = 1000000;
+            }
+
+            public int Timeout { get; }
+
+            protected override WebRequest GetWebRequest(Uri address)
+            {
+                var request = base.GetWebRequest(address);
+                if (request != null)
+                {
+                    request.Timeout = Timeout;
+                }
+
+                return request;
+            }
         }
     }
 }

@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <CodeAnalysisRuleSet>.\Codecov.ruleset</CodeAnalysisRuleSet>
+        <PackageId>Codecov.Tool</PackageId>
+        <ToolCommandName>codecov</ToolCommandName>
+        <PackAsTool>true</PackAsTool>
+        <Authors>admiringworm;mathphysics</Authors>
+        <PackageLicenseUrl>https://github.com/codecov/codecov-exe/blob/master/LICENSE.txt</PackageLicenseUrl>
+        <PackageProjectUrl>https://github.com/codecov/codecov-exe</PackageProjectUrl>
+        <PackageIconUrl>https://cdn.jsdelivr.net/gh/codecov/media@0953f4e0d5315fb6d526a248bc88e1bc16506a37/logos/pink.png</PackageIconUrl>
+        <Description>Codecov global executable uploader.</Description>
+        <Copyright>Copyright (c) 2017-Present Larz White, Kim J. Nordmo</Copyright>
+        <PackageReleaseNotes>All release notes for Codecov can be found on the GitHub site - https://github.com/codecov/codecov-exe/releases/tag/$(Version)</PackageReleaseNotes>
+        <PackageTags>coverage;codecov</PackageTags>
+        <RepositoryUrl>https://github.com/codecov/codecov-exe</RepositoryUrl>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="../Codecov/**/*.cs" Exclude="../Codecov/obj/**/*.cs;../Codecov/bin/**/*.cs" />
+    </ItemGroup>
+    <Import Project="../Codecov/Codecov.csproj" />
+</Project>

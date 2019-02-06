@@ -7,7 +7,7 @@
     <title>Codecov</title>
     <authors>Larz White, Kim J. Nordmo</authors>
     <projectUrl>https://codecov.io</projectUrl>
-    <iconUrl>https://cdn.rawgit.com/codecov/media/0953f4e0d5315fb6d526a248bc88e1bc16506a37/logos/pink.png</iconUrl>
+    <iconUrl>https://cdn.jsdelivr.net/gh/codecov/media@0953f4e0d5315fb6d526a248bc88e1bc16506a37/logos/pink.png</iconUrl>
     <copyright>Copyright (c) 2017-Present Larz White, Kim J. Nordmo</copyright>
     <licenseUrl>https://github.com/codecov/codecov-exe/blob/master/LICENSE.txt</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

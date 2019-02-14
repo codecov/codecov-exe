@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Codecov.Terminal;
 
 namespace Codecov.Factories
@@ -9,7 +10,7 @@ namespace Codecov.Factories
         {
             var terminals = new Dictionary<TerminalName, ITerminal> { { TerminalName.Generic, new Terminal.Terminal() }, { TerminalName.Powershell, new PowerShell() } };
 
-            foreach (var key in terminals.Keys)
+            foreach (var key in terminals.Keys.ToArray())
             {
                 if (!terminals[key].Exits)
                 {

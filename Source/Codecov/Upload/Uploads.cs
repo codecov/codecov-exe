@@ -36,7 +36,10 @@ namespace Codecov.Upload
 
         private static IEnumerable<IUpload> SetUploaders(IUrl url, IReport report)
         {
-            return new List<IUpload> { new WebClient(url, report) };
+            return new List<IUpload> {
+                new HttpWebRequest(url, report),
+                new WebClient(url, report)
+            };
         }
     }
 }

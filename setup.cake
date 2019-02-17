@@ -107,9 +107,10 @@ BuildParameters.Tasks.UploadCodecovReportTask.Does(() => {
     var codecovExec = GetFiles(publishDirectory + "/*.exe").First();
 
     var settings = new CodecovSettings {
-        Files = new[] { BuildParameters.Paths.Files.TestCoverageOutputFilePath.ToString() },
+        Files    = new[] { BuildParameters.Paths.Files.TestCoverageOutputFilePath.ToString() },
         Required = true,
-        ToolPath = codecovExec
+        ToolPath = codecovExec,
+        Verbose  = true
     };
 
     if (BuildParameters.Version != null &&

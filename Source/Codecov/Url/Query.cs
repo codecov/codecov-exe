@@ -240,8 +240,7 @@ namespace Codecov.Url
                 QueryParameters["token"] = tokenEnv.RemoveAllWhiteSpace();
             }
 
-            Guid tokenGuid;
-            if (Guid.TryParse(Options.Token, out tokenGuid))
+            if (Guid.TryParse(Options.Token, out Guid tokenGuid))
             {
                 QueryParameters["token"] = Options.Token.RemoveAllWhiteSpace();
             }

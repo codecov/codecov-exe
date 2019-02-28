@@ -11,9 +11,9 @@ namespace Codecov.Upload
     {
         private readonly Lazy<IEnumerable<IUpload>> _uploaders;
 
-        public Uploads(IUrl url, IReport report, IDictionary<TerminalName, ITerminal> terminals)
+        public Uploads(IUrl url, IReport report)
         {
-            _uploaders = new Lazy<IEnumerable<IUpload>>(() => SetUploaders(url, report, terminals));
+            _uploaders = new Lazy<IEnumerable<IUpload>>(() => SetUploaders(url, report));
         }
 
         private IEnumerable<IUpload> Uploaders => _uploaders.Value;
@@ -34,16 +34,12 @@ namespace Codecov.Upload
             throw new Exception("Failed to upload the report.");
         }
 
-        private static IEnumerable<IUpload> SetUploaders(IUrl url, IReport report, IDictionary<TerminalName, ITerminal> terminals)
+        private static IEnumerable<IUpload> SetUploaders(IUrl url, IReport report)
         {
-            var uploaders = new List<IUpload> { new HttpWebRequest(url, report) };
-
-            if (terminals[TerminalName.Powershell].Exits)
-            {
-                uploaders.Add(new WebClient(url, report));
-            }
-
-            return uploaders;
+            return new List<IUpload> {
+                new HttpWebRequest(url, report),
+                new WebClient(url, report)
+            };
         }
     }
 }

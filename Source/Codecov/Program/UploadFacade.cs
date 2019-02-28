@@ -31,7 +31,7 @@ namespace Codecov.Program
 
         private ICoverage Coverage => new Coverage.Tool.Coverage(CommandLineCommandLineOptions);
 
-        private IUpload Upload => new Uploads(Url, Report, Terminals);
+        private IUpload Upload => new Uploads(Url, Report);
 
         private IUrl Url => new Url.Url(new Host(CommandLineCommandLineOptions), new Route(), new Query(CommandLineCommandLineOptions, Repositories, ContinuousIntegrationServer, Yaml));
 

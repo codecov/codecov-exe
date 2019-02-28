@@ -7,17 +7,7 @@ namespace Codecov.Factories
     {
         public static IDictionary<TerminalName, ITerminal> Create()
         {
-            var terminals = new Dictionary<TerminalName, ITerminal> { { TerminalName.Generic, new Terminal.Terminal() }, { TerminalName.Powershell, new PowerShell() } };
-
-            foreach (var key in terminals.Keys)
-            {
-                if (!terminals[key].Exits)
-                {
-                    terminals.Remove(key);
-                }
-            }
-
-            return terminals;
+            return new Dictionary<TerminalName, ITerminal> { { TerminalName.Generic, new Terminal.Terminal() } };
         }
     }
 }

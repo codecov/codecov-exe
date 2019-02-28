@@ -6,7 +6,7 @@
     <title>Codecov</title>
     <authors>Larz White, Kim J. Nordmo</authors>
     <owners>Larz White, Kim J. Nordmo</owners>
-    <licenseUrl>https://github.com/codecov/codecov-exe/blob/master/LICENSE.txt</licenseUrl>
+    <license type="expression">MIT</license>
     <projectUrl>https://github.com/codecov/codecov-exe</projectUrl>
     <iconUrl>https://cdn.jsdelivr.net/gh/codecov/media@0953f4e0d5315fb6d526a248bc88e1bc16506a37/logos/pink.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

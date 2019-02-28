@@ -80,8 +80,7 @@ BuildParameters.Tasks.UploadAppVeyorArtifactsTask.Does(() =>
 
 // We'll need to remove the chocolatey package before trying to publish the github releases
 Task("Remove-Unneeded Github Releases")
-    .IsDependentOn("Publish-MyGet-Packages")
-    .IsDependentOn("Publish-Nuget-Packages")
+	.IsDependentOn("Publish-Chocolatey-Packages")
     .WithCriteria(() => BuildParameters.ShouldPublishGitHub)
     .Does(() =>
 {

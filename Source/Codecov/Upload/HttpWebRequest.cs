@@ -55,7 +55,14 @@ namespace Codecov.Upload
             }
 
             var putResponse = (HttpWebResponse)putRequest.GetResponseAsync().Result;
-            return putResponse.StatusCode == HttpStatusCode.OK;
+
+            if (putResponse.StatusCode != HttpStatusCode.OK)
+            {
+                Log.Verboase($"Cannot send to {url}. Received {putResponse.StatusCode}");
+                return false;
+            }
+
+            return true;
         }
     }
 }

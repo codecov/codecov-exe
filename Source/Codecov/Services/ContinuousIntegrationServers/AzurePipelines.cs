@@ -25,7 +25,7 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
         public override string Pr => _pr.Value;
 
-        public override string Service => "azurepipelines";
+        public override string Service => "custom";
 
         public override string Slug => _slug.Value;
 

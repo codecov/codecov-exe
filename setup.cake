@@ -29,7 +29,7 @@ ToolSettings.SetToolSettings(context: Context,
 
 // We want to do our own publishing of Codecov-exe
 
-var publishDirectory = BuildParameters.Paths.Directories.PublishedApplications + "/CodeCov/publish";
+var publishDirectory = BuildParameters.Paths.Directories.PublishedApplications + "/Codecov/publish";
 
 Task("DotNetCore-Publish")
     .IsDependentOn("DotNetCore-Test")
@@ -103,14 +103,19 @@ BuildParameters.Tasks.PublishGitHubReleaseTask.Does(() => RequireTool(GitRelease
 // We want to dog food codecov so we can push using the built binaries
 // This means we have to re-implement the whole task
 ((CakeTask)BuildParameters.Tasks.UploadCodecovReportTask.Task).Actions.Clear();
-BuildParameters.Tasks.UploadCodecovReportTask.Does(() => {
+
+BuildParameters.Tasks.UploadCodecovReportTask
+    .IsDependentOn(BuildParameters.Tasks.CreateNuGetPackagesTask)
+    .Does(() => RequireTool(
+        $"#tool nuget:file://{MakeAbsolute(BuildParameters.Paths.Directories.NuGetPackages)}?package=Codecov&version={BuildParameters.Version.SemVersion}&prerelease",
+        () => {
     var codecovExec = GetFiles(publishDirectory + "/*.exe").First();
 
     var settings = new CodecovSettings {
         Files    = new[] { BuildParameters.Paths.Files.TestCoverageOutputFilePath.ToString() },
         Required = true,
-        ToolPath = codecovExec,
-        Verbose  = true
+        Verbose  = true,
+        Dump     = BuildParameters.IsLocalBuild
     };
 
     if (BuildParameters.Version != null &&
@@ -121,16 +126,18 @@ BuildParameters.Tasks.UploadCodecovReportTask.Does(() => {
         var buildVersion = string.Format("{0}.build.{1}",
             BuildParameters.Version.FullSemVersion,
             BuildSystem.AppVeyor.Environment.Build.Number);
-        settings.EnvironmentVariables = new Dictionary<string, string> { { "APPVEYOR_BUILD_VERSION", buildVersion }};
+        settings.EnvironmentVariables.Add("APPVEYOR_BUILD_VERSION", buildVersion);
     }
 
     Codecov(settings);
 
-}).Finally(() => {
+})).Finally(() => {
     if (publishingError) {
         throw new Exception("Uploading to codecov failed");
     }
 });
+
+BuildParameters.Tasks.DefaultTask.IsDependentOn(BuildParameters.Tasks.UploadCodecovReportTask);
 
 BuildParameters.PrintParameters(Context);
 Build.RunDotNetCore();

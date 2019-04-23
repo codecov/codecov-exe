@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using Codecov.Services.VersionControlSystems;
 using FluentAssertions;
 using NSubstitute;
@@ -8,39 +9,48 @@ namespace Codecov.Tests.Coverage.SourceCode
 {
     public class SourceCodeTests
     {
+        private static string _systemDrive = Path.GetPathRoot(DriveInfo.GetDrives().First().ToString());
+
         [Fact]
         public void GetAll_Should_Get_All_The_Source_Code()
         {
             // Given
+            var allPaths = new[] {
+                Path.Combine(_systemDrive, "Fake", "Class.cs"),
+                Path.Combine(_systemDrive, "Fake", "Interface", "IClass.cs"),
+                Path.Combine(_systemDrive, "Fake", ".git")
+            };
             var versionControlSystem = Substitute.For<IVersionControlSystem>();
-            versionControlSystem.SourceCode.Returns(new[] { @"C:\Fake\Class.cs", @"C:\Fake\Interface\IClass.cs", @"C:\Fake\.git" });
+            versionControlSystem.SourceCode.Returns(allPaths);
             var sourceCode = new Codecov.Coverage.SourceCode.SourceCode(versionControlSystem);
 
             // When
             var getAll = sourceCode.GetAll.ToList();
 
             // Then
-            getAll.Count.Should().Be(3);
-            getAll[0].Should().Be(@"C:\Fake\Class.cs");
-            getAll[1].Should().Be(@"C:\Fake\Interface\IClass.cs");
-            getAll[2].Should().Be(@"C:\Fake\.git");
+            getAll.Should().HaveCount(3);
+            getAll.Should().Contain(allPaths);
         }
 
-        [Fact]
+        [WindowsFact("Not yet implemented for unix platforms")]
         public void GetAllButCodecovIgnored_Should_Get_All_Source_Code_That_Is_Not_Ignored_By_Codecov()
         {
             // Given
+            var allPaths = new[] {
+                Path.Combine(_systemDrive, "Fake", "Class.cs"),
+                Path.Combine(_systemDrive, "Fake", "Interface", "IClass.cs"),
+                Path.Combine(_systemDrive, "Fake", ".git")
+            };
             var versionControlSystem = Substitute.For<IVersionControlSystem>();
-            versionControlSystem.SourceCode.Returns(new[] { @"C:\Fake\Class.cs", @"C:\Fake\Interface\IClass.cs", @"C:\Fake\.git" });
+            versionControlSystem.SourceCode.Returns(allPaths);
             var sourceCode = new Codecov.Coverage.SourceCode.SourceCode(versionControlSystem);
 
             // When
             var getAllButCodecovIgnored = sourceCode.GetAllButCodecovIgnored.ToList();
 
             // Then
-            getAllButCodecovIgnored.Count.Should().Be(2);
-            getAllButCodecovIgnored[0].Should().Be(@"C:\Fake\Class.cs");
-            getAllButCodecovIgnored[1].Should().Be(@"C:\Fake\Interface\IClass.cs");
+            getAllButCodecovIgnored.Should().HaveCount(2);
+            getAllButCodecovIgnored.Should().Contain(allPaths.Where(p => !p.EndsWith(".git")));
         }
     }
 }

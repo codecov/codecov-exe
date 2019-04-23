@@ -11,6 +11,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
 {
     public class VersionControlSystemTests
     {
+        private static string _systemDrive = Path.GetPathRoot(DriveInfo.GetDrives().First().ToString());
         private static readonly IVersionControlSystemOptions Options = Substitute.For<IVersionControlSystemOptions>(); // Given
 
         private static readonly ITerminal Terminal = Substitute.For<ITerminal>(); // Given
@@ -89,7 +90,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         {
             // Given
             var options = Substitute.For<IVersionControlSystemOptions>();
-            options.RepoRoot.Returns("c:/fake/github/");
+            options.RepoRoot.Returns((_systemDrive + "/fake/github/").Replace('\\', '/').Replace("//", "/"));
 
             var versionControlSystem = new VersionControlSystem(options, Terminal);
 
@@ -97,7 +98,8 @@ namespace Codecov.Tests.Services.VersionControlSystems
             var repoRoot = versionControlSystem.RepoRoot;
 
             // Then
-            repoRoot.Should().Be(@"c:\fake\github");
+            var expected = Path.Combine(_systemDrive, "fake", "github");
+            repoRoot.Should().Be(expected);
         }
 
         [Theory, InlineData(""), InlineData(null)]
@@ -170,7 +172,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         public void SourceCode_Should_Return_File_Collection_If_Files_Exit()
         {
             // Given
-            var baseDirectory = $@"{Directory.GetCurrentDirectory()}\FakeRepo";
+            var baseDirectory = Path.Combine(Directory.GetCurrentDirectory(), "FakeRepo");
             Directory.CreateDirectory("./FakeRepo");
             Directory.CreateDirectory("./FakeRepo/Src");
             using (File.Create("./FakeRepo/.git")) { }
@@ -187,9 +189,10 @@ namespace Codecov.Tests.Services.VersionControlSystems
             var sortedSourceCode = versionControlSystem.SourceCode.ToList();
 
             // Then
-            sortedSourceCode[0].Should().Be($@"{baseDirectory}\.git");
-            sortedSourceCode[1].Should().Be($@"{baseDirectory}\README.md");
-            sortedSourceCode[2].Should().Be($@"{baseDirectory}\Src\class1.cs");
+            sortedSourceCode.Count.Should().Be(3);
+            sortedSourceCode.Should().Contain(Path.Combine(baseDirectory, ".git"));
+            sortedSourceCode.Should().Contain(Path.Combine(baseDirectory, "README.md"));
+            sortedSourceCode.Should().Contain(Path.Combine(baseDirectory, "Src", "class1.cs"));
 
             // Clean up
             Directory.Delete("./FakeRepo", true);

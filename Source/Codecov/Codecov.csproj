@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup Condition="'$(TargetFramework)' == ''">
         <TargetFramework>netcoreapp2.1</TargetFramework>
-        <RuntimeIdentifiers>win7-x64</RuntimeIdentifiers>
+        <RuntimeIdentifiers>win7-x64;linux-x64;osx-x64</RuntimeIdentifiers>
     </PropertyGroup>
     <PropertyGroup>
         <OutputType>Exe</OutputType>

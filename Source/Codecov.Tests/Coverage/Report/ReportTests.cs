@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 using Codecov.Coverage.Report;
 using Codecov.Coverage.SourceCode;
 using Codecov.Coverage.Tool;
@@ -11,6 +13,8 @@ namespace Codecov.Tests.Coverage.Report
 {
     public class ReportTests
     {
+        private static string _systemDrive = Path.GetPathRoot(DriveInfo.GetDrives().First().ToString());
+
         [Fact]
         public void Should_Generate_A_Report()
         {
@@ -20,8 +24,11 @@ namespace Codecov.Tests.Coverage.Report
             var options = Substitute.For<IReportOptions>();
             options.DisableNetwork = false;
             var sourceCode = Substitute.For<ISourceCode>();
-            sourceCode.GetAllButCodecovIgnored.Returns(new[] { @"C:\foo\Class.cs", @"C:\foo\Interface\IClass.cs" });
-            sourceCode.Directory.Returns(@"C:\foo");
+            sourceCode.GetAllButCodecovIgnored.Returns(new[] {
+                 Path.Combine(_systemDrive, "foo", "Class.cs"),
+                 Path.Combine(_systemDrive, "foo", "Interface", "IClass.cs")
+            });
+            sourceCode.Directory.Returns(Path.Combine(_systemDrive, "foo"));
             var coverage = Substitute.For<ICoverage>();
             coverage.CoverageReports.Returns(new[] { new ReportFile("./coverageUnit.xml", "Unit Tests."), new ReportFile("./coverageIntegration.xml", "Integration Tests.") });
             var report = new Codecov.Coverage.Report.Report(options, enviornmentVariables, sourceCode, coverage);
@@ -30,7 +37,9 @@ namespace Codecov.Tests.Coverage.Report
             var reporter = report.Reporter;
 
             // Then
-            reporter.Should().Be("foo=bar\nfizz=bizz\n<<<<<< ENV\nClass.cs\nInterface\\IClass.cs\n<<<<<< network\n# path=./coverageUnit.xml\nUnit Tests.\n<<<<<< EOF\n# path=./coverageIntegration.xml\nIntegration Tests.\n<<<<<< EOF\n");
+            var dirSplit = Path.DirectorySeparatorChar;
+            reporter.Should().Be(
+                $"foo=bar\nfizz=bizz\n<<<<<< ENV\nClass.cs\nInterface{dirSplit}IClass.cs\n<<<<<< network\n# path=./coverageUnit.xml\nUnit Tests.\n<<<<<< EOF\n# path=./coverageIntegration.xml\nIntegration Tests.\n<<<<<< EOF\n");
         }
 
         [Fact]
@@ -42,8 +51,11 @@ namespace Codecov.Tests.Coverage.Report
             var options = Substitute.For<IReportOptions>();
             options.DisableNetwork = true;
             var sourceCode = Substitute.For<ISourceCode>();
-            sourceCode.GetAllButCodecovIgnored.Returns(new[] { @"C:\foo\Class.cs", @"C:\foo\Interface\IClass.cs" });
-            sourceCode.Directory.Returns(@"C:\foo");
+            sourceCode.GetAllButCodecovIgnored.Returns(new[] {
+                 Path.Combine(_systemDrive, "foo", "Class.cs"),
+                 Path.Combine(_systemDrive, "foo", "Interface", "IClass.cs")
+            });
+            sourceCode.Directory.Returns(Path.Combine(_systemDrive, "foo"));
             var coverage = Substitute.For<ICoverage>();
             coverage.CoverageReports.Returns(new[] { new ReportFile("./coverageUnit.xml", "Unit Tests."), new ReportFile("./coverageIntegration.xml", "Integration Tests.") });
             var report = new Codecov.Coverage.Report.Report(options, enviornmentVariables, sourceCode, coverage);

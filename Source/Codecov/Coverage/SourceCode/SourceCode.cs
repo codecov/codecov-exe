@@ -11,7 +11,7 @@ namespace Codecov.Coverage.SourceCode
         private readonly Lazy<IEnumerable<string>> _getAll;
         private readonly Lazy<IEnumerable<string>> _getAllButCodecovIgnored;
         private readonly Lazy<string> _directory;
-        private IPathFilter _fileFilter;
+        private readonly IPathFilter _fileFilter;
 
         public SourceCode(IVersionControlSystem versionControlSystem)
         {
@@ -69,26 +69,26 @@ namespace Codecov.Coverage.SourceCode
                 .PathContains(@"\node_modules")
                 .PathContains(@".csproj.nuget.g.targets")
                 .PathContains(".csproj.nuget.g.props")
-                .HasExtension(".dll")
-                .HasExtension(".exe")
-                .HasExtension(".gif")
-                .HasExtension(".jpg")
-                .HasExtension(".jpeg")
-                .HasExtension(".md")
-                .HasExtension(".png")
-                .HasExtension(".psd")
-                .HasExtension(".ptt")
-                .HasExtension(".pptx")
-                .HasExtension(".numbers")
-                .HasExtension(".pages")
-                .HasExtension(".txt")
-                .HasExtension(".xlsx")
-                .HasExtension(".docx")
-                .HasExtension(".doc")
-                .HasExtension(".pdf")
-                .HasExtension(".yml")
-                .HasExtension(".yaml")
-                .HasExtension(".gitignore")
+                .FileHasExtension(".dll")
+                .FileHasExtension(".exe")
+                .FileHasExtension(".gif")
+                .FileHasExtension(".jpg")
+                .FileHasExtension(".jpeg")
+                .FileHasExtension(".md")
+                .FileHasExtension(".png")
+                .FileHasExtension(".psd")
+                .FileHasExtension(".ptt")
+                .FileHasExtension(".pptx")
+                .FileHasExtension(".numbers")
+                .FileHasExtension(".pages")
+                .FileHasExtension(".txt")
+                .FileHasExtension(".xlsx")
+                .FileHasExtension(".docx")
+                .FileHasExtension(".doc")
+                .FileHasExtension(".pdf")
+                .FileHasExtension(".yml")
+                .FileHasExtension(".yaml")
+                .FileHasExtension(".gitignore")
                 .Build();
         }
     }

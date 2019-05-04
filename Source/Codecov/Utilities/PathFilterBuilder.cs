@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 
 namespace Codecov.Utilities
 {
@@ -11,24 +10,27 @@ namespace Codecov.Utilities
     {
         private readonly List<IPathFilter> _filters = new List<IPathFilter>();
 
-        public PathFilterBuilder HasExtension(string extension)
+        public PathFilterBuilder FileHasExtension(string extension)
         {
-            _filters.Add(new FileExtensionPathFilter(extension));
-            return this;
-        }
+            if (string.IsNullOrEmpty(extension))
+            {
+                throw new ArgumentException("Extension cannot be null or empty", nameof(extension));
+            }
 
-        public PathFilterBuilder FileNameMatches(string pattern)
-        {
-            _filters.Add(new FileNameFilter(pattern));
+            _filters.Add(new FileExtensionPathFilter(extension));
             return this;
         }
 
         public PathFilterBuilder PathContains(string path)
         {
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (string.IsNullOrEmpty(path))
             {
-                path = path.Replace(@"\", "/");
+                throw new ArgumentException("Path cannot be null or empty", nameof(path));
             }
+
+            path = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                ? path.Replace(@"/", @"\")
+                : path.Replace(@"\", "/");
 
             _filters.Add(new PathFilter(path));
             return this;
@@ -71,22 +73,6 @@ namespace Codecov.Utilities
             }
         }
 
-        private class FileNameFilter : IPathFilter
-        {
-            private readonly Regex _regex;
-
-            public FileNameFilter(string regex)
-            {
-                _regex = new Regex(regex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            }
-
-            public bool Matches(string path)
-            {
-                var filename = Path.GetFileName(path);
-                return _regex.IsMatch(filename);
-            }
-        }
-        
         private class CompositePathFilter : IPathFilter
         {
             private readonly List<IPathFilter> _filters;
@@ -95,7 +81,6 @@ namespace Codecov.Utilities
             {
                 _filters = filters;
             }
-
 
             public bool Matches(string path)
             {

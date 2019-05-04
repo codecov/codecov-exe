@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Codecov.Coverage.SourceCode;
 
@@ -20,14 +21,21 @@ namespace Codecov.Yaml
 
         private string LoadFileName()
         {
-            var codecovYamlFullPath = SourceCode.GetAll.FirstOrDefault(file => file.ToLower().EndsWith(@"\.codecov.yaml") || file.ToLower().EndsWith(@"\codecov.yaml") || file.ToLower().EndsWith(@"\.codecov.yml") || file.ToLower().EndsWith(@"\codecov.yml"));
+            var codecovYamlFullPath = SourceCode.GetAll.FirstOrDefault(file =>
+            {
+                var fileName = Path.GetFileName(file);
+                return fileName.Equals(".codecov.yaml", StringComparison.OrdinalIgnoreCase) ||
+                       fileName.Equals("codecov.yaml", StringComparison.OrdinalIgnoreCase) ||
+                       fileName.Equals(".codecov.yml", StringComparison.OrdinalIgnoreCase) ||
+                       fileName.Equals("codecov.yml", StringComparison.OrdinalIgnoreCase);
+            });
+
             if (string.IsNullOrWhiteSpace(codecovYamlFullPath))
             {
                 return string.Empty;
             }
 
-            var codecovYamlFullPathSplit = codecovYamlFullPath.Split('\\');
-            return !codecovYamlFullPathSplit.Any() ? string.Empty : codecovYamlFullPathSplit[codecovYamlFullPathSplit.Length - 1];
+            return Path.GetFileName(codecovYamlFullPath);
         }
     }
 }

@@ -102,7 +102,7 @@ namespace Codecov.Services.VersionControlSystems
             var sourceCode = RunGit("ls-tree --full-tree -r HEAD --name-only");
             return string.IsNullOrWhiteSpace(sourceCode) ?
                 Enumerable.Empty<string>()
-                : sourceCode.Trim('\n').Split('\n').Select(FileSystem.NormalizedPath);
+                : sourceCode.Trim('\n').Split('\n').Select(file => FileSystem.NormalizedPath(Path.Combine(RepoRoot, file)));
         }
 
         private string RunGit(string commandArguments) => Terminal.Run("git", $@"-C ""{RepoRoot}"" {commandArguments}");

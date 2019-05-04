@@ -12,7 +12,8 @@ BuildParameters.SetParameters(context: Context,
                               repositoryName: "codecov-exe",
                               appVeyorAccountName: "admiringworm",
                               shouldRunCodecov: true,
-                              shouldRunGitVersion: true);
+                              shouldRunGitVersion: true,
+                              shouldExecuteGitLink: false);
 
 BuildParameters.PrintParameters(Context);
 

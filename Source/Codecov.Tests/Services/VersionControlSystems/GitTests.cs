@@ -168,7 +168,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
             repoRoot.Should().Be(rootDir);
         }
 
-        [WindowsTheory("Not yet implemented in unix environment"), InlineData(@".\Fake"), InlineData(@"./Fake")]
+        [Theory, InlineData(@".\Fake"), InlineData(@"./Fake")]
         public void RepoRoot_Should_Return_Absolute_Path_When_Given_Relative_Path(string repoRootData)
         {
             // Given

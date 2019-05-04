@@ -12,9 +12,12 @@ namespace Codecov.Utilities
                 return string.Empty;
             }
 
-            var absolutePath = Path.GetFullPath(path);
+            // We only need to replace the windows specific seperator, as these do not work on Unix
+            var absolutePath = Path.GetFullPath(path.Replace('\\', Path.DirectorySeparatorChar));
 
-            return !string.IsNullOrWhiteSpace(absolutePath) ? Path.GetFullPath(new Uri(absolutePath).LocalPath).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar) : string.Empty;
+            return !string.IsNullOrWhiteSpace(absolutePath)
+              ? Path.GetFullPath(new Uri(absolutePath).LocalPath).TrimEnd('\\', '/')
+              : string.Empty;
         }
     }
 }

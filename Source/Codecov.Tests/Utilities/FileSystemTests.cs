@@ -50,7 +50,7 @@ namespace Codecov.Tests.Utilities
             normalizedPath.Should().Be(@"c:\fake\github");
         }
 
-        [UnixFact( Skip = "Not yet implemented")]
+        [UnixFact]
         public void NormalizedPath_Should_Change_Backward_Slashes_To_Forward_Slashes_On_Unix()
         {
             // Given
@@ -63,7 +63,7 @@ namespace Codecov.Tests.Utilities
             normalizedPath.Should().Be(@"/home/fake/github");
         }
 
-        [WindowsFact("Not yet implemented for unix platforms")]
+        [Fact]
         public void NormalizedPath_Should_Create_Aboslute_Path_From_Relative_Path()
         {
             // Given

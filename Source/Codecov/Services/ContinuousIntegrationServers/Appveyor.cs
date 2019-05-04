@@ -45,7 +45,8 @@ namespace Codecov.Services.ContinuousIntegrationServers
                 return false;
             }
 
-            return appVeyor.Equals("True") && ci.Equals("True");
+            return appVeyor.Equals(ci, StringComparison.Ordinal)
+                   && appVeyor.Equals("True", StringComparison.OrdinalIgnoreCase);
         }
 
         private static string LoadJob()

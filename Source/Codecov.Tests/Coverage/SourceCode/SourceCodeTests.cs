@@ -32,7 +32,7 @@ namespace Codecov.Tests.Coverage.SourceCode
             getAll.Should().Contain(allPaths);
         }
 
-        [WindowsFact("Not yet implemented for unix platforms")]
+        [Fact]
         public void GetAllButCodecovIgnored_Should_Get_All_Source_Code_That_Is_Not_Ignored_By_Codecov()
         {
             // Given

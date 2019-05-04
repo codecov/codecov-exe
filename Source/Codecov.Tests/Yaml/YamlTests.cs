@@ -7,8 +7,8 @@ namespace Codecov.Tests.Yaml
 {
     public class YamlTests
     {
-        [Fact]
-        public void Should_Find_Yaml_File_If_Exits()
+        [WindowsFact]
+        public void Should_Find_Yaml_File_If_Exists_On_Windows()
         {
             // Given
             var sourceCode = Substitute.For<ISourceCode>();
@@ -22,12 +22,42 @@ namespace Codecov.Tests.Yaml
             fileName.Should().Be("codecov.yaml");
         }
 
-        [Fact]
-        public void Should_Return_Empty_String_If_Yaml_File_Does_Not_Exit()
+        [UnixFact]
+        public void Should_Find_Yaml_File_If_Exists_On_Unix()
+        {
+            // Given
+            var sourceCode = Substitute.For<ISourceCode>();
+            sourceCode.GetAll.Returns(new[] { @"/Fake/Class.cs", @"/Fake/Interface/IClass.cs", @"/Fake/.git", @"/Fake/codecov.yaml" });
+            var yaml = new Codecov.Yaml.Yaml(sourceCode);
+
+            // When
+            var fileName = yaml.FileName;
+
+            // Then
+            fileName.Should().Be("codecov.yaml");
+        }
+
+        [WindowsFact]
+        public void Should_Return_Empty_String_If_Yaml_File_Does_Not_Exit_On_Windows()
         {
             // Given
             var sourceCode = Substitute.For<ISourceCode>();
             sourceCode.GetAll.Returns(new[] { @"C:\Fake\Class.cs", @"C:\Fake\Interface\IClass.cs", @"C:\Fake\.git" });
+            var yaml = new Codecov.Yaml.Yaml(sourceCode);
+
+            // When
+            var fileName = yaml.FileName;
+
+            // Then
+            fileName.Should().BeEmpty();
+        }
+
+        [UnixFact]
+        public void Should_Return_Empty_String_If_Yaml_File_Does_Not_Exit_On_Unix()
+        {
+            // Given
+            var sourceCode = Substitute.For<ISourceCode>();
+            sourceCode.GetAll.Returns(new[] { @"/Fake/Class.cs", @"/Fake/Interface/IClass.cs", @"/Fake/.git" });
             var yaml = new Codecov.Yaml.Yaml(sourceCode);
 
             // When

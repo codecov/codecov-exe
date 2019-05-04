@@ -107,9 +107,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Theory]
-        [InlineData("True", "True", Skip = "Not working on linux")]
-        [InlineData("true", "true", Skip = "Not yet implemented")]
-        public void Detecter_Should_Be_True_When_AppVeyor_Enviornment_Variable_And_Ci_Enviornment_Variable_Exit_And_Both_Are_Equal_To_True(string appveyorData, string ciData)
+        [InlineData("True", "True")]
+        [InlineData("true", "true")]
+        public void Detecter_Should_Be_True_When_AppVeyor_Enviornment_Variable_And_Ci_Enviornment_Variable_Exist_And_Both_Are_Equal_To_True(string appveyorData, string ciData)
         {
             // Given
             Environment.SetEnvironmentVariable("APPVEYOR", appveyorData);

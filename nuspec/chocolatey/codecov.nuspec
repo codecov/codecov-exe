@@ -21,7 +21,7 @@
     <releaseNotes>All release notes for Codecov can be found on the GitHub site - https://github.com/codecov/codecov-exe/releases/tag/$version$</releaseNotes>
   </metadata>
   <files>
-    <file src="..\..\BuildArtifacts\Codecov.zip" target="tools" />
+    <file src="..\..\BuildArtifacts\Codecov-win7-x64.zip" target="tools" />
     <file src="..\..\LICENSE.txt" target="tools" />
     <file src="tools\**" target="tools" />
   </files>

@@ -1,4 +1,4 @@
-# Codecov global executable uploader for PowerShell and Windows Command Line.
+# Codecov global executable uploader for .NET Framework/Core based builds.
 
 | [https://codecov.io/](https://codecov.io/) | [@codecov](https://twitter.com/codecov) | [hello@codecov.io](mailto:hello@codecov.io) |
 | ------------------------ | ------------- | --------------------- |
@@ -11,13 +11,13 @@
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000)](https://gitter.im/codecov-exe/community)
 [![codecov](https://codecov.io/gh/codecov/codecov-exe/branch/master/graph/badge.svg)](https://codecov.io/gh/codecov/codecov-exe)
 
-1. This uploader supports Windows Command Line and PowerShell on Windows 7 (x64) and above. If you need support for OS X or Linux use the [bash global uploader](https://github.com/codecov/codecov-bash). However, since this is a .NET Core app, builds for OS X and Linux will eventually come.
+1. This uploader supports Windows 7 (x64) and above, Linux (x64), and OS X (x64).
 
-2. The following Services are supported: AppVeyor, TeamCity ([see section on TeamCity](#teamcity)), and Git.
+2. The following Services are supported: AppVeyor, Azure Pipelines, TeamCity ([see section on TeamCity](#teamcity)), and Git.
 
 3. Many Codecov CLI options are supported. Run `.\codecov.exe --help` or see [CommandLineOptions.cs](https://github.com/codecov/codecov-exe/blob/master/Source/Codecov/Program/CommandLineOptions.cs) for more details.
 
-4. You can download the exe from NuGet or Chocolatey. As an alternative to NuGet or Chocolatey you can download the exe as the asset *Codecov.zip* under the release. The following PowerShell (version 5) commands might be helpful
+4. On windows you can download the exe from NuGet or Chocolatey. There is also the .Net tool called Codecov.Tool which supports all platforms. As an alternative to NuGet or Chocolatey you can download the exe as the asset *Codecov-{os}.zip* under the release. The following PowerShell (version 5) commands might be helpful.
 
 ```PowerShell
 (New-Object System.Net.WebClient).DownloadFile("<url>", (Join-Path $pwd "Codecov.zip")) # Download Codecov.zip from github release.

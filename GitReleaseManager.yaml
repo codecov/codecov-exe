@@ -1,0 +1,20 @@
+create:
+  include-footer: true
+  footer-heading: Where to get it
+  footer-content: You can download this release from [chocolatey](https://chocolatey.org/packages/codecov/{milestone}),
+                  [nuget](https://nuget.org/packages/Codecov/{milestone})
+                  or as a [dotnet tool](https://nuget.org/packages/Codecov.Tool/{milestone})
+  footer-includes-milestone: true
+  milestone-replace-text: '{milestone}'
+# export:
+#   include-created-date-in-title: true | false
+#   created-date-string-format: MMMM dd, yyyy
+#   perform-regex-removal: true | false
+#   regex-text: '### Where to get it(\r\n)*You can .*\)'
+#   multiline-regex: true | false
+issue-labels-include:
+  - Bug
+  - Feature
+  - Improvement
+issue-labels-exclude:
+  - Build

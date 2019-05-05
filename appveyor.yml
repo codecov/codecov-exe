@@ -1,8 +1,32 @@
-image: Visual Studio 2017
+image:
+ - Ubuntu
+ - Visual Studio 2017
 
-build: off
-test: off
-deploy: off
+pull_requests:
+  do_not_increment_build_number: true
+skip_branch_with_pr: true
+matrix:
+  fast_finish: true
+environment:
+  APPVEYOR_YML_DISABLE_PS_LINUX: true
+for:
+-
+  matrix:
+    only:
+      - image: Visual Studio 2017
+  environment:
+    NUGET_API_KEY:
+      secure: koMAZYSTMVgMKHVVuyfoyVsqyFJc7KQ7UpmNixgflGJC0Mo6CQa8S5cQfbXaBXTH
+    GITHUB_USERNAME: AdmiringWorm
+    GITHUB_PASSWORD:
+      secure: 3bqzyVjmzE137kZ0lmMBKqM725nQd0hKAATVeE2trpWaPS+5bOpZfjy6zD5INfjV
+    NUGET_SOURCE: https://www.nuget.org/api/v2/package
+    APPVEYOR_API_TOKEN:
+      secure: QHpexV7pcFPNcXT0clrRuSDwDXXXI6oxFwBw5NDIRRg=
+    CHOCOLATEY_API_KEY:
+      secure: CzGGbCfsVKyCTbY193kYveGQDN5ilsyI30J3FYdo9+IpGsDwi/knjzBqCQbztIzY
+    CHOCOLATEY_SOURCE: https://push.chocolatey.org/
+
 
 skip_commits:
   files:
@@ -13,6 +37,7 @@ skip_commits:
     - .gitignore
 
 build_script:
-- ps: .\build.ps1 -Target AppVeyor
+- ps: .\build.ps1 -Target AppVeyor -Verbosity Verbose
+- sh: ./build.sh --target=AppVeyor --verbosity=Verbose
 
-cache: tools -> setup.cake,appveyor.yml,tools\packages.config
+cache: tools -> setup.cake,appveyor.yml,tools/packages.config

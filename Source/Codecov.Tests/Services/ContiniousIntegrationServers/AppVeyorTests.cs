@@ -106,12 +106,14 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
             detecter.Should().BeFalse();
         }
 
-        [Fact]
-        public void Detecter_Should_Be_True_When_AppVeyor_Enviornment_Variable_And_Ci_Enviornment_Variable_Exit_And_Both_Are_Equal_To_True()
+        [Theory]
+        [InlineData("True", "True")]
+        [InlineData("true", "true")]
+        public void Detecter_Should_Be_True_When_AppVeyor_Enviornment_Variable_And_Ci_Enviornment_Variable_Exist_And_Both_Are_Equal_To_True(string appveyorData, string ciData)
         {
             // Given
-            Environment.SetEnvironmentVariable("APPVEYOR", "True");
-            Environment.SetEnvironmentVariable("CI", "True");
+            Environment.SetEnvironmentVariable("APPVEYOR", appveyorData);
+            Environment.SetEnvironmentVariable("CI", ciData);
             var appVeyor = new AppVeyor();
 
             // When

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Codecov.Coverage.SourceCode;
 using Codecov.Coverage.Tool;
@@ -71,7 +72,7 @@ namespace Codecov.Coverage.Report
 
         private string Convert2RelativePath(string absolutePath)
         {
-            return absolutePath.Replace($@"{SourceCode.Directory}\", string.Empty);
+            return absolutePath.Replace(SourceCode.Directory + Path.DirectorySeparatorChar, string.Empty);
         }
     }
 }

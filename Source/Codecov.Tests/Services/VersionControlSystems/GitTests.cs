@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using Codecov.Services.VersionControlSystems;
 using Codecov.Terminal;
@@ -10,6 +11,8 @@ namespace Codecov.Tests.Services.VersionControlSystems
 {
     public class GitTests
     {
+        private static string _systemDrive = Path.GetPathRoot(DriveInfo.GetDrives().First().ToString());
+
         [Fact]
         public void Branch_Should_Return_Correct_Branch_If_Exits()
         {
@@ -151,8 +154,9 @@ namespace Codecov.Tests.Services.VersionControlSystems
         public void RepoRoot_Should_Get_From_Git_If_Options_Are_Not_Set(string optionsData)
         {
             // Given
+            var rootDir = Path.Combine(_systemDrive, "Fake");
             var terminal = Substitute.For<ITerminal>();
-            terminal.Run("git", "rev-parse --show-toplevel").Returns(@"C:\Fake");
+            terminal.Run("git", "rev-parse --show-toplevel").Returns(rootDir);
             var options = Substitute.For<IVersionControlSystemOptions>();
             options.RepoRoot.Returns(optionsData);
             var git = new Git(options, terminal);
@@ -161,7 +165,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
             var repoRoot = git.RepoRoot;
 
             // Then
-            repoRoot.Should().Be(@"C:\Fake");
+            repoRoot.Should().Be(rootDir);
         }
 
         [Theory, InlineData(@".\Fake"), InlineData(@"./Fake")]
@@ -177,7 +181,8 @@ namespace Codecov.Tests.Services.VersionControlSystems
             var repoRoot = git.RepoRoot;
 
             // Then
-            repoRoot.Should().Be($@"{Directory.GetCurrentDirectory()}\Fake");
+            var expected = Path.Combine(Directory.GetCurrentDirectory(), "Fake");
+            repoRoot.Should().Be(expected);
         }
 
         [Fact]
@@ -194,7 +199,8 @@ namespace Codecov.Tests.Services.VersionControlSystems
 
             // Then
             sourceCode.Count.Should().Be(1);
-            sourceCode[0].Should().Be($@"{Directory.GetCurrentDirectory()}\Class.cs");
+            var expected = Path.Combine(Directory.GetCurrentDirectory(), "Class.cs");
+            sourceCode[0].Should().Be(expected);
         }
 
         [Theory, InlineData("Class.cs\nIClass.cs"), InlineData("\nClass.cs\nIClass.cs\n\n")]
@@ -211,8 +217,10 @@ namespace Codecov.Tests.Services.VersionControlSystems
 
             // Then
             sourceCode.Count.Should().Be(2);
-            sourceCode[0].Should().Be($@"{Directory.GetCurrentDirectory()}\Class.cs");
-            sourceCode[1].Should().Be($@"{Directory.GetCurrentDirectory()}\IClass.cs");
+            var expected1 = Path.Combine(Directory.GetCurrentDirectory(), "Class.cs");
+            var expected2 = Path.Combine(Directory.GetCurrentDirectory(), "IClass.cs");
+            sourceCode[0].Should().Be(expected1);
+            sourceCode[1].Should().Be(expected2);
         }
 
         [Theory, InlineData(null), InlineData("")]

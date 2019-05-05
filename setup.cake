@@ -1,4 +1,5 @@
-#load "nuget:https://www.myget.org/F/cake-contrib/api/v2?package=Cake.Recipe&prerelease"
+#module "nuget:?package=Cake.DotNetTool.Module&version=0.2.0"
+#load "nuget:?package=Cake.Recipe&version=1.0.0"
 
 Environment.SetVariableNames();
 
@@ -10,7 +11,9 @@ BuildParameters.SetParameters(context: Context,
                               repositoryOwner: "codecov",
                               repositoryName: "codecov-exe",
                               appVeyorAccountName: "admiringworm",
-                              shouldRunCodecov: true);
+                              shouldRunCodecov: true,
+                              shouldRunGitVersion: true,
+                              shouldExecuteGitLink: false);
 
 BuildParameters.PrintParameters(Context);
 
@@ -28,7 +31,7 @@ ToolSettings.SetToolSettings(context: Context,
 
 // We want to do our own publishing of Codecov-exe
 
-var publishDirectory = BuildParameters.Paths.Directories.PublishedApplications + "/CodeCov/publish";
+var publishDirectory = BuildParameters.Paths.Directories.PublishedApplications + "/Codecov/publish";
 
 Task("DotNetCore-Publish")
     .IsDependentOn("DotNetCore-Test")
@@ -40,14 +43,6 @@ Task("DotNetCore-Publish")
         .WithProperty("FileVersion", BuildParameters.Version.Version)
         .WithProperty("AssemblyInformationalVersion", BuildParameters.Version.InformationalVersion);
 
-    DotNetCorePublish(BuildParameters.SourceDirectoryPath + "/Codecov", new DotNetCorePublishSettings
-    {
-        Configuration = BuildParameters.Configuration,
-        Runtime = "win7-x64",
-        OutputDirectory = publishDirectory,
-        MSBuildSettings = msBuildSettings
-    });
-
     DotNetCorePack(BuildParameters.SourceDirectoryPath + "/Codecov.Tool", new DotNetCorePackSettings
     {
         Configuration = BuildParameters.Configuration,
@@ -56,15 +51,29 @@ Task("DotNetCore-Publish")
         OutputDirectory = BuildParameters.Paths.Directories.NuGetPackages,
         MSBuildSettings = msBuildSettings
     });
+
+    var project = ParseProject(BuildParameters.SourceDirectoryPath + "/Codecov/Codecov.csproj", BuildParameters.Configuration);
+    var runtimeIdentifiers = project.NetCore.RuntimeIdentifiers;
+
+    foreach (var runtime in runtimeIdentifiers) {
+        DotNetCorePublish(project.ProjectFilePath.FullPath, new DotNetCorePublishSettings {
+            Runtime = runtime,
+            OutputDirectory = publishDirectory + "/" + runtime,
+            MSBuildSettings = msBuildSettings
+        });
+    }
 });
 
 Task("Create-ZipArchive")
     .IsDependentOn("DotNetCore-Publish")
     .Does(() =>
 {
-    var output = BuildParameters.Paths.Directories.Build + "/Codecov.zip";
+    var outputBase = BuildParameters.Paths.Directories.Build + "/Codecov-";
 
-    Zip(publishDirectory, output);
+    foreach (var directory in GetDirectories(publishDirectory + "/*")) {
+        var dirName = directory.GetDirectoryName();
+        Zip(directory, outputBase + dirName + ".zip");
+    }
 });
 
 BuildParameters.Tasks.CreateChocolateyPackagesTask.IsDependentOn("Create-ZipArchive");
@@ -102,15 +111,37 @@ BuildParameters.Tasks.PublishGitHubReleaseTask.Does(() => RequireTool(GitRelease
 // We want to dog food codecov so we can push using the built binaries
 // This means we have to re-implement the whole task
 ((CakeTask)BuildParameters.Tasks.UploadCodecovReportTask.Task).Actions.Clear();
-BuildParameters.Tasks.UploadCodecovReportTask.Does(() => {
-    var codecovExec = GetFiles(publishDirectory + "/*.exe").First();
+((CakeTask)BuildParameters.Tasks.UploadCodecovReportTask.Task).Criterias.Clear();
 
+BuildParameters.Tasks.CleanTask.Does(() =>
+{
+    if (DirectoryExists("./tools/.store/codecov.tool")) {
+        DeleteDirectory("./tools/.store/codecov.tool", new DeleteDirectorySettings {
+            Recursive = true,
+            Force     = true
+        });
+    }
+
+    DeleteFiles(GetFiles("./tools/codecov*"));
+});
+
+BuildParameters.Tasks.UploadCodecovReportTask
+    .IsDependentOn(BuildParameters.Tasks.CreateNuGetPackagesTask)
+    .WithCriteria(() => FileExists(BuildParameters.Paths.Files.TestCoverageOutputFilePath), "No coverage report to upload")
+    .Does(() => RequireTool(
+        $"#tool dotnet:file://{MakeAbsolute(BuildParameters.Paths.Directories.NuGetPackages)}?package=Codecov.Tool&version={BuildParameters.Version.SemVersion}&prerelease",
+        () => {
     var settings = new CodecovSettings {
         Files    = new[] { BuildParameters.Paths.Files.TestCoverageOutputFilePath.ToString() },
         Required = true,
-        ToolPath = codecovExec,
-        Verbose  = true
+        Verbose  = true,
+        Dump     = BuildParameters.IsLocalBuild
     };
+
+    if (BuildParameters.IsRunningOnUnix) {
+        var tool = Context.Tools.Resolve("codecov"); // Wee need special handling because the version used of Cake.Codecov does not support linux executable path
+        settings.ToolPath = tool;
+    }
 
     if (BuildParameters.Version != null &&
         !string.IsNullOrEmpty(BuildParameters.Version.FullSemVersion) &&
@@ -120,16 +151,39 @@ BuildParameters.Tasks.UploadCodecovReportTask.Does(() => {
         var buildVersion = string.Format("{0}.build.{1}",
             BuildParameters.Version.FullSemVersion,
             BuildSystem.AppVeyor.Environment.Build.Number);
-        settings.EnvironmentVariables = new Dictionary<string, string> { { "APPVEYOR_BUILD_VERSION", buildVersion }};
+        settings.EnvironmentVariables.Add("APPVEYOR_BUILD_VERSION", buildVersion);
     }
 
     Codecov(settings);
 
-}).Finally(() => {
+})).Finally(() => {
     if (publishingError) {
         throw new Exception("Uploading to codecov failed");
     }
 });
+
+BuildParameters.Tasks.DefaultTask.IsDependentOn(BuildParameters.Tasks.UploadCodecovReportTask);
+
+Task("Update-Dependencies")
+    .Does(() =>
+{
+    var dotnetTool = Context.Tools.Resolve("dotnet.exe");
+    if (dotnetTool == null) {
+        dotnetTool = Context.Tools.Resolve("dotnet");
+    }
+    foreach (var project in ParseSolution(BuildParameters.SolutionFilePath).GetProjects()) {
+        var parsedProject = ParseProject(project.Path, BuildParameters.Configuration);
+        foreach (var package in parsedProject.PackageReferences.Select(x => x.Name)) {
+            StartProcess(dotnetTool, new ProcessSettings()
+                .WithArguments(builder =>
+                    builder.Append("add")
+                           .AppendQuoted(project.Path.FullPath)
+                           .Append("package")
+                           .AppendQuoted(package)));
+        }
+    }
+}
+);
 
 BuildParameters.PrintParameters(Context);
 Build.RunDotNetCore();

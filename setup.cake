@@ -43,14 +43,6 @@ Task("DotNetCore-Publish")
         .WithProperty("FileVersion", BuildParameters.Version.Version)
         .WithProperty("AssemblyInformationalVersion", BuildParameters.Version.InformationalVersion);
 
-    DotNetCorePublish(BuildParameters.SourceDirectoryPath + "/Codecov", new DotNetCorePublishSettings
-    {
-        Configuration = BuildParameters.Configuration,
-        Runtime = "win7-x64",
-        OutputDirectory = publishDirectory,
-        MSBuildSettings = msBuildSettings
-    });
-
     DotNetCorePack(BuildParameters.SourceDirectoryPath + "/Codecov.Tool", new DotNetCorePackSettings
     {
         Configuration = BuildParameters.Configuration,
@@ -59,15 +51,29 @@ Task("DotNetCore-Publish")
         OutputDirectory = BuildParameters.Paths.Directories.NuGetPackages,
         MSBuildSettings = msBuildSettings
     });
+
+    var project = ParseProject(BuildParameters.SourceDirectoryPath + "/Codecov/Codecov.csproj", BuildParameters.Configuration);
+    var runtimeIdentifiers = project.NetCore.RuntimeIdentifiers;
+
+    foreach (var runtime in runtimeIdentifiers) {
+        DotNetCorePublish(project.ProjectFilePath.FullPath, new DotNetCorePublishSettings {
+            Runtime = runtime,
+            OutputDirectory = publishDirectory + "/" + runtime,
+            MSBuildSettings = msBuildSettings
+        });
+    }
 });
 
 Task("Create-ZipArchive")
     .IsDependentOn("DotNetCore-Publish")
     .Does(() =>
 {
-    var output = BuildParameters.Paths.Directories.Build + "/Codecov.zip";
+    var outputBase = BuildParameters.Paths.Directories.Build + "/Codecov-";
 
-    Zip(publishDirectory, output);
+    foreach (var directory in GetDirectories(publishDirectory + "/*")) {
+        var dirName = directory.GetDirectoryName();
+        Zip(dirName, outputBase + dirName + ".zip");
+    }
 });
 
 BuildParameters.Tasks.CreateChocolateyPackagesTask.IsDependentOn("Create-ZipArchive");

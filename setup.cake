@@ -72,7 +72,7 @@ Task("Create-ZipArchive")
 
     foreach (var directory in GetDirectories(publishDirectory + "/*")) {
         var dirName = directory.GetDirectoryName();
-        Zip(dirName, outputBase + dirName + ".zip");
+        Zip(directory, outputBase + dirName + ".zip");
     }
 });
 

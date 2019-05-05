@@ -68,9 +68,12 @@ Task("Create-ZipArchive")
     .IsDependentOn("DotNetCore-Publish")
     .Does(() =>
 {
-    var output = BuildParameters.Paths.Directories.Build + "/Codecov.zip";
+    var outputBase = BuildParameters.Paths.Directories.Build + "/Codecov-";
 
-    Zip(publishDirectory, output);
+    foreach (var directory in GetDirectories(publishDirectory + "/*")) {
+        var dirName = directory.GetDirectoryName();
+        Zip(dirName, outputBase + dirName + ".zip");
+    }
 });
 
 BuildParameters.Tasks.CreateChocolateyPackagesTask.IsDependentOn("Create-ZipArchive");

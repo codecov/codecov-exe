@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using GlobExpressions;
 
 namespace Codecov.Coverage.Tool
 {
@@ -21,15 +22,45 @@ namespace Codecov.Coverage.Tool
 
         private ICoverageOptions CoverageOptions { get; }
 
-        private static bool VerifyReportFile(string path)
+        private static bool VerifyReportFile(string path, out IEnumerable<string> expandedPath)
         {
+            HashSet<string> expanded = new HashSet<string> { path };
+            expandedPath = expanded;
             if (string.IsNullOrWhiteSpace(path))
             {
                 Logger.Log.Warning("Invalid report path.");
                 return false;
             }
 
-            if (!File.Exists(path))
+            if (path.Contains('*')
+                || path.Contains('?')
+                || path.Contains('!')
+                || path.Contains(','))
+            {
+                // Some basic guards
+                if (!path.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+                {
+                    path += ".xml";
+                }
+
+                //Logger.Log.Information($"Using wildcard path {path}");
+                List<string> matches = Glob.Files(Environment.CurrentDirectory, path, GlobOptions.Compiled | GlobOptions.CaseInsensitive)?.ToList();
+                if (matches?.Any() != true)
+                {
+                    //Logger.Log.Warning($"There are no files that match the wildcard {path}.");
+                    return false;
+                }
+
+                expanded.Clear();
+                matches.ForEach(_ =>
+                {
+                    //Logger.Log.Information($"Adding file {_} that matches wildcard path {path}");
+                    expanded.Add(_);
+                });
+
+                return true;
+            }
+            else if (!File.Exists(path))
             {
                 Logger.Log.Warning($"The file {path} does not exist.");
                 return false;
@@ -40,8 +71,18 @@ namespace Codecov.Coverage.Tool
 
         private IEnumerable<ReportFile> LoadReportFile()
         {
-            var report = CoverageOptions.Files.Where(x => VerifyReportFile(x)).Select(x => new ReportFile(x, File.ReadAllText(x))).ToArray();
-            if (!report.Any())
+            ReportFile[] report = CoverageOptions.Files?
+                .SelectMany(x =>
+                {
+                    if (VerifyReportFile(x, out IEnumerable<string> expanded))
+                    {
+                        return expanded;
+                    }
+
+                    return Enumerable.Empty<string>();
+                })?
+                .Select(x => new ReportFile(x, File.ReadAllText(x)))?.ToArray();
+            if (report?.Any() != true)
             {
                 throw new Exception("No Report detected.");
             }

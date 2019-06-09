@@ -22,7 +22,7 @@ namespace Codecov.Coverage.Tool
 
         private ICoverageOptions CoverageOptions { get; }
 
-        private static bool VerifyReportFile(string path, out IEnumerable<string> expandedPath)
+        private static bool VerifyReportFileAndExpandGlobPatterns(string path, out IEnumerable<string> expandedPath)
         {
             HashSet<string> expanded = new HashSet<string> { path };
             expandedPath = expanded;
@@ -37,12 +37,6 @@ namespace Codecov.Coverage.Tool
                 || path.Contains('!')
                 || path.Contains(','))
             {
-                // Some basic guards
-                if (!path.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
-                {
-                    path += ".xml";
-                }
-
                 //Logger.Log.Information($"Using wildcard path {path}");
                 List<string> matches = Glob.Files(Environment.CurrentDirectory, path, GlobOptions.Compiled | GlobOptions.CaseInsensitive)?.ToList();
                 if (matches?.Any() != true)
@@ -74,7 +68,7 @@ namespace Codecov.Coverage.Tool
             ReportFile[] report = CoverageOptions.Files?
                 .SelectMany(x =>
                 {
-                    if (VerifyReportFile(x, out IEnumerable<string> expanded))
+                    if (VerifyReportFileAndExpandGlobPatterns(x, out IEnumerable<string> expanded))
                     {
                         return expanded;
                     }

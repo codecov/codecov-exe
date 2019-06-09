@@ -10,11 +10,11 @@ namespace Codecov.Tests.Coverage.Tool
 {
     public class CoverageTests
     {
-        [Theory, InlineData(null), InlineData(""), InlineData("./coverage.xml")]
+        [Theory, InlineData(null), InlineData(""), InlineData("./ coverage.xml")]
         public void CoverageReport_Should_Be_Empty_If_The_File_Does_Not_Exits(string fileData)
         {
             // Given
-            ICoverageOptions options = Substitute.For<ICoverageOptions>();
+            var options = Substitute.For<ICoverageOptions>();
             Logger.Log.Create(false, false);
             options.Files.Returns(new[] { fileData });
             Codecov.Coverage.Tool.Coverage coverage = new Codecov.Coverage.Tool.Coverage(options);

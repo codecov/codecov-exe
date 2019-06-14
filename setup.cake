@@ -1,5 +1,7 @@
 #module "nuget:?package=Cake.DotNetTool.Module&version=0.2.0"
 #load "nuget:?package=Cake.Recipe&version=1.0.0"
+#load ".build/coverlet.cake"
+#load ".build/codecov.cake"
 
 Environment.SetVariableNames();
 
@@ -108,11 +110,6 @@ BuildParameters.Tasks.PublishGitHubReleaseTask.Does(() => RequireTool(GitRelease
     }
 }));
 
-// We want to dog food codecov so we can push using the built binaries
-// This means we have to re-implement the whole task
-((CakeTask)BuildParameters.Tasks.UploadCodecovReportTask.Task).Actions.Clear();
-((CakeTask)BuildParameters.Tasks.UploadCodecovReportTask.Task).Criterias.Clear();
-
 BuildParameters.Tasks.CleanTask.Does(() =>
 {
     if (DirectoryExists("./tools/.store/codecov.tool")) {
@@ -124,45 +121,6 @@ BuildParameters.Tasks.CleanTask.Does(() =>
 
     DeleteFiles(GetFiles("./tools/codecov*"));
 });
-
-BuildParameters.Tasks.UploadCodecovReportTask
-    .IsDependentOn(BuildParameters.Tasks.CreateNuGetPackagesTask)
-    .WithCriteria(() => FileExists(BuildParameters.Paths.Files.TestCoverageOutputFilePath), "No coverage report to upload")
-    .Does(() => RequireTool(
-        $"#tool dotnet:file://{MakeAbsolute(BuildParameters.Paths.Directories.NuGetPackages)}?package=Codecov.Tool&version={BuildParameters.Version.SemVersion}&prerelease",
-        () => {
-    var settings = new CodecovSettings {
-        Files    = new[] { BuildParameters.Paths.Files.TestCoverageOutputFilePath.ToString() },
-        Required = true,
-        Verbose  = true,
-        Dump     = BuildParameters.IsLocalBuild
-    };
-
-    if (BuildParameters.IsRunningOnUnix) {
-        var tool = Context.Tools.Resolve("codecov"); // Wee need special handling because the version used of Cake.Codecov does not support linux executable path
-        settings.ToolPath = tool;
-    }
-
-    if (BuildParameters.Version != null &&
-        !string.IsNullOrEmpty(BuildParameters.Version.FullSemVersion) &&
-        BuildParameters.IsRunningOnAppVeyor)
-    {
-        // Required to work correctly with appveyor because environment changes isn't detected until cake is done running.
-        var buildVersion = string.Format("{0}.build.{1}",
-            BuildParameters.Version.FullSemVersion,
-            BuildSystem.AppVeyor.Environment.Build.Number);
-        settings.EnvironmentVariables.Add("APPVEYOR_BUILD_VERSION", buildVersion);
-    }
-
-    Codecov(settings);
-
-})).Finally(() => {
-    if (publishingError) {
-        throw new Exception("Uploading to codecov failed");
-    }
-});
-
-BuildParameters.Tasks.DefaultTask.IsDependentOn(BuildParameters.Tasks.UploadCodecovReportTask);
 
 Task("Update-Dependencies")
     .Does(() =>

@@ -120,10 +120,13 @@ namespace Codecov.Program
             var response = Upload.Uploader();
             Log.Verboase($"response: {response}");
             var splitResponse = response.Split('\n');
-            var s3 = new Uri(splitResponse[1]);
-            var reportUrl = splitResponse[0];
-            Log.Information($"Uploading to S3 {s3.Scheme}://{s3.Authority}");
-            Log.Information($"View reports at: {reportUrl}");
+            if (splitResponse.Length > 1)
+            {
+                var s3 = new Uri(splitResponse[1]);
+                var reportUrl = splitResponse[0];
+                Log.Information($"Uploading to S3 {s3.Scheme}://{s3.Authority}");
+                Log.Information($"View reports at: {reportUrl}");
+            }
         }
     }
 }

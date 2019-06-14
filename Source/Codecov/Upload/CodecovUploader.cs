@@ -53,18 +53,35 @@ namespace Codecov.Upload
         {
             using (var request = new HttpRequestMessage(new HttpMethod("PUT"), url))
             {
-                request.Headers.TryAddWithoutValidation("x-amz-acl", "public-read");
-
-                request.Content = new ByteArrayContent(GetReportBytes());
-                request.Content.Headers.ContentEncoding.Clear();
-                request.Content.Headers.ContentEncoding.Add("gzip");
-                request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-gzip");
-
                 Log.Information("Uploading");
-                var response = client.SendAsync(request).Result;
+                var response = CreateResponse(request);
 
                 return response.IsSuccessStatusCode;
             }
+        }
+
+        protected virtual HttpResponseMessage CreateResponse(HttpRequestMessage request)
+        {
+            ConfigureRequest(request);
+
+            request.Content = new ByteArrayContent(GetReportBytes());
+
+            ConfigureContent(request.Content);
+
+            var response = client.SendAsync(request).Result;
+            return response;
+        }
+
+        protected virtual void ConfigureRequest(HttpRequestMessage request)
+        {
+            request.Headers.TryAddWithoutValidation("x-amz-acl", "public-read");
+        }
+
+        protected virtual void ConfigureContent(HttpContent content)
+        {
+            content.Headers.ContentEncoding.Clear();
+                content.Headers.ContentEncoding.Add("gzip");
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/x-gzip");
         }
 
         protected byte[] GetReportBytes()

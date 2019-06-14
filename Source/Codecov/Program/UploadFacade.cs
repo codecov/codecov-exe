@@ -116,7 +116,6 @@ namespace Codecov.Program
             Log.Information($"url: {Url.GetUrl.Scheme}://{Url.GetUrl.Authority}");
             Log.Verboase($"api endpoint: {Url.GetUrl}");
             Log.Information($"query: {DisplayUrl}");
-            Log.Information("Pinging Codecov");
 
             var response = Upload.Uploader();
             Log.Verboase($"response: {response}");

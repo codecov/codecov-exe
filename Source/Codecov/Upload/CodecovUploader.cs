@@ -39,6 +39,12 @@ namespace Codecov.Upload
 
                 Log.Information("Pinging Codecov");
                 var response = client.SendAsync(request).Result;
+                if (!response.IsSuccessStatusCode)
+                {
+                    Log.Warning($"Unable to ping Codecov. Server returned: ({response.StatusCode}) {response.ReasonPhrase}");
+                    return string.Empty;
+                }
+
                 return response.Content.ReadAsStringAsync().Result;
             }
         }
@@ -54,18 +60,10 @@ namespace Codecov.Upload
                 request.Content.Headers.ContentEncoding.Add("gzip");
                 request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-gzip");
 
-                try
-                {
-                    Log.Information("Uploading");
-                    var response = client.SendAsync(request).Result;
+                Log.Information("Uploading");
+                var response = client.SendAsync(request).Result;
 
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    Log.VerboaseException(ex);
-                    return false;
-                }
+                return response.IsSuccessStatusCode;
             }
         }
 

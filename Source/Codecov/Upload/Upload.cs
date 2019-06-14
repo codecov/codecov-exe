@@ -52,16 +52,10 @@ namespace Codecov.Upload
 
         protected abstract bool Put(Uri url);
 
-        private static Uri GetReportUrl(string postResponse)
-        {
-            var splitResponse = postResponse.Split('\n');
-            return new Uri(splitResponse[0]);
-        }
-
         private static Uri GetPutUrlFromPostResponse(string postResponse)
         {
             var splitResponse = postResponse.Split('\n');
-            return new Uri(splitResponse[1]);
+            return new Uri(splitResponse[splitResponse.Length > 1 ? 1 : 0]);
         }
     }
 }

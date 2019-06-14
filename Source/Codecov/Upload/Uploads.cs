@@ -37,7 +37,8 @@ namespace Codecov.Upload
         private static IEnumerable<IUpload> SetUploaders(IUrl url, IReport report)
         {
             return new List<IUpload> {
-                new CodecovUploader(url, report)
+                new CodecovUploader(url, report),
+                new CodecovFallbackUploader(url, report)
             };
         }
     }

@@ -35,7 +35,7 @@ namespace Codecov.Upload
                 var s3 = GetPutUrlFromPostResponse(response);
                 if (!Put(s3))
                 {
-                    Log.Verboase("Failed to upload the report.");
+                    Log.Warning($"Failed to upload the report with {this.GetType().Name}.");
                     return string.Empty;
                 }
 
@@ -51,6 +51,12 @@ namespace Codecov.Upload
         protected abstract string Post();
 
         protected abstract bool Put(Uri url);
+
+        private static Uri GetReportUrl(string postResponse)
+        {
+            var splitResponse = postResponse.Split('\n');
+            return new Uri(splitResponse[0]);
+        }
 
         private static Uri GetPutUrlFromPostResponse(string postResponse)
         {

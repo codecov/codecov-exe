@@ -31,16 +31,16 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
         private static bool LoadDetecter()
         {
-            var appVeyor = EnviornmentVariable.GetEnviornmentVariable("TRAVIS");
+            var travis = EnviornmentVariable.GetEnviornmentVariable("TRAVIS");
             var ci = EnviornmentVariable.GetEnviornmentVariable("CI");
 
-            if (string.IsNullOrWhiteSpace(appVeyor) || string.IsNullOrWhiteSpace(ci))
+            if (string.IsNullOrWhiteSpace(travis) || string.IsNullOrWhiteSpace(ci))
             {
                 return false;
             }
 
-            return appVeyor.Equals(ci, StringComparison.Ordinal)
-                   && appVeyor.Equals("True", StringComparison.OrdinalIgnoreCase);
+            return travis.Equals(ci, StringComparison.Ordinal)
+                   && travis.Equals("True", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

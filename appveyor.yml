@@ -37,7 +37,7 @@ skip_commits:
     - .gitignore
 
 build_script:
-- ps: .\build.ps1 -Target AppVeyor -Verbosity Verbose
-- sh: ./build.sh --target=AppVeyor --verbosity=Verbose
+- ps: .\build.ps1 -Target AppVeyor
+- sh: ./build.sh --target=AppVeyor
 
 cache: tools -> setup.cake,appveyor.yml,tools/packages.config

@@ -27,4 +27,4 @@ branches:
     - /feature\/.*/
 
 script:
-  - ./build.sh --verbosity=Verbose
+  - ./build.sh

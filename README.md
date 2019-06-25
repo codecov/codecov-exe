@@ -75,6 +75,11 @@ env.TEAMCITY_BUILD_REPOSITORY => --slug
 
 All types of contributions are welcome! Feel free to open an [issue](https://github.com/codecov/codecov-exe/issues) or contact us through the [gitter channel](https://gitter.im/codecov-exe/community) mentioning either **[@larzw](https://gitter.im/larzw)** or **[@AdmiringWorm](https://gitter.im/admiringworm)**.
 
+### Known Issues
+
+- Specifiyng file paths with spaces is currently not possible without a workaround.
+  This is expected to be fixed when a new major release of codecov-exe is released (See issue [#71](https://github.com/codecov/codecov-exe/issues/71) for possible workaround and tracking).
+
 ## Maintainers
 
 To create a relase, please do the following (to be automated):

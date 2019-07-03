@@ -55,7 +55,7 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
             foreach (var variable in environmentVariables)
             {
-                var ci = EnviornmentVariable.GetEnviornmentVariable(variable);
+                var ci = EnvironmentVariable.GetEnvironmentVariable(variable);
 
                 if (string.IsNullOrWhiteSpace(ci) || !ci.Equals("True", StringComparison.OrdinalIgnoreCase))
                 {

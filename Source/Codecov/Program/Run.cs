@@ -44,7 +44,15 @@ namespace Codecov.Program
 
         private static void ParseAndSetCommandLineArgs(IEnumerable<string> args)
         {
-            var result = (Parsed<CommandLineOptions>)Parser.Default.ParseArguments<CommandLineOptions>(args);
+            var result = (Parsed<CommandLineOptions>)Parser.Default.ParseArguments<CommandLineOptions>(args)
+                .WithNotParsed((errors) => {
+                    foreach (var error in errors)
+                    {
+                        if (error.Tag == ErrorType.UnknownOptionError) {
+                            Environment.Exit(0xA0); // Exit immediately with exit code 160 for invalid arguments
+                        }
+                    }
+                });
             _commandLineOptions = result.Value;
         }
 

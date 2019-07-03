@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Codecov.Utilities;
 
 namespace Codecov.Services.ContinuousIntegrationServers
@@ -46,6 +47,25 @@ namespace Codecov.Services.ContinuousIntegrationServers
             }
 
             GetEnvironmentVariables[name] = value;
+        }
+
+        protected static bool CheckEnvironmentVariables(params string[] environmentVariables)
+        {
+            var foundVariables = new List<string>();
+
+            foreach (var variable in environmentVariables)
+            {
+                var ci = EnviornmentVariable.GetEnviornmentVariable(variable);
+
+                if (string.IsNullOrWhiteSpace(ci) || !ci.Equals("True", StringComparison.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+                foundVariables.Add(ci);
+            }
+
+            var firstValue = foundVariables.FirstOrDefault();
+            return !string.IsNullOrEmpty(firstValue) && foundVariables.Skip(1).All(v => v.Equals(firstValue, StringComparison.Ordinal));
         }
     }
 }

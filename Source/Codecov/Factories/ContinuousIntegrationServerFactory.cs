@@ -7,7 +7,7 @@ namespace Codecov.Factories
     {
         public static IContinuousIntegrationServer Create()
         {
-            var continuousIntegrationServers = new IContinuousIntegrationServer[] { new AppVeyor(), new TeamCity(), new AzurePipelines() };
+            var continuousIntegrationServers = new IContinuousIntegrationServer[] { new AppVeyor(), new Travis(), new TeamCity(), new AzurePipelines() };
             var buildServer = continuousIntegrationServers.FirstOrDefault(x => x.Detecter);
             return buildServer ?? new ContinuousIntegrationServer();
         }

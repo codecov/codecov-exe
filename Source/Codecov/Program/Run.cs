@@ -36,7 +36,10 @@ namespace Codecov.Program
             ParseAndSetCommandLineArgs(args);
             ConfigureHowProgramExitsOnFail();
             Log.Create(_commandLineOptions.Verbose, _commandLineOptions.NoColor);
-            About.DisplayFiglet();
+            if (!_commandLineOptions.NoLogo)
+            {
+                About.DisplayFiglet();
+            }
         }
 
         private static void ParseAndSetCommandLineArgs(IEnumerable<string> args)

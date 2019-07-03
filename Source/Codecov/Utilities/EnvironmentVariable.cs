@@ -2,9 +2,9 @@
 
 namespace Codecov.Utilities
 {
-    internal static class EnviornmentVariable
+    internal static class EnvironmentVariable
     {
-        internal static string GetEnviornmentVariable(string name)
+        internal static string GetEnvironmentVariable(string name)
         {
             var env = Environment.GetEnvironmentVariable(name);
             return string.IsNullOrWhiteSpace(env) ? string.Empty : env;

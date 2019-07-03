@@ -8,13 +8,13 @@ namespace Codecov.Services.VersionControlSystems
 {
     internal class VersionControlSystem : IVersionControlSystem
     {
-        private readonly Lazy<string> _branch = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("VCS_BRANCH_NAME"));
-        private readonly Lazy<string> _commit = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("VCS_COMMIT_ID"));
-        private readonly Lazy<string> _pr = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("VCS_PULL_REQUEST"));
+        private readonly Lazy<string> _branch = new Lazy<string>(() => EnvironmentVariable.GetEnvironmentVariable("VCS_BRANCH_NAME"));
+        private readonly Lazy<string> _commit = new Lazy<string>(() => EnvironmentVariable.GetEnvironmentVariable("VCS_COMMIT_ID"));
+        private readonly Lazy<string> _pr = new Lazy<string>(() => EnvironmentVariable.GetEnvironmentVariable("VCS_PULL_REQUEST"));
         private readonly Lazy<string> _repoRoot;
-        private readonly Lazy<string> _slug = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("VCS_SLUG"));
+        private readonly Lazy<string> _slug = new Lazy<string>(() => EnvironmentVariable.GetEnvironmentVariable("VCS_SLUG"));
         private readonly Lazy<IEnumerable<string>> _sourceCode;
-        private readonly Lazy<string> _tag = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("VCS_TAG"));
+        private readonly Lazy<string> _tag = new Lazy<string>(() => EnvironmentVariable.GetEnvironmentVariable("VCS_TAG"));
 
         internal VersionControlSystem(IVersionControlSystemOptions options, ITerminal terminal)
         {

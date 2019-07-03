@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Codecov.Coverage.EnviornmentVariables;
+using Codecov.Coverage.EnvironmentVariables;
 using Codecov.Coverage.Report;
 using Codecov.Coverage.SourceCode;
 using Codecov.Coverage.Tool;
@@ -39,9 +39,9 @@ namespace Codecov.Program
 
         private CommandLineOptions CommandLineCommandLineOptions { get; }
 
-        private IEnviornmentVariables EnviornmentVariables => new EnviornmentVariables(CommandLineCommandLineOptions, ContinuousIntegrationServer);
+        private IEnvironmentVariables EnvironmentVariables => new EnvironmentVariables(CommandLineCommandLineOptions, ContinuousIntegrationServer);
 
-        private IReport Report => new Report(CommandLineCommandLineOptions, EnviornmentVariables, SourceCode, Coverage);
+        private IReport Report => new Report(CommandLineCommandLineOptions, EnvironmentVariables, SourceCode, Coverage);
 
         private IEnumerable<IRepository> Repositories => RepositoryFactory.Create(VersionControlSystem, ContinuousIntegrationServer);
 
@@ -98,10 +98,10 @@ namespace Codecov.Program
             Log.Information("Reading reports.");
             Log.Information(string.Join("\n", Coverage.CoverageReports.Select(x => x.File)));
 
-            if (EnviornmentVariables.GetEnviornmentVariables.Any())
+            if (EnvironmentVariables.GetEnvironmentVariables.Any())
             {
                 Log.Information("Appending build variables");
-                Log.Information(string.Join("\n", EnviornmentVariables.GetEnviornmentVariables.Select(x => x.Key.Trim()).ToArray()));
+                Log.Information(string.Join("\n", EnvironmentVariables.GetEnvironmentVariables.Select(x => x.Key.Trim()).ToArray()));
             }
 
             if (CommandLineCommandLineOptions.Dump)

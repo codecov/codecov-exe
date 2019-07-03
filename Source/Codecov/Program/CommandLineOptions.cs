@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Codecov.Coverage.EnviornmentVariables;
+using Codecov.Coverage.EnvironmentVariables;
 using Codecov.Coverage.Report;
 using Codecov.Coverage.Tool;
 using Codecov.Services.VersionControlSystems;
@@ -11,7 +11,7 @@ namespace Codecov.Program
     /// <summary>
     /// The command line api. <see href="https://docs.codecov.io/v4.3.6/reference#section-upload-query-as-seen-as-query-below"/>.
     /// </summary>
-    public class CommandLineOptions : IVersionControlSystemOptions, ICoverageOptions, IEnviornmentVariablesOptions, IHostOptions, IQueryOptions, IReportOptions
+    public class CommandLineOptions : IVersionControlSystemOptions, ICoverageOptions, IEnvironmentVariablesOptions, IHostOptions, IQueryOptions, IReportOptions
     {
         /// <summary>
         /// Gets or sets a property specifing the branch name.
@@ -53,14 +53,14 @@ namespace Codecov.Program
         public bool Dump { get; set; }
 
         /// <summary>
-        /// Gets or sets a value specifing the enviornment variables to be included with this build.
+        /// Gets or sets a value specifing the environment variables to be included with this build.
         /// (1) CODECOV_ENV=VAR1,VAR2. (2) -e VAR1 VAR2.
         /// </summary>
         /// <value>
-        /// A value specifing the enviornment variables to be included with this build. (1)
+        /// A value specifing the environment variables to be included with this build. (1)
         /// CODECOV_ENV=VAR1,VAR2. (2) -e VAR1 VAR2.
         /// </value>
-        [Option('e', "env", Separator = ' ', HelpText = "Specify enviornment variables to be included with this build. (1) CODECOV_ENV=VAR1,VAR2. (2) -e VAR1 VAR2.")]
+        [Option('e', "env", Separator = ' ', HelpText = "Specify environment variables to be included with this build. (1) CODECOV_ENV=VAR1,VAR2. (2) -e VAR1 VAR2.")]
         public IEnumerable<string> Envs { get; set; }
 
         /// <summary>
@@ -102,6 +102,13 @@ namespace Codecov.Program
         /// <value>A value indicating whether to remove color from the output.</value>
         [Option("no-color", HelpText = "Remove color from the output.")]
         public bool NoColor { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to skip printing the CodeCov logo.
+        /// </summary>
+        /// <value>A value indicating whether to skip printing the CodeCov logo.</value>
+        [Option("no-color", HelpText = "Do not print the CodeCov figlet.")]
+        public bool NoLogo { get; set; }
 
         /// <summary>
         /// Gets or sets a value specifing the pull request number.
@@ -146,14 +153,14 @@ namespace Codecov.Program
         public string Tag { get; set; }
 
         /// <summary>
-        /// Gets or sets a value specifing the private repository token. (option) set the enviornment
+        /// Gets or sets a value specifing the private repository token. (option) set the environment
         /// variable CODECOV_TOKEN-uuid. (1) -t @/path/to/token_file. (2) -t uuid.
         /// </summary>
         /// <value>
-        /// A value specifing the private repository token. (option) set the enviornment variable
+        /// A value specifing the private repository token. (option) set the environment variable
         /// CODECOV_TOKEN-uuid. (1) -t @/path/to/token_file. (2) -t uuid.
         /// </value>
-        [Option('t', "token", HelpText = "Set the private repository token. (option) set the enviornment variable CODECOV_TOKEN=:uuid. (1) -t uuid.")]
+        [Option('t', "token", HelpText = "Set the private repository token. (option) set the environment variable CODECOV_TOKEN=:uuid. (1) -t uuid.")]
         public string Token { get; set; }
 
         /// <summary>

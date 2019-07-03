@@ -8,7 +8,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
     public class AppVeyorTests
     {
         [Fact]
-        public void Branch_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
+        public void Branch_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("APPVEYOR_REPO_BRANCH", null);
@@ -22,7 +22,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Branch_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void Branch_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("APPVEYOR_REPO_BRANCH", "develop");
@@ -36,7 +36,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Build_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
+        public void Build_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("APPVEYOR_JOB_ID", null);
@@ -50,7 +50,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Build_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void Build_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("APPVEYOR_JOB_ID", "Job 123");
@@ -64,7 +64,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Commit_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
+        public void Commit_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("APPVEYOR_REPO_COMMIT", null);
@@ -78,7 +78,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Commit_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void Commit_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("APPVEYOR_REPO_COMMIT", "123");
@@ -92,7 +92,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Theory, InlineData(null, null), InlineData("", ""), InlineData("True", null), InlineData("True", ""), InlineData(null, "True"), InlineData("", "True"), InlineData("true", "True"), InlineData("True", "true"), InlineData("False", "True"), InlineData("True", "False"), InlineData("False", "False"), InlineData("foo", "bar")]
-        public void Detecter_Should_Be_False_When_AppVeyor_Enviornment_Variable_Or_Ci_Enviornment_Variable_Does_Not_Exit_And_Both_Are_Not_Equal_To_True(string appveyorData, string ciData)
+        public void Detecter_Should_Be_False_When_AppVeyor_Environment_Variable_Or_Ci_Environment_Variable_Does_Not_Exit_And_Both_Are_Not_Equal_To_True(string appveyorData, string ciData)
         {
             // Given
             Environment.SetEnvironmentVariable("APPVEYOR", appveyorData);
@@ -109,7 +109,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         [Theory]
         [InlineData("True", "True")]
         [InlineData("true", "true")]
-        public void Detecter_Should_Be_True_When_AppVeyor_Enviornment_Variable_And_Ci_Enviornment_Variable_Exist_And_Both_Are_Equal_To_True(string appveyorData, string ciData)
+        public void Detecter_Should_Be_True_When_AppVeyor_Environment_Variable_And_Ci_Environment_Variable_Exist_And_Both_Are_Equal_To_True(string appveyorData, string ciData)
         {
             // Given
             Environment.SetEnvironmentVariable("APPVEYOR", appveyorData);
@@ -124,7 +124,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Theory, InlineData(null, null, null), InlineData("", "", ""), InlineData("foo", "bar", ""), InlineData("", "foo", "bar"), InlineData("foo", "", "bar"), InlineData("", "", "foo"), InlineData("foo", "", ""), InlineData("", "foo", "")]
-        public void Job_Should_Be_Empty_String_When_Enviornment_Variables_Do_Not_Exit(string accountData, string slugData, string versionData)
+        public void Job_Should_Be_Empty_String_When_Environment_Variables_Do_Not_Exit(string accountData, string slugData, string versionData)
         {
             // Given
             Environment.SetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME", accountData);
@@ -141,7 +141,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Job_Should_Not_Be_Empty_String_When_Enviornment_Variables_Exit()
+        public void Job_Should_Not_Be_Empty_String_When_Environment_Variables_Exit()
         {
             // Given
             Environment.SetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME", "foo");
@@ -157,7 +157,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Pr_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
+        public void Pr_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER", null);
@@ -171,7 +171,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Pr_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void Pr_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER", "123");
@@ -185,7 +185,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Slug_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
+        public void Slug_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("APPVEYOR_REPO_NAME", null);
@@ -199,7 +199,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Slug_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void Slug_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("APPVEYOR_REPO_NAME", "foo/bar");

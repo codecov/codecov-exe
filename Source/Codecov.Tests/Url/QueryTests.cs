@@ -165,7 +165,7 @@ namespace Codecov.Tests.Url
         }
 
         [Fact]
-        public void Should_Set_From_Enviornmentvariable()
+        public void Should_Set_From_Environmentvariable()
         {
             // Given
             Environment.SetEnvironmentVariable("CODECOV_SLUG", "fizz/bang");
@@ -253,7 +253,7 @@ namespace Codecov.Tests.Url
         }
 
         [Fact]
-        public void Slug_Should_Override_Enviornment_Variable_And_Set_From_CommandLine()
+        public void Slug_Should_Override_Environment_Variable_And_Set_From_CommandLine()
         {
             // Given
             Environment.SetEnvironmentVariable("CODECOV_SLUG", "fizz/bang");
@@ -294,7 +294,7 @@ namespace Codecov.Tests.Url
         }
 
         [Fact]
-        public void Slug_Should_Override_Repository_And_Set_From_Enviornment_Variable()
+        public void Slug_Should_Override_Repository_And_Set_From_Environment_Variable()
         {
             // Given
             Environment.SetEnvironmentVariable("CODECOV_SLUG", "foo/bar");
@@ -316,7 +316,7 @@ namespace Codecov.Tests.Url
         }
 
         [Fact]
-        public void Token_Should_Override_Enviornment_Variable_And_Set_From_CommandLine()
+        public void Token_Should_Override_Environment_Variable_And_Set_From_CommandLine()
         {
             // Given
             Environment.SetEnvironmentVariable("CODECOV_TOKEN", "00000000-0000-0000-0000-000000000000");

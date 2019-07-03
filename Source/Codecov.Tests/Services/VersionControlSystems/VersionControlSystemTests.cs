@@ -17,7 +17,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         private static readonly ITerminal Terminal = Substitute.For<ITerminal>(); // Given
 
         [Fact]
-        public void Branch_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
+        public void Branch_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("VCS_BRANCH_NAME", null);
@@ -31,7 +31,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         }
 
         [Fact]
-        public void Branch_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void Branch_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("VCS_BRANCH_NAME", "develop");
@@ -58,7 +58,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         }
 
         [Fact]
-        public void Pr_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
+        public void Pr_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("VCS_PULL_REQUEST", null);
@@ -72,7 +72,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         }
 
         [Fact]
-        public void Pr_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void Pr_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("VCS_PULL_REQUEST", "123");
@@ -119,7 +119,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         }
 
         [Fact]
-        public void Slug_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
+        public void Slug_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("VCS_SLUG", null);
@@ -133,7 +133,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         }
 
         [Fact]
-        public void Slug_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void Slug_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("VCS_SLUG", "owner/repo");
@@ -199,7 +199,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         }
 
         [Fact]
-        public void Tag_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
+        public void Tag_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("VCS_TAG", null);
@@ -213,7 +213,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         }
 
         [Fact]
-        public void Tag_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void Tag_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("VCS_TAG", "v1.0.0");

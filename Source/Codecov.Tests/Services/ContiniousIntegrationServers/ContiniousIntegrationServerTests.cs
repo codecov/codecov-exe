@@ -21,7 +21,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Build_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
+        public void Build_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("CI_BUILD_ID", null);
@@ -35,7 +35,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Build_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void Build_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("CI_BUILD_ID", "123");
@@ -48,7 +48,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void BuildUrl_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
+        public void BuildUrl_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("CI_BUILD_URL", null);
@@ -62,7 +62,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void BuildUrl_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void BuildUrl_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("CI_BUILD_URL", "www.google.com");
@@ -101,20 +101,20 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void GetEnviornmentVariables_Should_Empty_Dictionary()
+        public void GetEnvironmentVariables_Should_Empty_Dictionary()
         {
             // Given
             var continuousIntegrationServer = new ContinuousIntegrationServer();
 
             // When
-            var enviornmentVariables = continuousIntegrationServer.GetEnviornmentVariables;
+            var environmentVariables = continuousIntegrationServer.GetEnvironmentVariables;
 
             // Then
-            enviornmentVariables.Should().BeEmpty();
+            environmentVariables.Should().BeEmpty();
         }
 
         [Fact]
-        public void Job_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
+        public void Job_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("CI_JOB_ID", null);
@@ -128,7 +128,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Job_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void Job_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("CI_JOB_ID", "123");

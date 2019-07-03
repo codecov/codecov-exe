@@ -6,9 +6,9 @@ namespace Codecov.Services.ContinuousIntegrationServers
 {
     internal class ContinuousIntegrationServer : IContinuousIntegrationServer
     {
-        private readonly Lazy<string> _build = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("CI_BUILD_ID"));
-        private readonly Lazy<string> _buildUrl = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("CI_BUILD_URL"));
-        private readonly Lazy<string> _job = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("CI_JOB_ID"));
+        private readonly Lazy<string> _build = new Lazy<string>(() => EnvironmentVariable.GetEnvironmentVariable("CI_BUILD_ID"));
+        private readonly Lazy<string> _buildUrl = new Lazy<string>(() => EnvironmentVariable.GetEnvironmentVariable("CI_BUILD_URL"));
+        private readonly Lazy<string> _job = new Lazy<string>(() => EnvironmentVariable.GetEnvironmentVariable("CI_JOB_ID"));
 
         public virtual string Branch => string.Empty;
 
@@ -20,7 +20,7 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
         public virtual bool Detecter => false;
 
-        public virtual IDictionary<string, string> GetEnviornmentVariables => new Dictionary<string, string>();
+        public virtual IDictionary<string, string> GetEnvironmentVariables => new Dictionary<string, string>();
 
         public virtual string Job => _job.Value;
 
@@ -32,9 +32,9 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
         public virtual string Tag => string.Empty;
 
-        protected void AddEnviornmentVariable(string name)
+        protected void AddEnvironmentVariable(string name)
         {
-            if (GetEnviornmentVariables.ContainsKey(name))
+            if (GetEnvironmentVariables.ContainsKey(name))
             {
                 return;
             }
@@ -45,7 +45,7 @@ namespace Codecov.Services.ContinuousIntegrationServers
                 return;
             }
 
-            GetEnviornmentVariables[name] = value;
+            GetEnvironmentVariables[name] = value;
         }
     }
 }

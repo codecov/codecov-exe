@@ -12,10 +12,10 @@ namespace Codecov.Coverage.Report
         private readonly Lazy<string> _reporter;
         private readonly Lazy<IReportOptions> _reportOptions;
 
-        public Report(IReportOptions options, IEnviornmentVariables enviornmentVariables, ISourceCode sourceCode, ICoverage coverage)
+        public Report(IReportOptions options, IEnvironmentVariables environmentVariables, ISourceCode sourceCode, ICoverage coverage)
         {
             _reportOptions = new Lazy<IReportOptions>(() => options);
-            EnviornmentVariables = enviornmentVariables;
+            EnvironmentVariables = environmentVariables;
             SourceCode = sourceCode;
             Coverage = coverage;
             _reporter = new Lazy<string>(() => $"{Env}{Network}{CombinedCoverage}");
@@ -43,9 +43,9 @@ namespace Codecov.Coverage.Report
 
         private ICoverage Coverage { get; }
 
-        private string Env => !EnviornmentVariables.GetEnviornmentVariables.Any() ? string.Empty : $"{string.Join("\n", EnviornmentVariables.GetEnviornmentVariables.Select(x => x.Key.Trim() + "=" + x.Value.Trim()).ToArray())}\n<<<<<< ENV\n";
+        private string Env => !EnvironmentVariables.GetEnvironmentVariables.Any() ? string.Empty : $"{string.Join("\n", EnvironmentVariables.GetEnvironmentVariables.Select(x => x.Key.Trim() + "=" + x.Value.Trim()).ToArray())}\n<<<<<< ENV\n";
 
-        private IEnviornmentVariables EnviornmentVariables { get; }
+        private IEnvironmentVariables EnvironmentVariables { get; }
 
         private ISourceCode SourceCode { get; }
 

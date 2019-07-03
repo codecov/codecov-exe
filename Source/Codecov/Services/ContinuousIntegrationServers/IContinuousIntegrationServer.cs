@@ -2,7 +2,7 @@
 
 namespace Codecov.Services.ContinuousIntegrationServers
 {
-    internal interface IContinuousIntegrationServer : IRepository, IBuild, IEnviornmentVariables, IDetect
+    internal interface IContinuousIntegrationServer : IRepository, IBuild, IEnvironmentVariables, IDetect
     {
     }
 }

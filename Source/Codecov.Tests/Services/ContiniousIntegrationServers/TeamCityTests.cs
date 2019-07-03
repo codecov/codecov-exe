@@ -8,7 +8,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
     public class TeamCityTests
     {
         [Fact]
-        public void Branch_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
+        public void Branch_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("TEAMCITY_BUILD_BRANCH", null);
@@ -22,7 +22,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Branch_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void Branch_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("TEAMCITY_BUILD_BRANCH", "develop");
@@ -39,7 +39,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void BuildUrl_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
+        public void BuildUrl_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("TEAMCITY_BUILD_URL", null);
@@ -53,7 +53,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void BuildUrl_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void BuildUrl_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("TEAMCITY_BUILD_URL", "www.google.com/hello");
@@ -70,7 +70,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Build_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
+        public void Build_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("TEAMCITY_BUILD_ID", null);
@@ -84,7 +84,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Build_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void Build_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("TEAMCITY_BUILD_ID", "123");
@@ -101,7 +101,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Commit_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
+        public void Commit_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("TEAMCITY_BUILD_COMMIT", null);
@@ -116,7 +116,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Commit_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void Commit_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("TEAMCITY_BUILD_COMMIT", "4491f681062057a9021199f3d19dfa3c3598d43c");
@@ -134,7 +134,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Commit_Should_Be_Set_When_Default_Enviornment_Variable_Exits()
+        public void Commit_Should_Be_Set_When_Default_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("TEAMCITY_BUILD_COMMIT", null);
@@ -152,7 +152,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Commit_Should_Be_Set_Correctly_When_Both_Enviornment_Variable_Exits()
+        public void Commit_Should_Be_Set_Correctly_When_Both_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("TEAMCITY_BUILD_COMMIT", "4491f681062057a9021199f3d19dfa3c3598d43c");
@@ -171,7 +171,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Slug_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
+        public void Slug_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("TEAMCITY_BUILD_REPOSITORY", null);
@@ -185,7 +185,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Http_Slug_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void Http_Slug_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("TEAMCITY_BUILD_REPOSITORY", "https://github.com/larzw/codecov-exe.git");
@@ -202,7 +202,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Shh_Slug_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void Shh_Slug_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("TEAMCITY_BUILD_REPOSITORY", "git@github.com:larzw/codecov-exe.git");
@@ -219,7 +219,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Theory, InlineData(null), InlineData("")]
-        public void Detecter_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits_Or_Is_Empty(string teamCityData)
+        public void Detecter_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits_Or_Is_Empty(string teamCityData)
         {
             // Given
             Environment.SetEnvironmentVariable("TEAMCITY_VERSION", teamCityData);
@@ -236,7 +236,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Detecter_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void Detecter_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("TEAMCITY_VERSION", "true");

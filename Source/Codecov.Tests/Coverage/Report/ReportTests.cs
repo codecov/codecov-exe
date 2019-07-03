@@ -19,8 +19,8 @@ namespace Codecov.Tests.Coverage.Report
         public void Should_Generate_A_Report()
         {
             // Given
-            var enviornmentVariables = Substitute.For<IEnviornmentVariables>();
-            enviornmentVariables.GetEnviornmentVariables.Returns(new Dictionary<string, string> { { "foo", "bar" }, { "fizz", "bizz" } });
+            var environmentVariables = Substitute.For<IEnvironmentVariables>();
+            environmentVariables.GetEnvironmentVariables.Returns(new Dictionary<string, string> { { "foo", "bar" }, { "fizz", "bizz" } });
             var options = Substitute.For<IReportOptions>();
             options.DisableNetwork = false;
             var sourceCode = Substitute.For<ISourceCode>();
@@ -31,7 +31,7 @@ namespace Codecov.Tests.Coverage.Report
             sourceCode.Directory.Returns(Path.Combine(_systemDrive, "foo"));
             var coverage = Substitute.For<ICoverage>();
             coverage.CoverageReports.Returns(new[] { new ReportFile("./coverageUnit.xml", "Unit Tests."), new ReportFile("./coverageIntegration.xml", "Integration Tests.") });
-            var report = new Codecov.Coverage.Report.Report(options, enviornmentVariables, sourceCode, coverage);
+            var report = new Codecov.Coverage.Report.Report(options, environmentVariables, sourceCode, coverage);
 
             // When
             var reporter = report.Reporter;
@@ -46,8 +46,8 @@ namespace Codecov.Tests.Coverage.Report
         public void If_DisableNetwork_Is_True_The_Source_Code_Should_Be_Empty()
         {
             // Given
-            var enviornmentVariables = Substitute.For<IEnviornmentVariables>();
-            enviornmentVariables.GetEnviornmentVariables.Returns(new Dictionary<string, string> { { "foo", "bar" }, { "fizz", "bizz" } });
+            var environmentVariables = Substitute.For<IEnvironmentVariables>();
+            environmentVariables.GetEnvironmentVariables.Returns(new Dictionary<string, string> { { "foo", "bar" }, { "fizz", "bizz" } });
             var options = Substitute.For<IReportOptions>();
             options.DisableNetwork = true;
             var sourceCode = Substitute.For<ISourceCode>();
@@ -58,7 +58,7 @@ namespace Codecov.Tests.Coverage.Report
             sourceCode.Directory.Returns(Path.Combine(_systemDrive, "foo"));
             var coverage = Substitute.For<ICoverage>();
             coverage.CoverageReports.Returns(new[] { new ReportFile("./coverageUnit.xml", "Unit Tests."), new ReportFile("./coverageIntegration.xml", "Integration Tests.") });
-            var report = new Codecov.Coverage.Report.Report(options, enviornmentVariables, sourceCode, coverage);
+            var report = new Codecov.Coverage.Report.Report(options, environmentVariables, sourceCode, coverage);
 
             // When
             var reporter = report.Reporter;

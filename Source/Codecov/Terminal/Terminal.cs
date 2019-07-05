@@ -83,7 +83,7 @@ namespace Codecov.Terminal
             }
             catch (Exception ex)
             {
-                Log.VerboaseException(ex);
+                Log.VerboseException(ex);
                 return string.Empty;
             }
         }

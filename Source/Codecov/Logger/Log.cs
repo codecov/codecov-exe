@@ -13,9 +13,9 @@ namespace Codecov.Logger
 
         public static void Information(string message) => _logger.Information(message);
 
-        public static void Verboase(string message) => _logger.Verbose(message);
+        public static void Verbose(string message) => _logger.Verbose(message);
 
-        public static void VerboaseException(Exception ex) => Verboase($"{ex.Message}\n{ex.StackTrace}");
+        public static void VerboseException(Exception ex) => Verbose($"{ex.Message}\n{ex.StackTrace}");
 
         public static void Warning(string message) => _logger.Warning(message);
 
@@ -24,12 +24,12 @@ namespace Codecov.Logger
         public static void Create(bool isVerbose, bool noColor)
         {
             _loggerConfig = new LoggerConfiguration();
-            SetLogLevelIsVerboase(isVerbose);
+            SetLogLevelIsVerbose(isVerbose);
             SetLogOutputHasColor(noColor);
             _logger = _loggerConfig.CreateLogger();
         }
 
-        private static void SetLogLevelIsVerboase(bool isVerbose)
+        private static void SetLogLevelIsVerbose(bool isVerbose)
         {
             if (isVerbose)
             {

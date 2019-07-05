@@ -31,7 +31,7 @@ namespace Codecov.Upload
 
         protected override string Post()
         {
-            Log.Verboase("Trying to upload using HttpClient");
+            Log.Verbose("Trying to upload using HttpClient");
             using (var request = new HttpRequestMessage(new HttpMethod("POST"), this.Url.GetUrl))
             {
                 request.Headers.TryAddWithoutValidation("X-Reduced-Redundancy", "false");

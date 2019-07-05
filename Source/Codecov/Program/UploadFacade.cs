@@ -114,11 +114,11 @@ namespace Codecov.Program
 
             Log.Information("Uploading Reports.");
             Log.Information($"url: {Url.GetUrl.Scheme}://{Url.GetUrl.Authority}");
-            Log.Verboase($"api endpoint: {Url.GetUrl}");
+            Log.Verbose($"api endpoint: {Url.GetUrl}");
             Log.Information($"query: {DisplayUrl}");
 
             var response = Upload.Uploader();
-            Log.Verboase($"response: {response}");
+            Log.Verbose($"response: {response}");
             var splitResponse = response.Split('\n');
             if (splitResponse.Length > 1)
             {

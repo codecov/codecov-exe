@@ -28,7 +28,7 @@ namespace Codecov.Upload
                     return response;
                 }
 
-                Log.Verboase("Uploader failed.");
+                Log.Verbose("Uploader failed.");
             }
 
             throw new Exception("Failed to upload the report.");

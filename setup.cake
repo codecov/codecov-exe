@@ -1,4 +1,5 @@
 #module "nuget:?package=Cake.DotNetTool.Module&version=0.2.0"
+#addin "nuget:?package=Cake.Warp&version=0.1.0"
 #load "nuget:?package=Cake.Recipe&version=1.0.0"
 #load ".build/coverlet.cake"
 #load ".build/codecov.cake"
@@ -58,11 +59,32 @@ Task("DotNetCore-Publish")
     var runtimeIdentifiers = project.NetCore.RuntimeIdentifiers;
 
     foreach (var runtime in runtimeIdentifiers) {
+        var outputDirectory = publishDirectory + "/" + runtime;
+        WarpPlatforms warpPlatform;
+        string warpOutputBase = BuildParameters.Paths.Directories.Build + "/codecov-";
+        if (runtime.StartsWith("win"))
+        {
+            warpPlatform = WarpPlatforms.WindowsX64;
+            warpOutputBase += "windows-x64.exe";
+        }
+        else if (runtime.StartsWith("osx"))
+        {
+            warpPlatform = WarpPlatforms.MacOSX64;
+            warpOutputBase += "osx-x64";
+        }
+        else
+        {
+            warpPlatform = WarpPlatforms.LinuxX64;
+            warpOutputBase += "linux-x64";
+        }
+
         DotNetCorePublish(project.ProjectFilePath.FullPath, new DotNetCorePublishSettings {
             Runtime = runtime,
-            OutputDirectory = publishDirectory + "/" + runtime,
+            OutputDirectory = outputDirectory,
             MSBuildSettings = msBuildSettings
         });
+
+        Warp(outputDirectory, (warpPlatform == WarpPlatforms.WindowsX64 ? "codecov.exe" : "codecov"), warpOutputBase, warpPlatform);
     }
 });
 
@@ -70,7 +92,7 @@ Task("Create-ZipArchive")
     .IsDependentOn("DotNetCore-Publish")
     .Does(() =>
 {
-    var outputBase = BuildParameters.Paths.Directories.Build + "/Codecov-";
+    var outputBase = BuildParameters.Paths.Directories.Build + "/codecov-";
 
     foreach (var directory in GetDirectories(publishDirectory + "/*")) {
         var dirName = directory.GetDirectoryName();
@@ -83,7 +105,7 @@ BuildParameters.Tasks.CreateNuGetPackagesTask.IsDependentOn("DotNetCore-Publish"
 
 BuildParameters.Tasks.UploadAppVeyorArtifactsTask.Does(() =>
 {
-    foreach (var archive in GetFiles(BuildParameters.Paths.Directories.Build + "/*.zip"))
+    foreach (var archive in GetFiles(BuildParameters.Paths.Directories.Build + "/codecov-*"))
     {
         AppVeyor.UploadArtifact(archive);
     }
@@ -103,7 +125,7 @@ BuildParameters.Tasks.PublishGitHubReleaseTask.Does(() => RequireTool(GitRelease
 {
     if (BuildParameters.CanUseGitReleaseManager)
     {
-        foreach (var archive in GetFiles(BuildParameters.Paths.Directories.Build + "/*.zip"))
+        foreach (var archive in GetFiles(BuildParameters.Paths.Directories.Build + "/codecov-*"))
         {
             GitReleaseManagerAddAssets(BuildParameters.GitHub.UserName, BuildParameters.GitHub.Password, BuildParameters.RepositoryOwner, BuildParameters.RepositoryName, BuildParameters.Version.Milestone, archive.ToString());
         }

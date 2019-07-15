@@ -27,15 +27,6 @@ for:
       secure: CzGGbCfsVKyCTbY193kYveGQDN5ilsyI30J3FYdo9+IpGsDwi/knjzBqCQbztIzY
     CHOCOLATEY_SOURCE: https://push.chocolatey.org/
 
-
-skip_commits:
-  files:
-    - '*.md'
-    - LICENSE
-    - .editorconfig
-    - .gitattributes
-    - .gitignore
-
 build_script:
 - ps: .\build.ps1 -Target AppVeyor
 - sh: ./build.sh --target=AppVeyor

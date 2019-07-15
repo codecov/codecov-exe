@@ -11,18 +11,18 @@
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
         <DebugType>pdbonly</DebugType>
         <CheckForOverflowUnderflow Condition="'$(Configuration)' == 'Release'">true</CheckForOverflowUnderflow>
-        <CodeAnalysisRuleSet>$(SolutionDir)\Codecov\Codecov.ruleset</CodeAnalysisRuleSet>
+        <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)\Codecov.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Remove="$(SolutionDir)\Codecov\Scripts\**" />
-        <EmbeddedResource Remove="$(SolutionDir)\Codecov\Scripts\**" />
-        <None Remove="$(SolutionDir)\Codecov\Scripts\**" />
+        <Compile Remove="$(MSBuildThisFileDirectory)\Scripts\**" />
+        <EmbeddedResource Remove="$(MSBuildThisFileDirectory)\Scripts\**" />
+        <None Remove="$(MSBuildThisFileDirectory)\Scripts\**" />
     </ItemGroup>
     <ItemGroup>
-        <None Remove="$(SolutionDir)\Codecov\stylecop.json" />
+        <None Remove="$(MSBuildThisFileDirectory)\stylecop.json" />
     </ItemGroup>
     <ItemGroup>
-        <AdditionalFiles Include="$(SolutionDir)\Codecov\stylecop.json" />
+        <AdditionalFiles Include="$(MSBuildThisFileDirectory)\stylecop.json" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="CommandLineParser" Version="2.5.0" />

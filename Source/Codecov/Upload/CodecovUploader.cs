@@ -29,6 +29,50 @@ namespace Codecov.Upload
         {
         }
 
+        public static void Cleanup()
+        {
+            client?.Dispose();
+            client = null;
+        }
+
+        protected virtual void ConfigureContent(HttpContent content)
+        {
+            content.Headers.ContentEncoding.Clear();
+            content.Headers.ContentEncoding.Add("gzip");
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/x-gzip");
+        }
+
+        protected virtual void ConfigureRequest(HttpRequestMessage request)
+        {
+            request.Headers.TryAddWithoutValidation("x-amz-acl", "public-read");
+        }
+
+        protected virtual HttpResponseMessage CreateResponse(HttpRequestMessage request)
+        {
+            ConfigureRequest(request);
+
+            request.Content = new ByteArrayContent(GetReportBytes());
+
+            ConfigureContent(request.Content);
+
+            var response = client.SendAsync(request).Result;
+            return response;
+        }
+
+        protected byte[] GetReportBytes()
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var stream = new GZipStream(memoryStream, CompressionLevel.Optimal))
+                {
+                    var content = Encoding.UTF8.GetBytes(Report.Reporter);
+                    stream.Write(content, 0, content.Length);
+                }
+
+                return memoryStream.ToArray();
+            }
+        }
+
         protected override string Post()
         {
             Log.Verboase("Trying to upload using HttpClient");
@@ -57,44 +101,6 @@ namespace Codecov.Upload
                 var response = CreateResponse(request);
 
                 return response.IsSuccessStatusCode;
-            }
-        }
-
-        protected virtual HttpResponseMessage CreateResponse(HttpRequestMessage request)
-        {
-            ConfigureRequest(request);
-
-            request.Content = new ByteArrayContent(GetReportBytes());
-
-            ConfigureContent(request.Content);
-
-            var response = client.SendAsync(request).Result;
-            return response;
-        }
-
-        protected virtual void ConfigureRequest(HttpRequestMessage request)
-        {
-            request.Headers.TryAddWithoutValidation("x-amz-acl", "public-read");
-        }
-
-        protected virtual void ConfigureContent(HttpContent content)
-        {
-            content.Headers.ContentEncoding.Clear();
-                content.Headers.ContentEncoding.Add("gzip");
-                content.Headers.ContentType = new MediaTypeHeaderValue("application/x-gzip");
-        }
-
-        protected byte[] GetReportBytes()
-        {
-            using (var memoryStream = new MemoryStream())
-            {
-                using (var stream = new GZipStream(memoryStream, CompressionLevel.Optimal))
-                {
-                    var content = Encoding.UTF8.GetBytes(Report.Reporter);
-                    stream.Write(content, 0, content.Length);
-                }
-
-                return memoryStream.ToArray();
             }
         }
     }

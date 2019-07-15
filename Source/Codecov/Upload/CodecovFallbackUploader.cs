@@ -13,6 +13,19 @@ namespace Codecov.Upload
         {
         }
 
+        protected override void ConfigureContent(HttpContent content)
+        {
+            content.Headers.ContentEncoding.Clear();
+            content.Headers.ContentEncoding.Add("gzip");
+        }
+
+        protected override void ConfigureRequest(HttpRequestMessage request)
+        {
+            request.Headers.Accept.Clear();
+            request.Headers.Accept.ParseAdd("text/plain");
+            request.Headers.Add("X-Content-Encoding", "gzip");
+        }
+
         protected override string Post()
         {
             return this.Url.GetFallbackUrl.ToString();
@@ -33,19 +46,6 @@ namespace Codecov.Upload
 
                 return response.IsSuccessStatusCode;
             }
-        }
-
-        protected override void ConfigureRequest(HttpRequestMessage request)
-        {
-            request.Headers.Accept.Clear();
-            request.Headers.Accept.ParseAdd("text/plain");
-            request.Headers.Add("X-Content-Encoding", "gzip");
-        }
-
-        protected override void ConfigureContent(HttpContent content)
-        {
-            content.Headers.ContentEncoding.Clear();
-            content.Headers.ContentEncoding.Add("gzip");
         }
 
         private static string GetReportUrl(string content)

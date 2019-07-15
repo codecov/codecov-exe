@@ -5,11 +5,20 @@ namespace Codecov.Logger
 {
     internal static class Log
     {
+        private static ILogger _logger;
         private static LoggerConfiguration _loggerConfig;
 
-        private static ILogger _logger;
+        public static void Create(bool isVerbose, bool noColor)
+        {
+            _loggerConfig = new LoggerConfiguration();
+            SetLogLevelIsVerboase(isVerbose);
+            SetLogOutputHasColor(noColor);
+            _logger = _loggerConfig.CreateLogger();
+        }
 
         public static void Error(string message) => _logger.Error(message);
+
+        public static void Fatal(string message) => _logger.Fatal(message);
 
         public static void Information(string message) => _logger.Information(message);
 
@@ -19,14 +28,14 @@ namespace Codecov.Logger
 
         public static void Warning(string message) => _logger.Warning(message);
 
-        public static void Fatal(string message) => _logger.Fatal(message);
-
-        public static void Create(bool isVerbose, bool noColor)
+        internal static void Cleanup()
         {
-            _loggerConfig = new LoggerConfiguration();
-            SetLogLevelIsVerboase(isVerbose);
-            SetLogOutputHasColor(noColor);
-            _logger = _loggerConfig.CreateLogger();
+            if (_logger != null && _logger is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+
+            _logger = null;
         }
 
         private static void SetLogLevelIsVerboase(bool isVerbose)

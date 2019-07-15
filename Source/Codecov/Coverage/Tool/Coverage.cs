@@ -37,18 +37,18 @@ namespace Codecov.Coverage.Tool
                 || path.Contains('!')
                 || path.Contains(','))
             {
-                //Logger.Log.Information($"Using wildcard path {path}");
+                // Logger.Log.Information($"Using wildcard path {path}");
                 List<string> matches = Glob.Files(Environment.CurrentDirectory, path, GlobOptions.Compiled | GlobOptions.CaseInsensitive)?.ToList();
                 if (matches?.Any() != true)
                 {
-                    //Logger.Log.Warning($"There are no files that match the wildcard {path}.");
+                    // Logger.Log.Warning($"There are no files that match the wildcard {path}.");
                     return false;
                 }
 
                 expanded.Clear();
                 matches.ForEach(_ =>
                 {
-                    //Logger.Log.Information($"Adding file {_} that matches wildcard path {path}");
+                    // Logger.Log.Information($"Adding file {_} that matches wildcard path {path}");
                     expanded.Add(_);
                 });
 

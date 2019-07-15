@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Linq;
-using Codecov.Tests;
 using Codecov.Utilities;
 using FluentAssertions;
 using Xunit;
@@ -37,19 +36,6 @@ namespace Codecov.Tests.Utilities
             normalizedPath.Should().BeEmpty();
         }
 
-        [WindowsFact]
-        public void NormalizedPath_Should_Change_Forward_Slashes_To_Backward_Slashes_On_Windows()
-        {
-            // Given
-            const string path = @"c:/fake/github";
-
-            // When
-            var normalizedPath = FileSystem.NormalizedPath(path);
-
-            // Then
-            normalizedPath.Should().Be(@"c:\fake\github");
-        }
-
         [UnixFact]
         public void NormalizedPath_Should_Change_Backward_Slashes_To_Forward_Slashes_On_Unix()
         {
@@ -61,6 +47,19 @@ namespace Codecov.Tests.Utilities
 
             // Then
             normalizedPath.Should().Be(@"/home/fake/github");
+        }
+
+        [WindowsFact]
+        public void NormalizedPath_Should_Change_Forward_Slashes_To_Backward_Slashes_On_Windows()
+        {
+            // Given
+            const string path = @"c:/fake/github";
+
+            // When
+            var normalizedPath = FileSystem.NormalizedPath(path);
+
+            // Then
+            normalizedPath.Should().Be(@"c:\fake\github");
         }
 
         [Fact]

@@ -10,11 +10,6 @@ namespace Codecov.Terminal
     {
         public virtual bool Exits => true;
 
-        public string RunScript(string script)
-        {
-            return Run(script, string.Empty);
-        }
-
         public virtual string Run(string command, string commandArguments)
         {
             try
@@ -86,6 +81,11 @@ namespace Codecov.Terminal
                 Log.VerboaseException(ex);
                 return string.Empty;
             }
+        }
+
+        public string RunScript(string script)
+        {
+            return Run(script, string.Empty);
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Codecov.Coverage.Report;
 using Codecov.Logger;
-using Codecov.Terminal;
 using Codecov.Url;
 
 namespace Codecov.Upload
@@ -36,7 +35,8 @@ namespace Codecov.Upload
 
         private static IEnumerable<IUpload> SetUploaders(IUrl url, IReport report)
         {
-            return new List<IUpload> {
+            return new List<IUpload>
+            {
                 new CodecovUploader(url, report),
                 new CodecovFallbackUploader(url, report)
             };

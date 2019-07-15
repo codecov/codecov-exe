@@ -1,22 +1,25 @@
-﻿using Codecov.Utilities;
-using FluentAssertions;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.InteropServices;
+using Codecov.Utilities;
+using FluentAssertions;
 using Xunit;
 
 namespace Codecov.Tests.Utilities
 {
     public class PathFilterBuilderTests
     {
-        [Theory]
-        [MemberData(nameof(ExtensionFilterTestData))]
-        public void ExtensionFilter_Should_Return_True_When_ExtensionsMatch(string path, string extensionFilter, bool expected)
+        public static TheoryData<string, string, string, bool> CompositeFilterData
         {
-            var filter = new PathFilterBuilder()
-                .FileHasExtension(extensionFilter)
-                .Build();
+            get
+            {
+                var data = new TheoryData<string, string, string, bool>();
+                data.Add(CreatePath("file.txt"), @"\Users", ".txt", true);
+                data.Add(CreatePath("file.txt"), @"\Groups", ".txt", true);
+                data.Add(CreatePath("file.txt"), @"\Groups", ".zip", false);
+                data.Add("", @"\Users", ".txt", false);
 
-            filter.Matches(path).Should().Be(expected);
+                return data;
+            }
         }
 
         public static TheoryData<string, string, bool> ExtensionFilterTestData
@@ -34,17 +37,6 @@ namespace Codecov.Tests.Utilities
             }
         }
 
-        [Theory]
-        [MemberData(nameof(PathFilterTestData))]
-        public void PathFilter_Should_Return_True_When_ExtensionsMatch(string path, string subPath, bool expected)
-        {
-            var filter = new PathFilterBuilder()
-                .PathContains(subPath)
-                .Build();
-
-            filter.Matches(path).Should().Be(expected);
-        }
-        
         public static TheoryData<string, string, bool> PathFilterTestData
         {
             get
@@ -73,18 +65,26 @@ namespace Codecov.Tests.Utilities
             filter.Matches(path).Should().Be(expected);
         }
 
-        public static TheoryData<string, string, string, bool> CompositeFilterData
+        [Theory]
+        [MemberData(nameof(ExtensionFilterTestData))]
+        public void ExtensionFilter_Should_Return_True_When_ExtensionsMatch(string path, string extensionFilter, bool expected)
         {
-            get
-            {
-                var data = new TheoryData<string, string, string, bool>();
-                data.Add(CreatePath("file.txt"), @"\Users", ".txt", true);
-                data.Add(CreatePath("file.txt"), @"\Groups", ".txt", true);
-                data.Add(CreatePath("file.txt"), @"\Groups", ".zip", false);
-                data.Add("", @"\Users", ".txt", false);
+            var filter = new PathFilterBuilder()
+                .FileHasExtension(extensionFilter)
+                .Build();
 
-                return data;
-            }
+            filter.Matches(path).Should().Be(expected);
+        }
+
+        [Theory]
+        [MemberData(nameof(PathFilterTestData))]
+        public void PathFilter_Should_Return_True_When_ExtensionsMatch(string path, string subPath, bool expected)
+        {
+            var filter = new PathFilterBuilder()
+                .PathContains(subPath)
+                .Build();
+
+            filter.Matches(path).Should().Be(expected);
         }
 
         private static string CreatePath(string path)

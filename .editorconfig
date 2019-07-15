@@ -15,3 +15,6 @@ end_of_line = LF
 
 [*.DotSettings]
 end_of_line = LF
+
+[*.cs]
+dotnet_sort_system_directives_first = true

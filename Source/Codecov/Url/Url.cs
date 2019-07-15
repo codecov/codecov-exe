@@ -4,8 +4,8 @@ namespace Codecov.Url
 {
     internal class Url : IUrl
     {
-        private readonly Lazy<Uri> _getUrl;
         private readonly Lazy<Uri> _getFallbackUrl;
+        private readonly Lazy<Uri> _getUrl;
 
         public Url(IHost host, IRoute route, IQuery query)
         {
@@ -16,10 +16,8 @@ namespace Codecov.Url
             _getFallbackUrl = new Lazy<Uri>(() => new Uri($"{Host.GetHost}/{Route.GetFallbackRoute}?{Query.GetQuery}"));
         }
 
-        public Uri GetUrl => _getUrl.Value;
-
         public Uri GetFallbackUrl => _getFallbackUrl.Value;
-
+        public Uri GetUrl => _getUrl.Value;
         private IHost Host { get; }
 
         private IQuery Query { get; }

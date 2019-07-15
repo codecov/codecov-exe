@@ -33,6 +33,26 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
         public virtual string Tag => string.Empty;
 
+        protected static bool CheckEnvironmentVariables(params string[] environmentVariables)
+        {
+            var foundVariables = new List<string>();
+
+            foreach (var variable in environmentVariables)
+            {
+                var ci = EnviornmentVariable.GetEnviornmentVariable(variable);
+
+                if (string.IsNullOrWhiteSpace(ci) || !ci.Equals("True", StringComparison.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+
+                foundVariables.Add(ci);
+            }
+
+            var firstValue = foundVariables.FirstOrDefault();
+            return !string.IsNullOrEmpty(firstValue) && foundVariables.Skip(1).All(v => v.Equals(firstValue, StringComparison.Ordinal));
+        }
+
         protected void AddEnviornmentVariable(string name)
         {
             if (GetEnviornmentVariables.ContainsKey(name))
@@ -47,25 +67,6 @@ namespace Codecov.Services.ContinuousIntegrationServers
             }
 
             GetEnviornmentVariables[name] = value;
-        }
-
-        protected static bool CheckEnvironmentVariables(params string[] environmentVariables)
-        {
-            var foundVariables = new List<string>();
-
-            foreach (var variable in environmentVariables)
-            {
-                var ci = EnviornmentVariable.GetEnviornmentVariable(variable);
-
-                if (string.IsNullOrWhiteSpace(ci) || !ci.Equals("True", StringComparison.OrdinalIgnoreCase))
-                {
-                    return false;
-                }
-                foundVariables.Add(ci);
-            }
-
-            var firstValue = foundVariables.FirstOrDefault();
-            return !string.IsNullOrEmpty(firstValue) && foundVariables.Skip(1).All(v => v.Equals(firstValue, StringComparison.Ordinal));
         }
     }
 }

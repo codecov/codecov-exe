@@ -5,7 +5,6 @@ namespace Codecov.Tests
 {
     public class WindowsFactAttribute : FactAttribute
     {
-
         public WindowsFactAttribute(string reason = null)
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

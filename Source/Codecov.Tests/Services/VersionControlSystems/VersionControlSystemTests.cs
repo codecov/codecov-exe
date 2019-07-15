@@ -11,10 +11,12 @@ namespace Codecov.Tests.Services.VersionControlSystems
 {
     public class VersionControlSystemTests
     {
+        private static readonly IVersionControlSystemOptions Options = Substitute.For<IVersionControlSystemOptions>();
+        private static readonly ITerminal Terminal = Substitute.For<ITerminal>();
         private static string _systemDrive = Path.GetPathRoot(DriveInfo.GetDrives().First().ToString());
-        private static readonly IVersionControlSystemOptions Options = Substitute.For<IVersionControlSystemOptions>(); // Given
+        // Given
 
-        private static readonly ITerminal Terminal = Substitute.For<ITerminal>(); // Given
+        // Given
 
         [Fact]
         public void Branch_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Codecov.Logger;
+using Codecov.Upload;
 using Codecov.Utilities;
 using CommandLine;
 
@@ -22,7 +23,14 @@ namespace Codecov.Program
             catch (Exception e)
             {
                 Log.Fatal($"{e.Message}\n{e.StackTrace}");
+
                 return _kill;
+            }
+            finally
+            {
+                // Cleaning up undisposed fields/Properties
+                CodecovUploader.Cleanup();
+                Log.Cleanup();
             }
         }
 
@@ -42,10 +50,12 @@ namespace Codecov.Program
         private static void ParseAndSetCommandLineArgs(IEnumerable<string> args)
         {
             var result = (Parsed<CommandLineOptions>)Parser.Default.ParseArguments<CommandLineOptions>(args)
-                .WithNotParsed((errors) => {
+                .WithNotParsed((errors) =>
+                {
                     foreach (var error in errors)
                     {
-                        if (error.Tag == ErrorType.UnknownOptionError) {
+                        if (error.Tag == ErrorType.UnknownOptionError)
+                        {
                             Environment.Exit(0xA0); // Exit immediately with exit code 160 for invalid arguments
                         }
                     }

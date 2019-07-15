@@ -25,29 +25,12 @@ namespace Codecov.Program
             CommandLineCommandLineOptions = commandLineOptions;
         }
 
-        private static IDictionary<TerminalName, ITerminal> Terminals => TerminalFactory.Create();
-
-        private static IContinuousIntegrationServer ContinuousIntegrationServer => ContinuousIntegrationServerFactory.Create();
-
         private ICoverage Coverage => new Coverage.Tool.Coverage(CommandLineCommandLineOptions);
-
-        private IUpload Upload => new Uploads(Url, Report);
-
         private IUrl Url => new Url.Url(new Host(CommandLineCommandLineOptions), new Route(), new Query(CommandLineCommandLineOptions, Repositories, ContinuousIntegrationServer, Yaml));
-
         private IYaml Yaml => new Yaml.Yaml(SourceCode);
-
+        private static IContinuousIntegrationServer ContinuousIntegrationServer => ContinuousIntegrationServerFactory.Create();
+        private static IDictionary<TerminalName, ITerminal> Terminals => TerminalFactory.Create();
         private CommandLineOptions CommandLineCommandLineOptions { get; }
-
-        private IEnviornmentVariables EnviornmentVariables => new EnviornmentVariables(CommandLineCommandLineOptions, ContinuousIntegrationServer);
-
-        private IReport Report => new Report(CommandLineCommandLineOptions, EnviornmentVariables, SourceCode, Coverage);
-
-        private IEnumerable<IRepository> Repositories => RepositoryFactory.Create(VersionControlSystem, ContinuousIntegrationServer);
-
-        private ISourceCode SourceCode => new SourceCode(VersionControlSystem);
-
-        private IVersionControlSystem VersionControlSystem => VersionControlSystemFactory.Create(CommandLineCommandLineOptions, Terminals[TerminalName.Generic]);
 
         private string DisplayUrl
         {
@@ -58,6 +41,13 @@ namespace Codecov.Program
                 return regex.Replace(url, string.Empty);
             }
         }
+
+        private IEnviornmentVariables EnviornmentVariables => new EnviornmentVariables(CommandLineCommandLineOptions, ContinuousIntegrationServer);
+        private IReport Report => new Report(CommandLineCommandLineOptions, EnviornmentVariables, SourceCode, Coverage);
+        private IEnumerable<IRepository> Repositories => RepositoryFactory.Create(VersionControlSystem, ContinuousIntegrationServer);
+        private ISourceCode SourceCode => new SourceCode(VersionControlSystem);
+        private IUpload Upload => new Uploads(Url, Report);
+        private IVersionControlSystem VersionControlSystem => VersionControlSystemFactory.Create(CommandLineCommandLineOptions, Terminals[TerminalName.Generic]);
 
         public void Uploader()
         {

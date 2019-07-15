@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Linq;
-using Codecov.Tests;
 using Codecov.Utilities;
 using FluentAssertions;
 using Xunit;
@@ -9,7 +8,7 @@ namespace Codecov.Tests.Utilities
 {
     public class FileSystemTests
     {
-        private static string _systemDrive = Path.GetPathRoot(DriveInfo.GetDrives().First().ToString());
+        private static readonly string _systemDrive = Path.GetPathRoot(DriveInfo.GetDrives().First().ToString());
 
         [Fact]
         public void NormalizedPath_Should_Be_Empty_If_Path_Is_Empty()
@@ -31,23 +30,11 @@ namespace Codecov.Tests.Utilities
             string path = null;
 
             // When
+            // ReSharper disable once ExpressionIsAlwaysNull
             var normalizedPath = FileSystem.NormalizedPath(path);
 
             // Then
             normalizedPath.Should().BeEmpty();
-        }
-
-        [WindowsFact]
-        public void NormalizedPath_Should_Change_Forward_Slashes_To_Backward_Slashes_On_Windows()
-        {
-            // Given
-            const string path = @"c:/fake/github";
-
-            // When
-            var normalizedPath = FileSystem.NormalizedPath(path);
-
-            // Then
-            normalizedPath.Should().Be(@"c:\fake\github");
         }
 
         [UnixFact]
@@ -61,6 +48,19 @@ namespace Codecov.Tests.Utilities
 
             // Then
             normalizedPath.Should().Be(@"/home/fake/github");
+        }
+
+        [WindowsFact]
+        public void NormalizedPath_Should_Change_Forward_Slashes_To_Backward_Slashes_On_Windows()
+        {
+            // Given
+            const string path = @"c:/fake/github";
+
+            // When
+            var normalizedPath = FileSystem.NormalizedPath(path);
+
+            // Then
+            normalizedPath.Should().Be(@"c:\fake\github");
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace Codecov.Tests.Utilities
         public void NormalizedPath_Should_Have_The_Same_Case()
         {
             // Given
-            string path = Path.Combine(_systemDrive, "Fake", "GitHub");
+            var path = Path.Combine(_systemDrive, "Fake", "GitHub");
 
             // When
             var normalizedPath = FileSystem.NormalizedPath(path);
@@ -94,7 +94,7 @@ namespace Codecov.Tests.Utilities
         public void NormalizedPath_Should_Remove_Ending_Slash()
         {
             // Given
-            string path = Path.Combine(_systemDrive, "fake", "github") + Path.DirectorySeparatorChar;
+            var path = Path.Combine(_systemDrive, "fake", "github") + Path.DirectorySeparatorChar;
 
             // When
             var normalizedPath = FileSystem.NormalizedPath(path);
@@ -107,7 +107,7 @@ namespace Codecov.Tests.Utilities
         public void NormalizedPath_Should_Work_If_Path_Has_Spaces_In_It()
         {
             // Given
-            string path = Path.Combine(_systemDrive, "fake path", "github");
+            var path = Path.Combine(_systemDrive, "fake path", "github");
 
             // When
             var normalizedPath = FileSystem.NormalizedPath(path);

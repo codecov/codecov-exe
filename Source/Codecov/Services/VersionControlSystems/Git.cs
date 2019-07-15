@@ -42,12 +42,9 @@ namespace Codecov.Services.VersionControlSystems
         private string LoadBranch()
         {
             var branch = RunGit(@"rev-parse --abbrev-ref HEAD");
-            if (string.IsNullOrWhiteSpace(branch) || branch.Equals("HEAD"))
-            {
-                return string.Empty;
-            }
-
-            return branch;
+            return string.IsNullOrWhiteSpace(branch) || branch.Equals("HEAD")
+                ? string.Empty
+                : branch;
         }
 
         private string LoadCommit()
@@ -57,9 +54,8 @@ namespace Codecov.Services.VersionControlSystems
         }
 
         private bool LoadDetecter()
-        {
-            return !string.IsNullOrWhiteSpace(Terminal.Run("git", "--version")) && Directory.Exists(Path.Combine(RepoRoot, ".git"));
-        }
+            => !string.IsNullOrWhiteSpace(Terminal.Run("git", "--version"))
+                && Directory.Exists(Path.Combine(RepoRoot, ".git"));
 
         private string LoadRepoRoot()
         {

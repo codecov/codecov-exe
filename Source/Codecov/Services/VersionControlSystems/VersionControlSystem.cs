@@ -45,8 +45,6 @@ namespace Codecov.Services.VersionControlSystems
         protected ITerminal Terminal { get; }
 
         private IEnumerable<string> LoadSourceCode()
-        {
-            return Directory.EnumerateFiles(RepoRoot, "*.*", SearchOption.AllDirectories);
-        }
+            => Directory.EnumerateFiles(RepoRoot, "*.*", SearchOption.AllDirectories);
     }
 }

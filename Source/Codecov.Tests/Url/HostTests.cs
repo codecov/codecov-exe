@@ -1,7 +1,7 @@
-﻿using Codecov.Url;
+﻿using System;
+using Codecov.Url;
 using FluentAssertions;
 using NSubstitute;
-using System;
 using Xunit;
 
 namespace Codecov.Tests.Url

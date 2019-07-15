@@ -23,8 +23,6 @@ namespace Codecov.Coverage.Report
 
         public string Reporter => _reporter.Value;
 
-        private IReportOptions ReportOptions => _reportOptions.Value;
-
         private string CombinedCoverage
         {
             get
@@ -47,8 +45,6 @@ namespace Codecov.Coverage.Report
 
         private IEnviornmentVariables EnviornmentVariables { get; }
 
-        private ISourceCode SourceCode { get; }
-
         private string Network
         {
             get
@@ -70,9 +66,11 @@ namespace Codecov.Coverage.Report
             }
         }
 
+        private IReportOptions ReportOptions => _reportOptions.Value;
+
+        private ISourceCode SourceCode { get; }
+
         private string Convert2RelativePath(string absolutePath)
-        {
-            return absolutePath.Replace(SourceCode.Directory + Path.DirectorySeparatorChar, string.Empty);
-        }
+            => absolutePath.Replace(SourceCode.Directory + Path.DirectorySeparatorChar, string.Empty);
     }
 }

@@ -5,12 +5,14 @@ using Codecov.Coverage.Tool;
 using Codecov.Services.VersionControlSystems;
 using Codecov.Url;
 using CommandLine;
+using JetBrains.Annotations;
 
 namespace Codecov.Program
 {
     /// <summary>
     /// The command line api. <see href="https://docs.codecov.io/v4.3.6/reference#section-upload-query-as-seen-as-query-below"/>.
     /// </summary>
+    [PublicAPI]
     public class CommandLineOptions : IVersionControlSystemOptions, ICoverageOptions, IEnviornmentVariablesOptions, IHostOptions, IQueryOptions, IReportOptions
     {
         /// <summary>

@@ -1,4 +1,3 @@
-﻿using System;
 using System.IO;
 using System.Linq;
 using Codecov.Services.VersionControlSystems;
@@ -11,7 +10,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
 {
     public class GitTests
     {
-        private static string _systemDrive = Path.GetPathRoot(DriveInfo.GetDrives().First().ToString());
+        private static readonly string _systemDrive = Path.GetPathRoot(DriveInfo.GetDrives().First().ToString());
 
         [Fact]
         public void Branch_Should_Return_Correct_Branch_If_Exits()
@@ -77,6 +76,22 @@ namespace Codecov.Tests.Services.VersionControlSystems
             commit.Should().BeEmpty();
         }
 
+        [Fact]
+        public void Detecter_Should_Be_False_If_Dot_Git_Directory_Does_Not_Exit()
+        {
+            // Given
+            var terminal = Substitute.For<ITerminal>();
+            terminal.Run("git", "--version").Returns("foo");
+            var options = Substitute.For<IVersionControlSystemOptions>();
+            var git = new Git(options, terminal);
+
+            // When
+            var detecter = git.Detecter;
+
+            // Then
+            detecter.Should().BeFalse();
+        }
+
         [Theory, InlineData(null), InlineData("")]
         public void Detecter_Should_Be_False_If_Returns_Null_Or_Empty_String(string terminalData)
         {
@@ -95,22 +110,6 @@ namespace Codecov.Tests.Services.VersionControlSystems
 
             // Clean up
             Directory.Delete(".git");
-        }
-
-        [Fact]
-        public void Detecter_Should_Be_False_If_Dot_Git_Directory_Does_Not_Exit()
-        {
-            // Given
-            var terminal = Substitute.For<ITerminal>();
-            terminal.Run("git", "--version").Returns("foo");
-            var options = Substitute.For<IVersionControlSystemOptions>();
-            var git = new Git(options, terminal);
-
-            // When
-            var detecter = git.Detecter;
-
-            // Then
-            detecter.Should().BeFalse();
         }
 
         [Fact]

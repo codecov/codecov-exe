@@ -1,5 +1,8 @@
 #module "nuget:?package=Cake.DotNetTool.Module&version=0.2.0"
+#addin "nuget:?package=Cake.Warp&version=0.1.0"
 #load "nuget:?package=Cake.Recipe&version=1.0.0"
+#load ".build/coverlet.cake"
+#load ".build/codecov.cake"
 
 Environment.SetVariableNames();
 
@@ -56,11 +59,32 @@ Task("DotNetCore-Publish")
     var runtimeIdentifiers = project.NetCore.RuntimeIdentifiers;
 
     foreach (var runtime in runtimeIdentifiers) {
+        var outputDirectory = publishDirectory + "/" + runtime;
+        WarpPlatforms warpPlatform;
+        string warpOutputBase = BuildParameters.Paths.Directories.Build + "/codecov-";
+        if (runtime.StartsWith("win"))
+        {
+            warpPlatform = WarpPlatforms.WindowsX64;
+            warpOutputBase += "windows-x64.exe";
+        }
+        else if (runtime.StartsWith("osx"))
+        {
+            warpPlatform = WarpPlatforms.MacOSX64;
+            warpOutputBase += "osx-x64";
+        }
+        else
+        {
+            warpPlatform = WarpPlatforms.LinuxX64;
+            warpOutputBase += "linux-x64";
+        }
+
         DotNetCorePublish(project.ProjectFilePath.FullPath, new DotNetCorePublishSettings {
             Runtime = runtime,
-            OutputDirectory = publishDirectory + "/" + runtime,
+            OutputDirectory = outputDirectory,
             MSBuildSettings = msBuildSettings
         });
+
+        Warp(outputDirectory, (warpPlatform == WarpPlatforms.WindowsX64 ? "codecov.exe" : "codecov"), warpOutputBase, warpPlatform);
     }
 });
 
@@ -68,7 +92,7 @@ Task("Create-ZipArchive")
     .IsDependentOn("DotNetCore-Publish")
     .Does(() =>
 {
-    var outputBase = BuildParameters.Paths.Directories.Build + "/Codecov-";
+    var outputBase = BuildParameters.Paths.Directories.Build + "/codecov-";
 
     foreach (var directory in GetDirectories(publishDirectory + "/*")) {
         var dirName = directory.GetDirectoryName();
@@ -81,7 +105,7 @@ BuildParameters.Tasks.CreateNuGetPackagesTask.IsDependentOn("DotNetCore-Publish"
 
 BuildParameters.Tasks.UploadAppVeyorArtifactsTask.Does(() =>
 {
-    foreach (var archive in GetFiles(BuildParameters.Paths.Directories.Build + "/*.zip"))
+    foreach (var archive in GetFiles(BuildParameters.Paths.Directories.Build + "/codecov-*"))
     {
         AppVeyor.UploadArtifact(archive);
     }
@@ -101,17 +125,12 @@ BuildParameters.Tasks.PublishGitHubReleaseTask.Does(() => RequireTool(GitRelease
 {
     if (BuildParameters.CanUseGitReleaseManager)
     {
-        foreach (var archive in GetFiles(BuildParameters.Paths.Directories.Build + "/*.zip"))
+        foreach (var archive in GetFiles(BuildParameters.Paths.Directories.Build + "/codecov-*"))
         {
             GitReleaseManagerAddAssets(BuildParameters.GitHub.UserName, BuildParameters.GitHub.Password, BuildParameters.RepositoryOwner, BuildParameters.RepositoryName, BuildParameters.Version.Milestone, archive.ToString());
         }
     }
 }));
-
-// We want to dog food codecov so we can push using the built binaries
-// This means we have to re-implement the whole task
-((CakeTask)BuildParameters.Tasks.UploadCodecovReportTask.Task).Actions.Clear();
-((CakeTask)BuildParameters.Tasks.UploadCodecovReportTask.Task).Criterias.Clear();
 
 BuildParameters.Tasks.CleanTask.Does(() =>
 {
@@ -124,45 +143,6 @@ BuildParameters.Tasks.CleanTask.Does(() =>
 
     DeleteFiles(GetFiles("./tools/codecov*"));
 });
-
-BuildParameters.Tasks.UploadCodecovReportTask
-    .IsDependentOn(BuildParameters.Tasks.CreateNuGetPackagesTask)
-    .WithCriteria(() => FileExists(BuildParameters.Paths.Files.TestCoverageOutputFilePath), "No coverage report to upload")
-    .Does(() => RequireTool(
-        $"#tool dotnet:file://{MakeAbsolute(BuildParameters.Paths.Directories.NuGetPackages)}?package=Codecov.Tool&version={BuildParameters.Version.SemVersion}&prerelease",
-        () => {
-    var settings = new CodecovSettings {
-        Files    = new[] { BuildParameters.Paths.Files.TestCoverageOutputFilePath.ToString() },
-        Required = true,
-        Verbose  = true,
-        Dump     = BuildParameters.IsLocalBuild
-    };
-
-    if (BuildParameters.IsRunningOnUnix) {
-        var tool = Context.Tools.Resolve("codecov"); // Wee need special handling because the version used of Cake.Codecov does not support linux executable path
-        settings.ToolPath = tool;
-    }
-
-    if (BuildParameters.Version != null &&
-        !string.IsNullOrEmpty(BuildParameters.Version.FullSemVersion) &&
-        BuildParameters.IsRunningOnAppVeyor)
-    {
-        // Required to work correctly with appveyor because environment changes isn't detected until cake is done running.
-        var buildVersion = string.Format("{0}.build.{1}",
-            BuildParameters.Version.FullSemVersion,
-            BuildSystem.AppVeyor.Environment.Build.Number);
-        settings.EnvironmentVariables.Add("APPVEYOR_BUILD_VERSION", buildVersion);
-    }
-
-    Codecov(settings);
-
-})).Finally(() => {
-    if (publishingError) {
-        throw new Exception("Uploading to codecov failed");
-    }
-});
-
-BuildParameters.Tasks.DefaultTask.IsDependentOn(BuildParameters.Tasks.UploadCodecovReportTask);
 
 Task("Update-Dependencies")
     .Does(() =>

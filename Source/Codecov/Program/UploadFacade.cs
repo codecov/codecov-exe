@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -25,29 +25,17 @@ namespace Codecov.Program
             CommandLineCommandLineOptions = commandLineOptions;
         }
 
-        private static IDictionary<TerminalName, ITerminal> Terminals => TerminalFactory.Create();
-
         private static IContinuousIntegrationServer ContinuousIntegrationServer => ContinuousIntegrationServerFactory.Create();
 
-        private ICoverage Coverage => new Coverage.Tool.Coverage(CommandLineCommandLineOptions);
+        private static IDictionary<TerminalName, ITerminal> Terminals => TerminalFactory.Create();
 
-        private IUpload Upload => new Uploads(Url, Report);
+        private ICoverage Coverage => new Coverage.Tool.Coverage(CommandLineCommandLineOptions);
 
         private IUrl Url => new Url.Url(new Host(CommandLineCommandLineOptions), new Route(), new Query(CommandLineCommandLineOptions, Repositories, ContinuousIntegrationServer, Yaml));
 
         private IYaml Yaml => new Yaml.Yaml(SourceCode);
 
         private CommandLineOptions CommandLineCommandLineOptions { get; }
-
-        private IEnviornmentVariables EnviornmentVariables => new EnviornmentVariables(CommandLineCommandLineOptions, ContinuousIntegrationServer);
-
-        private IReport Report => new Report(CommandLineCommandLineOptions, EnviornmentVariables, SourceCode, Coverage);
-
-        private IEnumerable<IRepository> Repositories => RepositoryFactory.Create(VersionControlSystem, ContinuousIntegrationServer);
-
-        private ISourceCode SourceCode => new SourceCode(VersionControlSystem);
-
-        private IVersionControlSystem VersionControlSystem => VersionControlSystemFactory.Create(CommandLineCommandLineOptions, Terminals[TerminalName.Generic]);
 
         private string DisplayUrl
         {
@@ -58,6 +46,18 @@ namespace Codecov.Program
                 return regex.Replace(url, string.Empty);
             }
         }
+
+        private IEnviornmentVariables EnviornmentVariables => new EnviornmentVariables(CommandLineCommandLineOptions, ContinuousIntegrationServer);
+
+        private IReport Report => new Report(CommandLineCommandLineOptions, EnviornmentVariables, SourceCode, Coverage);
+
+        private IEnumerable<IRepository> Repositories => RepositoryFactory.Create(VersionControlSystem, ContinuousIntegrationServer);
+
+        private ISourceCode SourceCode => new SourceCode(VersionControlSystem);
+
+        private IUpload Upload => new Uploads(Url, Report);
+
+        private IVersionControlSystem VersionControlSystem => VersionControlSystemFactory.Create(CommandLineCommandLineOptions, Terminals[TerminalName.Generic]);
 
         public void Uploader()
         {
@@ -116,15 +116,17 @@ namespace Codecov.Program
             Log.Information($"url: {Url.GetUrl.Scheme}://{Url.GetUrl.Authority}");
             Log.Verboase($"api endpoint: {Url.GetUrl}");
             Log.Information($"query: {DisplayUrl}");
-            Log.Information("Pinging Codecov");
 
             var response = Upload.Uploader();
             Log.Verboase($"response: {response}");
             var splitResponse = response.Split('\n');
-            var s3 = new Uri(splitResponse[1]);
-            var reportUrl = splitResponse[0];
-            Log.Information($"Uploading to S3 {s3.Scheme}://{s3.Authority}");
-            Log.Information($"View reports at: {reportUrl}");
+            if (splitResponse.Length > 1)
+            {
+                var s3 = new Uri(splitResponse[1]);
+                var reportUrl = splitResponse[0];
+                Log.Information($"Uploading to S3 {s3.Scheme}://{s3.Authority}");
+                Log.Information($"View reports at: {reportUrl}");
+            }
         }
     }
 }

@@ -1,6 +1,8 @@
 using System.Runtime.InteropServices;
 using Xunit;
 
+// ReSharper disable VirtualMemberCallInConstructor
+
 namespace Codecov.Tests
 {
     public class UnixFactAttribute : FactAttribute

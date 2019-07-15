@@ -8,10 +8,10 @@ namespace Codecov.Coverage.SourceCode
 {
     internal class SourceCode : ISourceCode
     {
-        private readonly Lazy<IEnumerable<string>> _getAll;
-        private readonly Lazy<IEnumerable<string>> _getAllButCodecovIgnored;
         private readonly Lazy<string> _directory;
         private readonly IPathFilter _fileFilter;
+        private readonly Lazy<IEnumerable<string>> _getAll;
+        private readonly Lazy<IEnumerable<string>> _getAllButCodecovIgnored;
 
         public SourceCode(IVersionControlSystem versionControlSystem)
         {
@@ -23,18 +23,13 @@ namespace Codecov.Coverage.SourceCode
             _fileFilter = BuildSourceFilter();
         }
 
+        public string Directory => _directory.Value;
+
         public IEnumerable<string> GetAll => _getAll.Value;
 
         public IEnumerable<string> GetAllButCodecovIgnored => _getAllButCodecovIgnored.Value;
 
-        public string Directory => _directory.Value;
-
         private IVersionControlSystem VersionControlSystem { get; }
-
-        private IEnumerable<string> LoadGetAllButCodecovIgnored()
-        {
-            return GetAll.Where(file => !_fileFilter.Matches(file));
-        }
 
         private static IPathFilter BuildSourceFilter()
         {
@@ -91,5 +86,8 @@ namespace Codecov.Coverage.SourceCode
                 .FileHasExtension(".gitignore")
                 .Build();
         }
+
+        private IEnumerable<string> LoadGetAllButCodecovIgnored()
+            => GetAll.Where(file => !_fileFilter.Matches(file));
     }
 }

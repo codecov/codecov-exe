@@ -1,13 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26403.3
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codecov", "Codecov\Codecov.csproj", "{5F1C74CB-811C-4BD2-BD11-B1A2D32F17F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codecov", "Codecov\Codecov.csproj", "{5F1C74CB-811C-4BD2-BD11-B1A2D32F17F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codecov.Tests", "Codecov.Tests\Codecov.Tests.csproj", "{40F9A3D1-0324-4CBD-BA86-6CF043A8A8E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codecov.Tests", "Codecov.Tests\Codecov.Tests.csproj", "{40F9A3D1-0324-4CBD-BA86-6CF043A8A8E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codecov.Tool", "Codecov.Tool\Codecov.Tool.csproj", "{D9701D7A-9FA1-4CCD-8357-A1FC8894918A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codecov.Tool", "Codecov.Tool\Codecov.Tool.csproj", "{D9701D7A-9FA1-4CCD-8357-A1FC8894918A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{391DE4D5-E7F1-45E4-85F3-5C43052D6D0A}"
+	ProjectSection(SolutionItems) = preProject
+		..\.editorconfig = ..\.editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +35,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {13A1FC7D-CA61-4B34-8EE5-C598047D58F0}
 	EndGlobalSection
 EndGlobal

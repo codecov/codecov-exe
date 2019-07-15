@@ -9,7 +9,7 @@ namespace Codecov.Tests.Yaml
 {
     public class YamlTests
     {
-        private static string _systemDrive = Path.GetPathRoot(DriveInfo.GetDrives().First().ToString());
+        private static readonly string _systemDrive = Path.GetPathRoot(DriveInfo.GetDrives().First().ToString());
 
         [Theory]
         [InlineData("codecov.yaml")]

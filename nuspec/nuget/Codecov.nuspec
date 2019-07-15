@@ -22,6 +22,8 @@ If there is a need to run Codecov on Unix platforms, then please use Codecov.Too
     <tags>coverage codecov</tags>
   </metadata>
   <files>
-    <file src="publish\win7-x64\**\*" target="tools" />
+    <file src="../../../codecov-windows-x64.exe" target="tools/codecov.exe" />
+    <file src="../../../codecov-linux-x64" target="runtimes/linux-x64/tools/codecov" />
+    <file src="../../../codecov-osx-x64" target="runtimes/osx-x64/tools/codecov" />
   </files>
 </package>

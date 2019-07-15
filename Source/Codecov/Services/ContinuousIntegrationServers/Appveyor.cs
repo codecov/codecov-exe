@@ -8,7 +8,7 @@ namespace Codecov.Services.ContinuousIntegrationServers
         private readonly Lazy<string> _branch = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("APPVEYOR_REPO_BRANCH"));
         private readonly Lazy<string> _build = new Lazy<string>(LoadBuild);
         private readonly Lazy<string> _commit = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("APPVEYOR_REPO_COMMIT"));
-        private readonly Lazy<bool> _detecter = new Lazy<bool>(LoadDetecter);
+        private readonly Lazy<bool> _detecter = new Lazy<bool>(() => CheckEnvironmentVariables("CI", "APPVEYOR"));
         private readonly Lazy<string> _job = new Lazy<string>(LoadJob);
         private readonly Lazy<string> _pr = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("APPVEYOR_PULL_REQUEST_NUMBER"));
         private readonly Lazy<string> _slug = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("APPVEYOR_REPO_NAME"));
@@ -33,20 +33,6 @@ namespace Codecov.Services.ContinuousIntegrationServers
         {
             var build = EnviornmentVariable.GetEnviornmentVariable("APPVEYOR_JOB_ID");
             return !string.IsNullOrWhiteSpace(build) ? Uri.EscapeDataString(build) : string.Empty;
-        }
-
-        private static bool LoadDetecter()
-        {
-            var appVeyor = EnviornmentVariable.GetEnviornmentVariable("APPVEYOR");
-            var ci = EnviornmentVariable.GetEnviornmentVariable("CI");
-
-            if (string.IsNullOrWhiteSpace(appVeyor) || string.IsNullOrWhiteSpace(ci))
-            {
-                return false;
-            }
-
-            return appVeyor.Equals(ci, StringComparison.Ordinal)
-                   && appVeyor.Equals("True", StringComparison.OrdinalIgnoreCase);
         }
 
         private static string LoadJob()

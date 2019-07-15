@@ -71,7 +71,6 @@ namespace Codecov.Url
         private void SetBranch()
         {
             QueryParameters["branch"] = string.Empty;
-            var charReplacement = new[] { '#' };
 
             foreach (var repository in Repositories)
             {
@@ -94,9 +93,7 @@ namespace Codecov.Url
         }
 
         private void SetBuildUrl()
-        {
-            QueryParameters["build_url"] = Build.BuildUrl;
-        }
+            => QueryParameters["build_url"] = Build.BuildUrl;
 
         private void SetCommit()
         {
@@ -145,9 +142,7 @@ namespace Codecov.Url
         }
 
         private void SetPackage()
-        {
-            QueryParameters["package"] = About.Version;
-        }
+            => QueryParameters["package"] = About.Version;
 
         private void SetPr()
         {
@@ -185,9 +180,7 @@ namespace Codecov.Url
         }
 
         private void SetService()
-        {
-            QueryParameters["service"] = Build.Service;
-        }
+            => QueryParameters["service"] = Build.Service;
 
         private void SetSlug()
         {
@@ -240,15 +233,13 @@ namespace Codecov.Url
                 QueryParameters["token"] = tokenEnv.RemoveAllWhiteSpace();
             }
 
-            if (Guid.TryParse(Options.Token, out Guid tokenGuid))
+            if (Guid.TryParse(Options.Token, out var _))
             {
                 QueryParameters["token"] = Options.Token.RemoveAllWhiteSpace();
             }
         }
 
         private void SetYaml()
-        {
-            QueryParameters["yaml"] = Yaml.FileName;
-        }
+            => QueryParameters["yaml"] = Yaml.FileName;
     }
 }

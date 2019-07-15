@@ -24,7 +24,7 @@ namespace Codecov.Coverage.Tool
 
         private static bool VerifyReportFileAndExpandGlobPatterns(string path, out IEnumerable<string> expandedPath)
         {
-            HashSet<string> expanded = new HashSet<string> { path };
+            var expanded = new HashSet<string> { path };
             expandedPath = expanded;
             if (string.IsNullOrWhiteSpace(path))
             {
@@ -38,7 +38,7 @@ namespace Codecov.Coverage.Tool
                 || path.Contains(','))
             {
                 // Logger.Log.Information($"Using wildcard path {path}");
-                List<string> matches = Glob.Files(Environment.CurrentDirectory, path, GlobOptions.Compiled | GlobOptions.CaseInsensitive)?.ToList();
+                var matches = Glob.Files(Environment.CurrentDirectory, path, GlobOptions.Compiled | GlobOptions.CaseInsensitive)?.ToList();
                 if (matches?.Any() != true)
                 {
                     // Logger.Log.Warning($"There are no files that match the wildcard {path}.");
@@ -47,10 +47,9 @@ namespace Codecov.Coverage.Tool
 
                 expanded.Clear();
                 matches.ForEach(_ =>
-                {
+
                     // Logger.Log.Information($"Adding file {_} that matches wildcard path {path}");
-                    expanded.Add(_);
-                });
+                    expanded.Add(_));
 
                 return true;
             }
@@ -65,17 +64,12 @@ namespace Codecov.Coverage.Tool
 
         private IEnumerable<ReportFile> LoadReportFile()
         {
-            ReportFile[] report = CoverageOptions.Files?
+            var report = CoverageOptions.Files?
                 .SelectMany(x =>
-                {
-                    if (VerifyReportFileAndExpandGlobPatterns(x, out IEnumerable<string> expanded))
-                    {
-                        return expanded;
-                    }
-
-                    return Enumerable.Empty<string>();
-                })?
-                .Select(x => new ReportFile(x, File.ReadAllText(x)))?.ToArray();
+                    VerifyReportFileAndExpandGlobPatterns(x, out var expanded)
+                        ? expanded
+                        : Enumerable.Empty<string>())
+                .Select(x => new ReportFile(x, File.ReadAllText(x))).ToArray();
             if (report?.Any() != true)
             {
                 throw new Exception("No Report detected.");

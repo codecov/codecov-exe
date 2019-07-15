@@ -27,9 +27,7 @@ namespace Codecov.Upload
         }
 
         protected override string Post()
-        {
-            return this.Url.GetFallbackUrl.ToString();
-        }
+            => Url.GetFallbackUrl.ToString();
 
         protected override bool Put(Uri url)
         {

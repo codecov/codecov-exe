@@ -71,8 +71,6 @@ namespace Codecov.Coverage.Report
         private ISourceCode SourceCode { get; }
 
         private string Convert2RelativePath(string absolutePath)
-        {
-            return absolutePath.Replace(SourceCode.Directory + Path.DirectorySeparatorChar, string.Empty);
-        }
+            => absolutePath.Replace(SourceCode.Directory + Path.DirectorySeparatorChar, string.Empty);
     }
 }

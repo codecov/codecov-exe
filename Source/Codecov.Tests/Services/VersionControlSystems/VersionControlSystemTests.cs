@@ -11,19 +11,16 @@ namespace Codecov.Tests.Services.VersionControlSystems
 {
     public class VersionControlSystemTests
     {
-        private static readonly IVersionControlSystemOptions Options = Substitute.For<IVersionControlSystemOptions>();
-        private static readonly ITerminal Terminal = Substitute.For<ITerminal>();
-        private static string _systemDrive = Path.GetPathRoot(DriveInfo.GetDrives().First().ToString());
-        // Given
-
-        // Given
+        private static readonly IVersionControlSystemOptions _options = Substitute.For<IVersionControlSystemOptions>();
+        private static readonly string _systemDrive = Path.GetPathRoot(DriveInfo.GetDrives().First().ToString());
+        private static readonly ITerminal _terminal = Substitute.For<ITerminal>();
 
         [Fact]
         public void Branch_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
         {
             // Given
             Environment.SetEnvironmentVariable("VCS_BRANCH_NAME", null);
-            var versionControlSystem = new VersionControlSystem(Options, Terminal);
+            var versionControlSystem = new VersionControlSystem(_options, _terminal);
 
             // When
             var branch = versionControlSystem.Branch;
@@ -37,7 +34,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         {
             // Given
             Environment.SetEnvironmentVariable("VCS_BRANCH_NAME", "develop");
-            var versionControlSystem = new VersionControlSystem(Options, Terminal);
+            var versionControlSystem = new VersionControlSystem(_options, _terminal);
 
             // When
             var branch = versionControlSystem.Branch;
@@ -50,7 +47,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         public void Detecter_Should_Be_False()
         {
             // Given
-            var versionControlSystem = new VersionControlSystem(Options, Terminal);
+            var versionControlSystem = new VersionControlSystem(_options, _terminal);
 
             // When
             var detecter = versionControlSystem.Detecter;
@@ -64,7 +61,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         {
             // Given
             Environment.SetEnvironmentVariable("VCS_PULL_REQUEST", null);
-            var versionControlSystem = new VersionControlSystem(Options, Terminal);
+            var versionControlSystem = new VersionControlSystem(_options, _terminal);
 
             // When
             var pr = versionControlSystem.Pr;
@@ -78,7 +75,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         {
             // Given
             Environment.SetEnvironmentVariable("VCS_PULL_REQUEST", "123");
-            var versionControlSystem = new VersionControlSystem(Options, Terminal);
+            var versionControlSystem = new VersionControlSystem(_options, _terminal);
 
             // When
             var pr = versionControlSystem.Pr;
@@ -94,7 +91,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
             var options = Substitute.For<IVersionControlSystemOptions>();
             options.RepoRoot.Returns((_systemDrive + "/fake/github/").Replace('\\', '/').Replace("//", "/"));
 
-            var versionControlSystem = new VersionControlSystem(options, Terminal);
+            var versionControlSystem = new VersionControlSystem(options, _terminal);
 
             // When
             var repoRoot = versionControlSystem.RepoRoot;
@@ -111,7 +108,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
             var options = Substitute.For<IVersionControlSystemOptions>();
             options.RepoRoot.Returns(repoRootData);
 
-            var versionControlSystem = new VersionControlSystem(options, Terminal);
+            var versionControlSystem = new VersionControlSystem(options, _terminal);
 
             // When
             var repoRoot = versionControlSystem.RepoRoot;
@@ -125,7 +122,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         {
             // Given
             Environment.SetEnvironmentVariable("VCS_SLUG", null);
-            var versionControlSystem = new VersionControlSystem(Options, Terminal);
+            var versionControlSystem = new VersionControlSystem(_options, _terminal);
 
             // When
             var slug = versionControlSystem.Slug;
@@ -139,7 +136,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         {
             // Given
             Environment.SetEnvironmentVariable("VCS_SLUG", "owner/repo");
-            var versionControlSystem = new VersionControlSystem(Options, Terminal);
+            var versionControlSystem = new VersionControlSystem(_options, _terminal);
 
             // When
             var slug = versionControlSystem.Slug;
@@ -158,7 +155,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
             var options = Substitute.For<IVersionControlSystemOptions>();
             options.RepoRoot.Returns("./FakeRepo");
 
-            var versionControlSystem = new VersionControlSystem(options, Terminal);
+            var versionControlSystem = new VersionControlSystem(options, _terminal);
 
             // When
             var sourceCode = versionControlSystem.SourceCode;
@@ -177,14 +174,17 @@ namespace Codecov.Tests.Services.VersionControlSystems
             var baseDirectory = Path.Combine(Directory.GetCurrentDirectory(), "FakeRepo");
             Directory.CreateDirectory("./FakeRepo");
             Directory.CreateDirectory("./FakeRepo/Src");
-            using (File.Create("./FakeRepo/.git")) { }
-            using (File.Create("./FakeRepo/Src/class1.cs")) { }
-            using (File.Create("./FakeRepo/README.md")) { }
+            using (File.Create("./FakeRepo/.git"))
+            { }
+            using (File.Create("./FakeRepo/Src/class1.cs"))
+            { }
+            using (File.Create("./FakeRepo/README.md"))
+            { }
 
             var options = Substitute.For<IVersionControlSystemOptions>();
             options.RepoRoot.Returns("./FakeRepo");
 
-            var versionControlSystem = new VersionControlSystem(options, Terminal);
+            var versionControlSystem = new VersionControlSystem(options, _terminal);
 
             // When
             versionControlSystem.SourceCode.ToList().Sort();
@@ -205,7 +205,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         {
             // Given
             Environment.SetEnvironmentVariable("VCS_TAG", null);
-            var versionControlSystem = new VersionControlSystem(Options, Terminal);
+            var versionControlSystem = new VersionControlSystem(_options, _terminal);
 
             // When
             var tag = versionControlSystem.Tag;
@@ -219,7 +219,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         {
             // Given
             Environment.SetEnvironmentVariable("VCS_TAG", "v1.0.0");
-            var versionControlSystem = new VersionControlSystem(Options, Terminal);
+            var versionControlSystem = new VersionControlSystem(_options, _terminal);
 
             // When
             var tag = versionControlSystem.Tag;

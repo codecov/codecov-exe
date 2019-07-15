@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Linq;
 using Codecov.Services.VersionControlSystems;
 using FluentAssertions;
@@ -9,7 +9,7 @@ namespace Codecov.Tests.Coverage.SourceCode
 {
     public class SourceCodeTests
     {
-        private static string _systemDrive = Path.GetPathRoot(DriveInfo.GetDrives().First().ToString());
+        private static readonly string _systemDrive = Path.GetPathRoot(DriveInfo.GetDrives().First().ToString());
 
         [Fact]
         public void GetAll_Should_Get_All_The_Source_Code()

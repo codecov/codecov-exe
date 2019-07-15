@@ -20,10 +20,8 @@ namespace Codecov.Tests.Coverage.Tool
             var coverage = new Codecov.Coverage.Tool.Coverage(options);
 
             // When
-            Action coverageReport = () =>
-            {
-                var x = coverage.CoverageReports;
-            };
+            // ReSharper disable once AssignmentIsFullyDiscarded
+            Action coverageReport = () => _ = coverage.CoverageReports;
 
             // Then
             coverageReport.Should().Throw<Exception>().WithMessage("No Report detected.");
@@ -38,14 +36,14 @@ namespace Codecov.Tests.Coverage.Tool
             }
 
             // Given
-            ICoverageOptions options = Substitute.For<ICoverageOptions>();
+            var options = Substitute.For<ICoverageOptions>();
             options.Files.Returns(new[] { "reports/*.OpenCover.xml", });
             File.WriteAllText("reports/coverageUnit.opencover.xml", "Unit Tests.");
             File.WriteAllText("reports/coverageIntegration.opencover.xml", "Integration Tests.");
-            Codecov.Coverage.Tool.Coverage coverage = new Codecov.Coverage.Tool.Coverage(options);
+            var coverage = new Codecov.Coverage.Tool.Coverage(options);
 
             // When
-            System.Collections.Generic.List<ReportFile> coverageReport = coverage.CoverageReports.OrderBy(_ => _.File).ToList();
+            var coverageReport = coverage.CoverageReports.OrderBy(r => r.File).ToList();
 
             // Then
             coverageReport.Count.Should().Be(2);
@@ -88,14 +86,14 @@ namespace Codecov.Tests.Coverage.Tool
         public void Should_Read_Multiple_Coverage_Reports_With_WildCard_Path()
         {
             // Given
-            ICoverageOptions options = Substitute.For<ICoverageOptions>();
+            var options = Substitute.For<ICoverageOptions>();
             options.Files.Returns(new[] { "*.opencover.xml", });
             File.WriteAllText("./coverageUnit.opencover.xml", "Unit Tests.");
             File.WriteAllText("./coverageIntegration.opencover.xml", "Integration Tests.");
-            Codecov.Coverage.Tool.Coverage coverage = new Codecov.Coverage.Tool.Coverage(options);
+            var coverage = new Codecov.Coverage.Tool.Coverage(options);
 
             // When
-            System.Collections.Generic.List<ReportFile> coverageReport = coverage.CoverageReports.OrderBy(_ => _.File).ToList();
+            var coverageReport = coverage.CoverageReports.OrderBy(_ => _.File).ToList();
 
             // Then
             coverageReport.Count.Should().Be(2);
@@ -113,17 +111,15 @@ namespace Codecov.Tests.Coverage.Tool
         public void Should_Read_No_Coverage_Reports_With_WildCard_Path()
         {
             // Given
-            ICoverageOptions options = Substitute.For<ICoverageOptions>();
+            var options = Substitute.For<ICoverageOptions>();
             options.Files.Returns(new[] { "*.opencover.xml", });
             File.WriteAllText("./coverageUnit.xml", "Unit Tests.");
             File.WriteAllText("./coverageIntegration.xml", "Integration Tests.");
-            Codecov.Coverage.Tool.Coverage coverage = new Codecov.Coverage.Tool.Coverage(options);
+            var coverage = new Codecov.Coverage.Tool.Coverage(options);
 
             // When
-            Action coverageReport = () =>
-            {
-                System.Collections.Generic.IEnumerable<ReportFile> x = coverage.CoverageReports;
-            };
+            // ReSharper disable once AssignmentIsFullyDiscarded
+            Action coverageReport = () => _ = coverage.CoverageReports;
 
             // Then
             coverageReport.Should().Throw<Exception>().WithMessage("No Report detected.");
@@ -157,14 +153,14 @@ namespace Codecov.Tests.Coverage.Tool
         public void Should_Read_Single_Coverage_Reports_With_WildCard_Path()
         {
             // Given
-            ICoverageOptions options = Substitute.For<ICoverageOptions>();
+            var options = Substitute.For<ICoverageOptions>();
             options.Files.Returns(new[] { "*.opencover.xml", });
             File.WriteAllText("./coverageUnit.opencover.xml", "Unit Tests.");
             File.WriteAllText("./coverageIntegration.xml", "Integration Tests.");
-            Codecov.Coverage.Tool.Coverage coverage = new Codecov.Coverage.Tool.Coverage(options);
+            var coverage = new Codecov.Coverage.Tool.Coverage(options);
 
             // When
-            System.Collections.Generic.List<ReportFile> coverageReport = coverage.CoverageReports.OrderBy(_ => _.File).ToList();
+            var coverageReport = coverage.CoverageReports.OrderBy(_ => _.File).ToList();
 
             // Then
             coverageReport.Count.Should().Be(1);

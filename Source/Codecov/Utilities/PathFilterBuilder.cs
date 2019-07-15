@@ -11,9 +11,7 @@ namespace Codecov.Utilities
         private readonly List<IPathFilter> _filters = new List<IPathFilter>();
 
         public IPathFilter Build()
-        {
-            return new CompositePathFilter(_filters);
-        }
+            => new CompositePathFilter(_filters);
 
         public PathFilterBuilder FileHasExtension(string extension)
         {
@@ -51,9 +49,7 @@ namespace Codecov.Utilities
             }
 
             public bool Matches(string path)
-            {
-                return _filters.Any(f => f.Matches(path));
-            }
+                => _filters.Any(f => f.Matches(path));
         }
 
         private class FileExtensionPathFilter : IPathFilter
@@ -83,9 +79,7 @@ namespace Codecov.Utilities
             }
 
             public bool Matches(string path)
-            {
-                return path.Contains(_subPath, StringComparison.OrdinalIgnoreCase);
-            }
+                => path.Contains(_subPath, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

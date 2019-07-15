@@ -84,8 +84,6 @@ namespace Codecov.Terminal
         }
 
         public string RunScript(string script)
-        {
-            return Run(script, string.Empty);
-        }
+            => Run(script, string.Empty);
     }
 }

@@ -35,9 +35,7 @@ namespace Codecov.Program
         }
 
         private static void ConfigureHowProgramExitsOnFail()
-        {
-            _kill = _commandLineOptions.Required ? 1 : 0;
-        }
+            => _kill = _commandLineOptions.Required ? 1 : 0;
 
         private static void Init(IEnumerable<string> args)
         {

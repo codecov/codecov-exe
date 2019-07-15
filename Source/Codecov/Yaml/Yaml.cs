@@ -30,12 +30,9 @@ namespace Codecov.Yaml
                        fileName.Equals("codecov.yml", StringComparison.OrdinalIgnoreCase);
             });
 
-            if (string.IsNullOrWhiteSpace(codecovYamlFullPath))
-            {
-                return string.Empty;
-            }
-
-            return Path.GetFileName(codecovYamlFullPath);
+            return string.IsNullOrWhiteSpace(codecovYamlFullPath)
+                ? string.Empty
+                : Path.GetFileName(codecovYamlFullPath);
         }
     }
 }

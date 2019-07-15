@@ -13,14 +13,14 @@ namespace Codecov.Upload
 {
     internal class CodecovUploader : Upload
     {
-        private static HttpClient client;
+        private static HttpClient _client;
 
         static CodecovUploader()
         {
-            if (client == null)
+            if (_client == null)
             {
-                client = new HttpClient();
-                client.DefaultRequestHeaders.UserAgent.ParseAdd($"codecove-exe/{Assembly.GetExecutingAssembly().GetName().Version}");
+                _client = new HttpClient();
+                _client.DefaultRequestHeaders.UserAgent.ParseAdd($"codecove-exe/{Assembly.GetExecutingAssembly().GetName().Version}");
             }
         }
 
@@ -31,8 +31,8 @@ namespace Codecov.Upload
 
         public static void Cleanup()
         {
-            client?.Dispose();
-            client = null;
+            _client?.Dispose();
+            _client = null;
         }
 
         protected virtual void ConfigureContent(HttpContent content)
@@ -43,9 +43,7 @@ namespace Codecov.Upload
         }
 
         protected virtual void ConfigureRequest(HttpRequestMessage request)
-        {
-            request.Headers.TryAddWithoutValidation("x-amz-acl", "public-read");
-        }
+            => request.Headers.TryAddWithoutValidation("x-amz-acl", "public-read");
 
         protected virtual HttpResponseMessage CreateResponse(HttpRequestMessage request)
         {
@@ -55,34 +53,20 @@ namespace Codecov.Upload
 
             ConfigureContent(request.Content);
 
-            var response = client.SendAsync(request).Result;
+            var response = _client.SendAsync(request).Result;
             return response;
-        }
-
-        protected byte[] GetReportBytes()
-        {
-            using (var memoryStream = new MemoryStream())
-            {
-                using (var stream = new GZipStream(memoryStream, CompressionLevel.Optimal))
-                {
-                    var content = Encoding.UTF8.GetBytes(Report.Reporter);
-                    stream.Write(content, 0, content.Length);
-                }
-
-                return memoryStream.ToArray();
-            }
         }
 
         protected override string Post()
         {
             Log.Verboase("Trying to upload using HttpClient");
-            using (var request = new HttpRequestMessage(new HttpMethod("POST"), this.Url.GetUrl))
+            using (var request = new HttpRequestMessage(new HttpMethod("POST"), Url.GetUrl))
             {
                 request.Headers.TryAddWithoutValidation("X-Reduced-Redundancy", "false");
                 request.Headers.TryAddWithoutValidation("X-Content-Type", "application/x-gzip");
 
                 Log.Information("Pinging Codecov");
-                var response = client.SendAsync(request).Result;
+                var response = _client.SendAsync(request).Result;
                 if (!response.IsSuccessStatusCode)
                 {
                     Log.Warning($"Unable to ping Codecov. Server returned: ({response.StatusCode}) {response.ReasonPhrase}");
@@ -101,6 +85,20 @@ namespace Codecov.Upload
                 var response = CreateResponse(request);
 
                 return response.IsSuccessStatusCode;
+            }
+        }
+
+        private byte[] GetReportBytes()
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var stream = new GZipStream(memoryStream, CompressionLevel.Optimal))
+                {
+                    var content = Encoding.UTF8.GetBytes(Report.Reporter);
+                    stream.Write(content, 0, content.Length);
+                }
+
+                return memoryStream.ToArray();
             }
         }
     }

@@ -88,8 +88,6 @@ namespace Codecov.Coverage.SourceCode
         }
 
         private IEnumerable<string> LoadGetAllButCodecovIgnored()
-        {
-            return GetAll.Where(file => !_fileFilter.Matches(file));
-        }
+            => GetAll.Where(file => !_fileFilter.Matches(file));
     }
 }

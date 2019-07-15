@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -41,8 +41,8 @@ namespace Codecov.Program
         {
             get
             {
-                string url = Url.GetUrl.ToString();
-                Regex regex = new Regex(@"token=\w{8}-\w{4}-\w{4}-\w{4}-\w{12}&");
+                var url = Url.GetUrl.ToString();
+                var regex = new Regex(@"token=\w{8}-\w{4}-\w{4}-\w{4}-\w{12}&");
                 return regex.Replace(url, string.Empty);
             }
         }
@@ -61,7 +61,7 @@ namespace Codecov.Program
 
         public void Uploader()
         {
-            string ci = ContinuousIntegrationServer.GetType().Name;
+            var ci = ContinuousIntegrationServer.GetType().Name;
             if (ci.Equals("ContinuousIntegrationServer"))
             {
                 Log.Warning("No CI detected.");
@@ -79,7 +79,7 @@ namespace Codecov.Program
                 Log.Information($"{ci} detected.");
             }
 
-            string vcs = VersionControlSystem.GetType().Name;
+            var vcs = VersionControlSystem.GetType().Name;
             if (vcs.Equals("VersionControlSystem"))
             {
                 Log.Warning("No VCS detected.");
@@ -117,13 +117,13 @@ namespace Codecov.Program
             Log.Verboase($"api endpoint: {Url.GetUrl}");
             Log.Information($"query: {DisplayUrl}");
 
-            string response = Upload.Uploader();
+            var response = Upload.Uploader();
             Log.Verboase($"response: {response}");
-            string[] splitResponse = response.Split('\n');
+            var splitResponse = response.Split('\n');
             if (splitResponse.Length > 1)
             {
-                Uri s3 = new Uri(splitResponse[1]);
-                string reportUrl = splitResponse[0];
+                var s3 = new Uri(splitResponse[1]);
+                var reportUrl = splitResponse[0];
                 Log.Information($"Uploading to S3 {s3.Scheme}://{s3.Authority}");
                 Log.Information($"View reports at: {reportUrl}");
             }

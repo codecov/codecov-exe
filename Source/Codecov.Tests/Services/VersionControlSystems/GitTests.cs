@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Linq;
 using Codecov.Services.VersionControlSystems;
 using Codecov.Terminal;
@@ -10,7 +10,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
 {
     public class GitTests
     {
-        private static string _systemDrive = Path.GetPathRoot(DriveInfo.GetDrives().First().ToString());
+        private static readonly string _systemDrive = Path.GetPathRoot(DriveInfo.GetDrives().First().ToString());
 
         [Fact]
         public void Branch_Should_Return_Correct_Branch_If_Exits()

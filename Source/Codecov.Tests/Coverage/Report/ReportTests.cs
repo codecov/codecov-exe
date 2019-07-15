@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Codecov.Coverage.Report;
@@ -13,7 +13,7 @@ namespace Codecov.Tests.Coverage.Report
 {
     public class ReportTests
     {
-        private static string _systemDrive = Path.GetPathRoot(DriveInfo.GetDrives().First().ToString());
+        private static readonly string _systemDrive = Path.GetPathRoot(DriveInfo.GetDrives().First().ToString());
 
         [Fact]
         public void If_DisableNetwork_Is_True_The_Source_Code_Should_Be_Empty()

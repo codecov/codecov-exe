@@ -25,33 +25,43 @@ namespace Codecov.Program
             CommandLineCommandLineOptions = commandLineOptions;
         }
 
-        private ICoverage Coverage => new Coverage.Tool.Coverage(CommandLineCommandLineOptions);
-        private IUrl Url => new Url.Url(new Host(CommandLineCommandLineOptions), new Route(), new Query(CommandLineCommandLineOptions, Repositories, ContinuousIntegrationServer, Yaml));
-        private IYaml Yaml => new Yaml.Yaml(SourceCode);
         private static IContinuousIntegrationServer ContinuousIntegrationServer => ContinuousIntegrationServerFactory.Create();
+
         private static IDictionary<TerminalName, ITerminal> Terminals => TerminalFactory.Create();
+
+        private ICoverage Coverage => new Coverage.Tool.Coverage(CommandLineCommandLineOptions);
+
+        private IUrl Url => new Url.Url(new Host(CommandLineCommandLineOptions), new Route(), new Query(CommandLineCommandLineOptions, Repositories, ContinuousIntegrationServer, Yaml));
+
+        private IYaml Yaml => new Yaml.Yaml(SourceCode);
+
         private CommandLineOptions CommandLineCommandLineOptions { get; }
 
         private string DisplayUrl
         {
             get
             {
-                var url = Url.GetUrl.ToString();
-                var regex = new Regex(@"token=\w{8}-\w{4}-\w{4}-\w{4}-\w{12}&");
+                string url = Url.GetUrl.ToString();
+                Regex regex = new Regex(@"token=\w{8}-\w{4}-\w{4}-\w{4}-\w{12}&");
                 return regex.Replace(url, string.Empty);
             }
         }
 
         private IEnviornmentVariables EnviornmentVariables => new EnviornmentVariables(CommandLineCommandLineOptions, ContinuousIntegrationServer);
+
         private IReport Report => new Report(CommandLineCommandLineOptions, EnviornmentVariables, SourceCode, Coverage);
+
         private IEnumerable<IRepository> Repositories => RepositoryFactory.Create(VersionControlSystem, ContinuousIntegrationServer);
+
         private ISourceCode SourceCode => new SourceCode(VersionControlSystem);
+
         private IUpload Upload => new Uploads(Url, Report);
+
         private IVersionControlSystem VersionControlSystem => VersionControlSystemFactory.Create(CommandLineCommandLineOptions, Terminals[TerminalName.Generic]);
 
         public void Uploader()
         {
-            var ci = ContinuousIntegrationServer.GetType().Name;
+            string ci = ContinuousIntegrationServer.GetType().Name;
             if (ci.Equals("ContinuousIntegrationServer"))
             {
                 Log.Warning("No CI detected.");
@@ -69,7 +79,7 @@ namespace Codecov.Program
                 Log.Information($"{ci} detected.");
             }
 
-            var vcs = VersionControlSystem.GetType().Name;
+            string vcs = VersionControlSystem.GetType().Name;
             if (vcs.Equals("VersionControlSystem"))
             {
                 Log.Warning("No VCS detected.");
@@ -107,13 +117,13 @@ namespace Codecov.Program
             Log.Verboase($"api endpoint: {Url.GetUrl}");
             Log.Information($"query: {DisplayUrl}");
 
-            var response = Upload.Uploader();
+            string response = Upload.Uploader();
             Log.Verboase($"response: {response}");
-            var splitResponse = response.Split('\n');
+            string[] splitResponse = response.Split('\n');
             if (splitResponse.Length > 1)
             {
-                var s3 = new Uri(splitResponse[1]);
-                var reportUrl = splitResponse[0];
+                Uri s3 = new Uri(splitResponse[1]);
+                string reportUrl = splitResponse[0];
                 Log.Information($"Uploading to S3 {s3.Scheme}://{s3.Authority}");
                 Log.Information($"View reports at: {reportUrl}");
             }

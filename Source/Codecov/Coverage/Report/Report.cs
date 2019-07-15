@@ -40,7 +40,9 @@ namespace Codecov.Coverage.Report
         }
 
         private ICoverage Coverage { get; }
+
         private string Env => !EnviornmentVariables.GetEnviornmentVariables.Any() ? string.Empty : $"{string.Join("\n", EnviornmentVariables.GetEnviornmentVariables.Select(x => x.Key.Trim() + "=" + x.Value.Trim()).ToArray())}\n<<<<<< ENV\n";
+
         private IEnviornmentVariables EnviornmentVariables { get; }
 
         private string Network
@@ -65,6 +67,7 @@ namespace Codecov.Coverage.Report
         }
 
         private IReportOptions ReportOptions => _reportOptions.Value;
+
         private ISourceCode SourceCode { get; }
 
         private string Convert2RelativePath(string absolutePath)

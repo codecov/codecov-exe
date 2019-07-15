@@ -17,7 +17,9 @@ namespace Codecov.Url
         }
 
         public Uri GetFallbackUrl => _getFallbackUrl.Value;
+
         public Uri GetUrl => _getUrl.Value;
+
         private IHost Host { get; }
 
         private IQuery Query { get; }

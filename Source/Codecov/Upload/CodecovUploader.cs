@@ -97,20 +97,25 @@ namespace Codecov.Upload
 
                     if (!success)
                     {
-                        Log.Warning($"Unable to upload coverage report to Codecov. Server returned: ({(int)response.StatusCode}) {response.ReasonPhrase}");
-
-                        if (string.Equals(response.Content.Headers.ContentType.MediaType, "text/plain", StringComparison.OrdinalIgnoreCase))
-                        {
-                            Log.Warning(response.Content.ReadAsStringAsync().Result);
-                        }
-                        else
-                        {
-                            Log.Warning("Unknown reason. Possible reason being invalid parameters.");
-                        }
+                        ReportFailure(response);
                     }
 
                     return success;
                 }
+            }
+        }
+
+        protected void ReportFailure(HttpResponseMessage message)
+        {
+            Log.Warning($"Unable to upload coverage report to Codecov. Server returned: ({(int)message.StatusCode}) {message.ReasonPhrase}");
+
+            if (string.Equals(message.Content.Headers.ContentType.MediaType, "text/plain", StringComparison.OrdinalIgnoreCase))
+            {
+                Log.Warning(message.Content.ReadAsStringAsync().Result);
+            }
+            else
+            {
+                Log.Warning("Unknown reason. Possible reason being invalid parameters.");
             }
         }
 

@@ -43,16 +43,7 @@ namespace Codecov.Upload
                 }
                 else
                 {
-                    Log.Warning($"Unable to upload coverage report to Codecov. Server returned: ({(int)response.StatusCode}) {response.ReasonPhrase}");
-
-                    if (string.Equals(response.Content.Headers.ContentType.MediaType, "text/plain", StringComparison.OrdinalIgnoreCase))
-                    {
-                        Log.Warning(response.Content.ReadAsStringAsync().Result);
-                    }
-                    else
-                    {
-                        Log.Warning("Unknown reason. Possible reason being invalid parameters.");
-                    }
+                    ReportFailure(response);
                 }
 
                 return response.IsSuccessStatusCode;

@@ -77,20 +77,18 @@ namespace Codecov.Services.VersionControlSystems
                 return string.Empty;
             }
 
-            var splitColon = remote.Split(':');
-            if (splitColon.Length <= 1)
+            var splits = remote.Split(new[] { ':', '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (splits.Length <= 1)
             {
                 return string.Empty;
             }
 
-            var splitSlash = splitColon[1].Split('/');
-            if (splitSlash.Length <= 1)
-            {
-                return string.Empty;
-            }
+            var slug = splits[splits.Length - 2] + "/" + splits[splits.Length - 1];
 
-            var slug = splitSlash[splitSlash.Length - 2] + "/" + splitSlash[splitSlash.Length - 1].TrimEnd('t').TrimEnd('i').TrimEnd('g').TrimEnd('.');
-            return slug;
+            return slug.EndsWith(".git", StringComparison.OrdinalIgnoreCase)
+                ? slug.Substring(0, slug.Length - 4)
+                : slug;
         }
 
         private IEnumerable<string> LoadSourceCode()

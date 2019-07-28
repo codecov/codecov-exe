@@ -238,7 +238,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
             source.Should().Equal(Enumerable.Empty<string>());
         }
 
-        [Theory, InlineData("https://github.com/larzw/codecov-exe.git"), InlineData("git@github.com:larzw/codecov-exe.git")]
+        [Theory, InlineData("https://github.com/larzw/codecov-exe.git"), InlineData("git@github.com:larzw/codecov-exe.git"), InlineData("https://admiringworm:MyPassword@github.com/larzw/codecov-exe.git")]
         public void Slug_Should_Return_Correct_Result(string slugData)
         {
             // Given

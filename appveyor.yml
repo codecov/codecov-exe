@@ -10,10 +10,9 @@ matrix:
 environment:
   APPVEYOR_YML_DISABLE_PS_LINUX: true
 for:
--
-  matrix:
+- matrix:
     only:
-      - image: Visual Studio 2017
+      - image: Ubuntu
   environment:
     NUGET_API_KEY:
       secure: koMAZYSTMVgMKHVVuyfoyVsqyFJc7KQ7UpmNixgflGJC0Mo6CQa8S5cQfbXaBXTH
@@ -21,6 +20,10 @@ for:
     GITHUB_PASSWORD:
       secure: 3bqzyVjmzE137kZ0lmMBKqM725nQd0hKAATVeE2trpWaPS+5bOpZfjy6zD5INfjV
     NUGET_SOURCE: https://www.nuget.org/api/v2/package
+- matrix:
+    only:
+      - image: Visual Studio 2017
+  environment:
     APPVEYOR_API_TOKEN:
       secure: QHpexV7pcFPNcXT0clrRuSDwDXXXI6oxFwBw5NDIRRg=
     CHOCOLATEY_API_KEY:

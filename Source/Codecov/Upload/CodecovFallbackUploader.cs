@@ -41,6 +41,10 @@ namespace Codecov.Upload
                     var content = response.Content.ReadAsStringAsync().Result;
                     Log.Information($"View reports at: {GetReportUrl(content)}");
                 }
+                else
+                {
+                    ReportFailure(response);
+                }
 
                 return response.IsSuccessStatusCode;
             }

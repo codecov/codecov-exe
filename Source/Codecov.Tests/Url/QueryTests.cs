@@ -35,6 +35,26 @@ namespace Codecov.Tests.Url
         }
 
         [Fact]
+        public void Should_Encode_Slashes_In_BranchName()
+        {
+            // Given
+            var queryOptions = Substitute.For<IQueryOptions>();
+            var continiousIntegrationServer = Substitute.For<IRepository>();
+            continiousIntegrationServer.Branch.Returns("release/6.0.0");
+            var versionControlSystem = Substitute.For<IRepository>();
+            versionControlSystem.Branch.Returns("dev");
+            var build = Substitute.For<IBuild>();
+            var yaml = Substitute.For<IYaml>();
+            var query = new Query(queryOptions, new[] { continiousIntegrationServer, versionControlSystem }, build, yaml);
+
+            // When
+            var getQuery = query.GetQuery.Split('&');
+
+            // Then
+            getQuery.Should().Contain("branch=release%2F6.0.0");
+        }
+
+        [Fact]
         public void Should_Double_Encode_Pluss_Signs()
         {
             // Given

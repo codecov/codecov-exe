@@ -60,11 +60,13 @@ namespace Codecov.Url
             return result.ToString();
         }
 
-        private void OverrideIfNotEmptyOrNull(string key, string value)
+        private void OverrideIfNotEmptyOrNull(string key, string value, bool escapeValue = false)
         {
             if (!string.IsNullOrWhiteSpace(value))
             {
-                QueryParameters[key] = value.RemoveAllWhiteSpace();
+                QueryParameters[key] = escapeValue ?
+                    Uri.EscapeDataString(value.RemoveAllWhiteSpace()) :
+                    value.RemoveAllWhiteSpace();
             }
         }
 
@@ -77,8 +79,8 @@ namespace Codecov.Url
                 if (!string.IsNullOrWhiteSpace(repository.Branch))
                 {
                     // We also need to take into account that '#' needs to be escaped for parameters
-                    // to work, but not '/'
-                    QueryParameters["branch"] = EscapeKnownProblematicCharacters(repository.Branch);
+                    var escapedBranch = EscapeKnownProblematicCharacters(Uri.EscapeDataString(repository.Branch));
+                    QueryParameters["branch"] = escapedBranch;
                     break;
                 }
             }
@@ -88,7 +90,9 @@ namespace Codecov.Url
 
         private void SetBuild()
         {
-            QueryParameters["build"] = Build.Build;
+            var escapedBuild = Uri.EscapeDataString(Build.Build);
+
+            QueryParameters["build"] = escapedBuild;
             OverrideIfNotEmptyOrNull("build", Options.Build);
         }
 

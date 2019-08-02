@@ -14,7 +14,12 @@ create:
 #   multiline-regex: true | false
 issue-labels-include:
   - Bug
+  - Documentation
   - Feature
   - Improvement
 issue-labels-exclude:
   - Build
+issue-labels-alias:
+  - name:    Documentation
+    header:  Documentation
+    plural:  Documentation

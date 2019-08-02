@@ -23,7 +23,7 @@ If there is a need to run Codecov on Unix platforms, then please use Codecov.Too
   </metadata>
   <files>
     <file src="../../../codecov-windows-x64.exe" target="tools/codecov.exe" />
-    <file src="../../../codecov-linux-x64" target="runtimes/linux-x64/tools/codecov" />
-    <file src="../../../codecov-osx-x64" target="runtimes/osx-x64/tools/codecov" />
+    <file src="../../../codecov-linux-x64" target="tools/linux-x64/codecov" />
+    <file src="../../../codecov-osx-x64" target="tools/osx-x64/codecov" />
   </files>
 </package>

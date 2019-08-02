@@ -12,10 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>Codecov global executable uploader.</summary>
     <description>
-Codecov global executable uploader for PowerShell and Windows Command Line.
-
-**IMPORTANT:** This package only provides the Windows Compatible version of Codecov.
-If there is a need to run Codecov on Unix platforms, then please use Codecov.Tool, or download platform specific Archives from our Releases page.
+Codecov global executable uploader for PowerShell and .NET applications/libraries. Supports Windows, Linux and OSX.
     </description>
     <copyright>Copyright (c) 2017-Present Larz White, Kim J. Nordmo</copyright>
     <releaseNotes>All release notes for Codecov can be found on the GitHub site - https://github.com/codecov/codecov-exe/releases/tag/$version$</releaseNotes>

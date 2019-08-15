@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Codecov.Utilities;
 
 namespace Codecov.Services.ContinuousIntegrationServers
@@ -7,6 +8,7 @@ namespace Codecov.Services.ContinuousIntegrationServers
     {
         private readonly Lazy<string> _branch = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("APPVEYOR_REPO_BRANCH"));
         private readonly Lazy<string> _build = new Lazy<string>(LoadBuild);
+        private readonly Lazy<string> _buildUrl = new Lazy<string>(LoadBuildUrl);
         private readonly Lazy<string> _commit = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("APPVEYOR_REPO_COMMIT"));
         private readonly Lazy<bool> _detecter = new Lazy<bool>(() => CheckEnvironmentVariables("CI", "APPVEYOR"));
         private readonly Lazy<string> _job = new Lazy<string>(LoadJob);
@@ -16,6 +18,8 @@ namespace Codecov.Services.ContinuousIntegrationServers
         public override string Branch => _branch.Value;
 
         public override string Build => _build.Value;
+
+        public override string BuildUrl => _buildUrl.Value;
 
         public override string Commit => _commit.Value;
 
@@ -35,6 +39,22 @@ namespace Codecov.Services.ContinuousIntegrationServers
             return !string.IsNullOrWhiteSpace(build) ? Uri.EscapeDataString(build) : string.Empty;
         }
 
+        private static string LoadBuildUrl()
+        {
+            var hostUrl = EnviornmentVariable.GetEnviornmentVariable("APPVEYOR_URL");
+            var accountName = EnviornmentVariable.GetEnviornmentVariable("APPVEYOR_ACCOUNT_NAME");
+            var slug = EnviornmentVariable.GetEnviornmentVariable("APPVEYOR_PROJECT_SLUG");
+            var jobId = EnviornmentVariable.GetEnviornmentVariable("APPVEYOR_JOB_ID");
+
+            if (IsNullOrEmpty(hostUrl, accountName, slug, jobId) || !Uri.TryCreate(hostUrl, UriKind.Absolute, out var uri) || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+            {
+                return string.Empty;
+            }
+
+            var jobUrl = $"{hostUrl}/project/{accountName}/{slug}/build/job/{jobId}";
+            return jobUrl;
+        }
+
         private static string LoadJob()
         {
             var accountName = EnviornmentVariable.GetEnviornmentVariable("APPVEYOR_ACCOUNT_NAME");
@@ -50,5 +70,8 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
             return job;
         }
+
+        private static bool IsNullOrEmpty(params string[] parameters)
+            => parameters.Any(x => string.IsNullOrEmpty(x));
     }
 }

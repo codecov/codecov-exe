@@ -31,9 +31,8 @@ for:
     CHOCOLATEY_SOURCE: https://push.chocolatey.org/
 
 build_script:
-- ps: $env:CI_BUILD_URL = "https://ci.appveyor.com/project/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/build/job/$env:APPVEYOR_JOB_ID"
+- ps: "$env:APPVEYOR_PROJECT_SLUG"
 - ps: .\build.ps1 -Target AppVeyor
-- sh: export CI_BUILD_URL="https://ci.appveyor.com/project/$APPVEYOR_ACCOUNT_NAME/$APPVEYOR_PROJECT_SLUG/build/job/$APPVEYOR_JOB_ID"
 - sh: ./build.sh --target=AppVeyor
 
 cache: tools -> setup.cake,appveyor.yml,tools/packages.config

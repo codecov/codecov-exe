@@ -31,7 +31,6 @@ for:
     CHOCOLATEY_SOURCE: https://push.chocolatey.org/
 
 build_script:
-- ps: "$env:APPVEYOR_PROJECT_SLUG"
 - ps: .\build.ps1 -Target AppVeyor
 - sh: ./build.sh --target=AppVeyor
 

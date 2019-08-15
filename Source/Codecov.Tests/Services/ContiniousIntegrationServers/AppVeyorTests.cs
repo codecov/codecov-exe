@@ -309,6 +309,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
                 "APPVEYOR_PULL_REQUEST_NUMBER",
                 "APPVEYOR_REPO_NAME",
                 "APPVEYOR_URL",
+                "CODECOV_SLUG" // We use this travis fork tests
             };
 
             foreach (var variable in envVariable)

@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Codecov.Tests.Services.ContiniousIntegrationServers
 {
-    public class TravisTests
+    public class TravisTests : IDisposable
     {
         [Fact]
         public void Branch_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
@@ -206,6 +206,27 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
 
             // Then
             slug.Should().Be("foo/bar");
+        }
+
+        public void Dispose()
+        {
+            // We will remove all environment variables that could have been set during unit test
+            var envVariable = new[]
+            {
+                "CI",
+                "CODECOV_SLUG", // We use this travis fork tests
+                "TRAVIS_BRANCH",
+                "TRAVIS_JOB_NUMBER",
+                "TRAVIS_COMMIT",
+                "TRAVIS_JOB_ID",
+                "TRAVIS_PULL_REQUEST",
+                "TRAVIS_REPO_SLUG"
+            };
+
+            foreach (var variable in envVariable)
+            {
+                Environment.SetEnvironmentVariable(variable, null);
+            }
         }
     }
 }

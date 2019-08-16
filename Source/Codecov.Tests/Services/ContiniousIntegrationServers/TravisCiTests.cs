@@ -238,6 +238,35 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
             slug.Should().Be("foo/bar");
         }
 
+        [Theory, InlineData(null), InlineData("")]
+        public void Tag_Should_Empty_String_When_Environment_Variable_Does_Not_Exist(string tagData)
+        {
+            // Given
+            Environment.SetEnvironmentVariable("TRAVIS_TAG", tagData);
+
+            var travis = new Travis();
+
+            // When
+            var tag = travis.Tag;
+
+            // THen
+            tag.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Tag_Should_Not_Be_Empty_String_When_Environment_Variable_Exist()
+        {
+            // Given
+            Environment.SetEnvironmentVariable("TRAVIS_TAG", "v1.2.4");
+            var travis = new Travis();
+
+            // When
+            var tag = travis.Tag;
+
+            // Then
+            tag.Should().Be("v1.2.4");
+        }
+
         public void Dispose()
         {
             // We will remove all environment variables that could have been set during unit test
@@ -253,6 +282,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
                 "TRAVIS_PULL_REQUEST",
                 "TRAVIS_REPO_SLUG",
                 "TRAVIS_JOB_WEB_URL",
+                "TRAVIS_TAG",
             };
 
             foreach (var variable in envVariable)

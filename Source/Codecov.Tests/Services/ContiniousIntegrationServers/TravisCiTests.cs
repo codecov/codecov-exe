@@ -124,6 +124,36 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Theory, InlineData(null), InlineData("")]
+        public void BuildUrl_Should_Be_Empty_String_When_Environment_Variables_Do_Not_Exist(string jobUrl)
+        {
+            // Given
+            Environment.SetEnvironmentVariable("TRAVIS_JOB_WEB_URL", jobUrl);
+
+            var travis = new Travis();
+
+            // When
+            var buildUrl = travis.BuildUrl;
+
+            // Then
+            buildUrl.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void BuildUrl_Should_Not_Be_Empty_String_When_Environment_Variable_Exist()
+        {
+            // Given
+            Environment.SetEnvironmentVariable("TRAVIS_JOB_WEB_URL", "https://travis-ci.org/some-job");
+
+            var travis = new Travis();
+
+            // When
+            var buildUrl = travis.BuildUrl;
+
+            // Then
+            buildUrl.Should().Be("https://travis-ci.org/some-job");
+        }
+
+        [Theory, InlineData(null), InlineData("")]
         public void Job_Should_Be_Empty_String_When_Environment_Variables_Do_Not_Exit(string jobNumber)
         {
             // Given
@@ -215,12 +245,14 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
             {
                 "CI",
                 "CODECOV_SLUG", // We use this travis fork tests
+                "TRAVIS",
                 "TRAVIS_BRANCH",
                 "TRAVIS_JOB_NUMBER",
                 "TRAVIS_COMMIT",
                 "TRAVIS_JOB_ID",
                 "TRAVIS_PULL_REQUEST",
-                "TRAVIS_REPO_SLUG"
+                "TRAVIS_REPO_SLUG",
+                "TRAVIS_JOB_WEB_URL",
             };
 
             foreach (var variable in envVariable)

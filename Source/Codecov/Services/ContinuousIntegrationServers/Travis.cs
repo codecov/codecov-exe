@@ -7,15 +7,19 @@ namespace Codecov.Services.ContinuousIntegrationServers
     {
         private readonly Lazy<string> _branch = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("TRAVIS_BRANCH"));
         private readonly Lazy<string> _build = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("TRAVIS_JOB_NUMBER"));
+        private readonly Lazy<string> _buildUrl = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("TRAVIS_JOB_WEB_URL"));
         private readonly Lazy<string> _commit = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("TRAVIS_COMMIT"));
         private readonly Lazy<bool> _detecter = new Lazy<bool>(() => CheckEnvironmentVariables("CI", "TRAVIS"));
         private readonly Lazy<string> _job = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("TRAVIS_JOB_ID"));
         private readonly Lazy<string> _pr = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("TRAVIS_PULL_REQUEST"));
         private readonly Lazy<string> _slug = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("TRAVIS_REPO_SLUG"));
+        private readonly Lazy<string> _tag = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("TRAVIS_TAG"));
 
         public override string Branch => _branch.Value;
 
         public override string Build => _build.Value;
+
+        public override string BuildUrl => _buildUrl.Value;
 
         public override string Commit => _commit.Value;
 
@@ -28,5 +32,7 @@ namespace Codecov.Services.ContinuousIntegrationServers
         public override string Service => "travis";
 
         public override string Slug => _slug.Value;
+
+        public override string Tag => _tag.Value;
     }
 }

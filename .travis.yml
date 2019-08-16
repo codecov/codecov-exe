@@ -25,6 +25,7 @@ branches:
     - /release\/.*/
     - /hotfix\/.*/
     - /feature\/.*/
+    - /bugfix\/.*/
 
 script:
   - ./build.sh

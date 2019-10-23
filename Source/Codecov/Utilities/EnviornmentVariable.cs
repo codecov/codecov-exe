@@ -17,7 +17,7 @@ namespace Codecov.Utilities
             {
                 var env = Environment.GetEnvironmentVariable(name);
 
-                if (env != null)
+                if (!string.IsNullOrWhiteSpace(env))
                 {
                     return env;
                 }

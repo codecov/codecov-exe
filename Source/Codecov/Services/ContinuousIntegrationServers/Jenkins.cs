@@ -14,7 +14,6 @@ namespace Codecov.Services.ContinuousIntegrationServers
         private readonly Lazy<bool> _detecter = new Lazy<bool>(() => !string.IsNullOrWhiteSpace(EnviornmentVariable.GetEnviornmentVariable("JENKINS_URL")));
         private readonly Lazy<string> _pr = new Lazy<string>(() => EnviornmentVariable.GetFirstExistingEnvironmentVariable("ghprbPullId", "CHANGE_ID"));
 
-
         public override string Branch => _branch.Value;
 
         public override string Build => _build.Value;
@@ -28,6 +27,5 @@ namespace Codecov.Services.ContinuousIntegrationServers
         public override string Pr => _pr.Value;
 
         public override string Service => "jenkins";
-
     }
 }

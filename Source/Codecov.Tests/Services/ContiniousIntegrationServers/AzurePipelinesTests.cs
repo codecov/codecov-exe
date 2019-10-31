@@ -165,6 +165,19 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
+        public void Service_Should_Be_Set_To_AzurePipelines()
+        {
+            // Given
+            var pipelines = new AzurePipelines();
+
+            // When
+            var service = pipelines.Service;
+
+            // Then
+            service.Should().Be("azure_pipelines");
+        }
+
+        [Fact]
         public void Slug_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
         {
             // Given

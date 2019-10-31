@@ -30,6 +30,9 @@ for:
       secure: CzGGbCfsVKyCTbY193kYveGQDN5ilsyI30J3FYdo9+IpGsDwi/knjzBqCQbztIzY
     CHOCOLATEY_SOURCE: https://push.chocolatey.org/
 
+install:
+- sh: sudo apt-get update && sudo apt-get install -y libgit2-dev
+
 build_script:
 - ps: .\build.ps1 -Target AppVeyor
 - sh: ./build.sh --target=AppVeyor

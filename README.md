@@ -18,7 +18,7 @@
 
 3. Many Codecov CLI options are supported. Run `.\codecov.exe --help` or see [CommandLineOptions.cs](https://github.com/codecov/codecov-exe/blob/master/Source/Codecov/Program/CommandLineOptions.cs) for more details.
 
-4. On windows you can download the exe from NuGet or Chocolatey. There is also the .Net tool called Codecov.Tool which supports all platforms. As an alternative to NuGet or Chocolatey you can download the exe as the asset *Codecov-{os}.zip* under the release. The following PowerShell (version 5) commands might be helpful.
+4. On windows you can download the exe from [NuGet](https://www.nuget.org/packages/Codecov) or [Chocolatey](https://chocolatey.org/packages/codecov). There is also the .Net tool called [Codecov.Tool](https://www.nuget.org/packages/Codecov.Tool) which supports all platforms. As an alternative to NuGet or Chocolatey you can download the exe as the asset *Codecov-{os}.zip* under the release. The following PowerShell (version 5) commands might be helpful.
 
 ```PowerShell
 (New-Object System.Net.WebClient).DownloadFile("<url>", (Join-Path $pwd "Codecov.zip")) # Download Codecov.zip from github release.
@@ -32,14 +32,21 @@ For a basic use case, in PowerShell run the following commands,
 
 ```PowerShell
 > choco install codecov
-> .\codecov.exe -f <path to coverage report> -t <Codecov upload token>
+> codecov.exe -f <path to coverage report> -t <Codecov upload token>
+```
+
+or using the .NET Core tool
+
+```shell
+dotnet tool install --global Codecov.Tool
+codecov -f <path to coverage report> -t <Codecov upload token>
 ```
 
 For an AppVeyor build, the *appveyor.yml* file would look something like
 
 ```yml
 before_build:
-- choco install codecov
+- choco install codecov # Can be changed to dotnet tool install --global Codecov.Tool
 test_script:
 # Note that, a Codecov upload token is not required.
 - codecov -f <path to coverage report>

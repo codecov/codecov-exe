@@ -5,10 +5,11 @@
 
 ## Introduction
 
-[![Build status](https://ci.appveyor.com/api/projects/status/589rt9yq1p1e43di?svg=true)](https://ci.appveyor.com/project/AdmiringWorm/codecov-exe)
-[![NuGet](https://img.shields.io/nuget/v/Codecov.svg)](https://www.nuget.org/packages/Codecov/)
+[![Build status](https://img.shields.io/appveyor/ci/AdmiringWorm/codecov-exe?logo=appveyor)](https://ci.appveyor.com/project/AdmiringWorm/codecov-exe)
+[![NuGet](https://img.shields.io/nuget/v/Codecov?logo=nuget)](https://www.nuget.org/packages/Codecov/)
+[![DotNet Tool](https://img.shields.io/nuget/v/Codecov.Tool?label=dotnet%20tool&logo=nuget)](https://www.nuget.org/packages/Codecov.Tool/)
 [![Chocolatey](https://img.shields.io/chocolatey/v/codecov.svg)](https://chocolatey.org/packages/codecov)
-[![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000)](https://gitter.im/codecov-exe/community)
+[![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000&logo=gitter)](https://gitter.im/codecov-exe/community)
 [![codecov](https://codecov.io/gh/codecov/codecov-exe/branch/master/graph/badge.svg)](https://codecov.io/gh/codecov/codecov-exe)
 
 1. This uploader supports Windows 7 (x64) and above, Linux (x64), and OS X (x64).

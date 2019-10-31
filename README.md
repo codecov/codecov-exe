@@ -14,7 +14,7 @@
 
 1. This uploader supports Windows 7 (x64) and above, Linux (x64), and OS X (x64).
 
-2. The following Services are supported: AppVeyor, Azure Pipelines, TeamCity ([see section on TeamCity](#teamcity)), and Git.
+2. [See the following section of supported CI providers](#ci-providers).
 
 3. Many Codecov CLI options are supported. Run `.\codecov.exe --help` or see [CommandLineOptions.cs](https://github.com/codecov/codecov-exe/blob/master/Source/Codecov/Program/CommandLineOptions.cs) for more details.
 
@@ -49,7 +49,20 @@ test_script:
 
 If you use [Cake](http://cakebuild.net/) (C# Make) for your builds, you may be intrested in the [Cake.Codecov](https://github.com/cake-contrib/Cake.Codecov) addin.
 
-## TeamCity
+## CI Providers
+
+The following CI providers are supported:
+
+|     Company     |       Supported      |  Token Required  |
+| --------------- | -------------------- | ---------------- |
+| AppVeyor        | Yes                  | Private only     |
+| Azure Pipelines | Yes                  | Public & Private |
+| Git             | Yes (as a fallback)  | Public & Private |
+| Jenkins         | Yes                  | Public & Private |
+| TeamCity        | Yes                  | Public & Private |
+| Travis CI       | Yes (See below)      | Private only     |
+
+### TeamCity
 
 TeamCity does not automatically make build parameters available as environment variables. You will need to add the [following environment parameters](https://github.com/codecov/support/wiki/TeamCity) to the build configuration. To do this make sure your *Branch specification* under the VCS Root is configured correctly,
 
@@ -65,7 +78,7 @@ Then set your environment variables,
 
 Note that, the above environment variables (except for `env.TEAMCITY_BUILD_URL`) can alternatively be set via the command line,
 
-```
+```shell
 env.TEAMCITY_BUILD_BRANCH => --branch
 env.TEAMCITY_BUILD_ID => --build
 env.TEAMCITY_BUILD_COMMIT => --sha
@@ -85,7 +98,7 @@ All types of contributions are welcome! Feel free to open an [issue](https://git
 
 To create a relase, please do the following:
 
-* Push the latest changes to the master branch on github
-* Navigate to the release page and view the drafted release.
-* Make any necessary changes.
-* Publish the draft release on GitHub, targeting the master branch.
+- Push the latest changes to the master branch on github
+- Navigate to the release page and view the drafted release.
+- Make any necessary changes.
+- Publish the draft release on GitHub, targeting the master branch.

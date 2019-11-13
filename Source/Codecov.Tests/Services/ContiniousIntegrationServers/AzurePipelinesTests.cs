@@ -63,7 +63,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Build_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
         {
             // Given
-            Environment.SetEnvironmentVariable("BUILD_BUILDID", null);
+            Environment.SetEnvironmentVariable("BUILD_BUILDNUMBER", null);
             var pipelines = new AzurePipelines();
 
             // When
@@ -77,7 +77,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Build_Should_Be_Set_When_Enviornment_Variable_Exits()
         {
             // Given
-            Environment.SetEnvironmentVariable("BUILD_BUILDID", "123");
+            Environment.SetEnvironmentVariable("BUILD_BUILDNUMBER", "123");
             var pipelines = new AzurePipelines();
 
             // When
@@ -180,12 +180,12 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
             buildUrl.Should().BeEmpty();
         }
 
-        [Theory, InlineData(null, null), InlineData("", ""), InlineData("foo", ""), InlineData("", "foo")]
+        [Theory, InlineData(null, null), InlineData("", ""), InlineData("foo", "")]
         public void Job_Should_Be_Empty_String_When_Enviornment_Variables_Do_Not_Exit(string slugData, string versionData)
         {
             // Given
             Environment.SetEnvironmentVariable("BUILD_REPOSITORY_NAME", slugData);
-            Environment.SetEnvironmentVariable("BUILD_BUILDNUMBER", versionData);
+            Environment.SetEnvironmentVariable("BUILD_BUILDID", versionData);
 
             var pipelines = new AzurePipelines();
 
@@ -201,14 +201,14 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         {
             // Given
             Environment.SetEnvironmentVariable("BUILD_REPOSITORY_NAME", "foo/bar");
-            Environment.SetEnvironmentVariable("BUILD_BUILDNUMBER", "bang");
+            Environment.SetEnvironmentVariable("BUILD_BUILDID", "bang");
             var pipelines = new AzurePipelines();
 
             // When
             var job = pipelines.Job;
 
             // Then
-            job.Should().Be("foo/bar/bang");
+            job.Should().Be("bang");
         }
 
         [Fact]

@@ -10,7 +10,7 @@ namespace Codecov.Services.ContinuousIntegrationServers
         private readonly Lazy<string> _buildUrl;
         private readonly Lazy<string> _commit = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("BUILD_SOURCEVERSION"));
         private readonly Lazy<bool> _detecter = new Lazy<bool>(() => CheckEnvironmentVariables("TF_BUILD"));
-        private readonly Lazy<string> _job = new Lazy<string>(LoadJob);
+        private readonly Lazy<string> _job = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("BUILD_BUILDID"));
         private readonly Lazy<string> _pr = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("SYSTEM_PULLREQUEST_PULLREQUESTNUMBER"));
         private readonly Lazy<string> _project = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("SYSTEM_TEAMPROJECT"));
         private readonly Lazy<string> _serverUri = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("SYSTEM_TEAMFOUNDATIONSERVERURI"));
@@ -45,30 +45,15 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
         private static string LoadBuild()
         {
-            var build = EnviornmentVariable.GetEnviornmentVariable("BUILD_BUILDID");
+            var build = EnviornmentVariable.GetEnviornmentVariable("BUILD_BUILDNUMBER");
             return !string.IsNullOrWhiteSpace(build) ? Uri.EscapeDataString(build) : string.Empty;
-        }
-
-        private static string LoadJob()
-        {
-            var slug = EnviornmentVariable.GetEnviornmentVariable("BUILD_REPOSITORY_NAME");
-            var version = EnviornmentVariable.GetEnviornmentVariable("BUILD_BUILDNUMBER");
-
-            if (string.IsNullOrEmpty(slug) || string.IsNullOrEmpty(version))
-            {
-                return string.Empty;
-            }
-
-            var job = $"{slug}/{version}";
-
-            return job;
         }
 
         private string LoadBuildUrl()
         {
             var serverUri = ServerUri;
             var project = Project;
-            var build = Build;
+            var build = Job;
             if (string.IsNullOrEmpty(serverUri) || string.IsNullOrEmpty(project) || string.IsNullOrEmpty(build))
             {
                 return string.Empty;

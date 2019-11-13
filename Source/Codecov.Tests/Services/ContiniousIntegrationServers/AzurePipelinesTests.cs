@@ -35,6 +35,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Branch_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
         {
             // Given
+            Environment.SetEnvironmentVariable("SYSTEM_PULLREQUEST_TARGETBRANCH", null);
             Environment.SetEnvironmentVariable("BUILD_SOURCEBRANCHNAME", null);
             var pipelines = new AzurePipelines();
 
@@ -46,9 +47,25 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Branch_Should_Be_Set_When_Enviornment_Variable_Exits()
+        public void Branch_Should_Be_Set_When_PR_Enviornment_Variable_Exits()
         {
             // Given
+            Environment.SetEnvironmentVariable("SYSTEM_PULLREQUEST_TARGETBRANCH", "develop");
+            Environment.SetEnvironmentVariable("BUILD_SOURCEBRANCHNAME", null);
+            var pipelines = new AzurePipelines();
+
+            // When
+            var branch = pipelines.Branch;
+
+            // Then
+            branch.Should().Be("develop");
+        }
+
+        [Fact]
+        public void Branch_Should_Be_Set_When_Branch_Enviornment_Variable_Exits()
+        {
+            // Given
+            Environment.SetEnvironmentVariable("SYSTEM_PULLREQUEST_TARGETBRANCH", null);
             Environment.SetEnvironmentVariable("BUILD_SOURCEBRANCHNAME", "develop");
             var pipelines = new AzurePipelines();
 
@@ -57,6 +74,21 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
 
             // Then
             branch.Should().Be("develop");
+        }
+
+        [Fact]
+        public void Branch_Should_Prefer_Pull_Request()
+        {
+            // Given
+            Environment.SetEnvironmentVariable("SYSTEM_PULLREQUEST_TARGETBRANCH", "pr");
+            Environment.SetEnvironmentVariable("BUILD_SOURCEBRANCHNAME", "master");
+            var pipelines = new AzurePipelines();
+
+            // When
+            var branch = pipelines.Branch;
+
+            // Then
+            branch.Should().Be("pr");
         }
 
         [Fact]

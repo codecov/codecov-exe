@@ -5,7 +5,7 @@ namespace Codecov.Services.ContinuousIntegrationServers
 {
     internal class AzurePipelines : ContinuousIntegrationServer
     {
-        private readonly Lazy<string> _branch = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("BUILD_SOURCEBRANCHNAME"));
+        private readonly Lazy<string> _branch = new Lazy<string>(LoadBranch);
         private readonly Lazy<string> _build = new Lazy<string>(LoadBuild);
         private readonly Lazy<string> _buildUrl;
         private readonly Lazy<string> _commit = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("BUILD_SOURCEVERSION"));
@@ -42,6 +42,17 @@ namespace Codecov.Services.ContinuousIntegrationServers
         public override string Service => "azure_pipelines";
 
         public override string Slug => _slug.Value;
+
+        private static string LoadBranch()
+        {
+            var pullRequestBranch = EnviornmentVariable.GetEnviornmentVariable("SYSTEM_PULLREQUEST_TARGETBRANCH");
+            if (!string.IsNullOrEmpty(pullRequestBranch))
+            {
+                return pullRequestBranch;
+            }
+
+            return EnviornmentVariable.GetEnviornmentVariable("BUILD_SOURCEBRANCHNAME");
+        }
 
         private static string LoadBuild()
         {

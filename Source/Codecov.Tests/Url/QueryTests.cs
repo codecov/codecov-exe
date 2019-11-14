@@ -100,6 +100,8 @@ namespace Codecov.Tests.Url
         public void Should_Return_Defaults()
         {
             // Given
+            Environment.SetEnvironmentVariable("CODECOV_SLUG", null);
+            Environment.SetEnvironmentVariable("CODECOV_TOKEN", null);
             var queryOptions = Substitute.For<IQueryOptions>();
             var repository = Substitute.For<IEnumerable<IRepository>>();
             var build = Substitute.For<IBuild>();
@@ -217,6 +219,8 @@ namespace Codecov.Tests.Url
             repository.Branch.Returns("develop");
             repository.Commit.Returns("3c075f8d15aea3b3b40cea0bcf441a30bfd5c5d2");
             repository.Pr.Returns("123");
+            repository.Project.Returns(string.Empty);
+            repository.ServerUri.Returns(string.Empty);
             repository.Tag.Returns("v1.0");
             repository.Slug.Returns("larz/codecov-exe");
             var build = Substitute.For<IBuild>();
@@ -230,6 +234,38 @@ namespace Codecov.Tests.Url
             getQuery.FirstOrDefault(x => x.StartsWith("branch=")).Should().Be("branch=develop");
             getQuery.FirstOrDefault(x => x.StartsWith("commit=")).Should().Be("commit=3c075f8d15aea3b3b40cea0bcf441a30bfd5c5d2");
             getQuery.FirstOrDefault(x => x.StartsWith("pr=")).Should().Be("pr=123");
+            getQuery.FirstOrDefault(x => x.StartsWith("project=")).Should().Be(null);
+            getQuery.FirstOrDefault(x => x.StartsWith("server_uri=")).Should().Be(null);
+            getQuery.FirstOrDefault(x => x.StartsWith("tag=")).Should().Be("tag=v1.0");
+            getQuery.FirstOrDefault(x => x.StartsWith("slug=")).Should().Be("slug=larz%2Fcodecov-exe");
+        }
+
+        [Fact]
+        public void Should_Set_From_Repository_WithProject()
+        {
+            // Given
+            var queryOptions = Substitute.For<IQueryOptions>();
+            var repository = Substitute.For<IRepository>();
+            repository.Branch.Returns("develop");
+            repository.Commit.Returns("3c075f8d15aea3b3b40cea0bcf441a30bfd5c5d2");
+            repository.Pr.Returns("123");
+            repository.Project.Returns("projectA");
+            repository.ServerUri.Returns("https://dev.azure.com/");
+            repository.Tag.Returns("v1.0");
+            repository.Slug.Returns("larz/codecov-exe");
+            var build = Substitute.For<IBuild>();
+            var yaml = Substitute.For<IYaml>();
+            var query = new Query(queryOptions, new[] { repository }, build, yaml);
+
+            // When
+            var getQuery = query.GetQuery.Split('&');
+
+            // Then
+            getQuery.FirstOrDefault(x => x.StartsWith("branch=")).Should().Be("branch=develop");
+            getQuery.FirstOrDefault(x => x.StartsWith("commit=")).Should().Be("commit=3c075f8d15aea3b3b40cea0bcf441a30bfd5c5d2");
+            getQuery.FirstOrDefault(x => x.StartsWith("pr=")).Should().Be("pr=123");
+            getQuery.FirstOrDefault(x => x.StartsWith("project=")).Should().Be("project=projectA");
+            getQuery.FirstOrDefault(x => x.StartsWith("server_uri=")).Should().Be("server_uri=https://dev.azure.com/");
             getQuery.FirstOrDefault(x => x.StartsWith("tag=")).Should().Be("tag=v1.0");
             getQuery.FirstOrDefault(x => x.StartsWith("slug=")).Should().Be("slug=larz%2Fcodecov-exe");
         }

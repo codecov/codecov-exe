@@ -27,6 +27,10 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
         public virtual string Pr => string.Empty;
 
+        public virtual string Project => string.Empty;
+
+        public virtual string ServerUri => string.Empty;
+
         public virtual string Service => string.Empty;
 
         public virtual string Slug => string.Empty;

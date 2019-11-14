@@ -32,6 +32,10 @@ namespace Codecov.Services.VersionControlSystems
 
         public virtual string Pr => _pr.Value;
 
+        public virtual string Project => string.Empty;
+
+        public virtual string ServerUri => string.Empty;
+
         public virtual string RepoRoot => _repoRoot.Value;
 
         public virtual string Slug => _slug.Value;

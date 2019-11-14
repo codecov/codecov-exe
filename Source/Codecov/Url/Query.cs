@@ -164,6 +164,19 @@ namespace Codecov.Url
             OverrideIfNotEmptyOrNull("pr", Options.Pr);
         }
 
+        private void SetProjectAndServerUri()
+        {
+            foreach (var repository in Repositories)
+            {
+                if (!string.IsNullOrEmpty(repository.Project) && !string.IsNullOrEmpty(repository.ServerUri))
+                {
+                    QueryParameters["project"] = repository.Project;
+                    QueryParameters["server_uri"] = repository.ServerUri;
+                    break;
+                }
+            }
+        }
+
         private void SetQueryParameters()
         {
             QueryParameters = new Dictionary<string, string>();
@@ -181,6 +194,7 @@ namespace Codecov.Url
             SetYaml();
             SetJob();
             SetService();
+            SetProjectAndServerUri();
         }
 
         private void SetService()

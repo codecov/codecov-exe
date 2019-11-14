@@ -63,12 +63,12 @@ The following CI providers are supported:
 |     Company     |       Supported           |  Token Required  |
 | --------------- | ------------------------- | ---------------- |
 | AppVeyor        | Yes                       | Private only     |
-| Azure Pipelines | Yes                       | Public & Private |
+| Azure Pipelines | Yes                       | Private          |
 | Git             | Yes (as a fallback)       | Public & Private |
 | GitHub Actions  | Partial (git as fallback) | Public & Private |
 | Jenkins         | Yes                       | Public & Private |
-| TeamCity        | Yes                       | Public & Private |
-| Travis CI       | Yes (See below)           | Private only     |
+| TeamCity        | Yes (See below)           | Public & Private |
+| Travis CI       | Yes                       | Private only     |
 
 ### TeamCity
 

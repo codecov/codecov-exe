@@ -1,6 +1,6 @@
 name: Build
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -17,5 +17,5 @@ jobs:
       with:
         dotnet-version: 2.2.108
     - name: Build with cake
-      run: ./build.ps1
+      run: ./build.ps1 -Verbosity Diagnostic
       shell: powershell

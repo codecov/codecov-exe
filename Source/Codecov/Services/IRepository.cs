@@ -8,6 +8,10 @@
 
         string Pr { get; }
 
+        string Project { get; }
+
+        string ServerUri { get; }
+
         string Slug { get; }
 
         string Tag { get; }

@@ -100,6 +100,8 @@ namespace Codecov.Tests.Url
         public void Should_Return_Defaults()
         {
             // Given
+            Environment.SetEnvironmentVariable("CODECOV_SLUG", null);
+            Environment.SetEnvironmentVariable("CODECOV_TOKEN", null);
             var queryOptions = Substitute.For<IQueryOptions>();
             var repository = Substitute.For<IEnumerable<IRepository>>();
             var build = Substitute.For<IBuild>();

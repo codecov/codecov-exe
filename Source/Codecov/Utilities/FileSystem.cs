@@ -5,6 +5,12 @@ namespace Codecov.Utilities
 {
     internal static class FileSystem
     {
+        internal static long GetFileSize(string path)
+        {
+            var fileInfo = new FileInfo(path);
+            return fileInfo.Exists ? fileInfo.Length : 0;
+        }
+
         internal static string NormalizedPath(string path)
         {
             if (string.IsNullOrWhiteSpace(path))

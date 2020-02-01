@@ -1,5 +1,4 @@
 #module "nuget:?package=Cake.DotNetTool.Module&version=0.2.0"
-#addin "nuget:?package=Cake.Warp&version=0.1.0"
 #load "nuget:?package=Cake.Recipe&version=1.0.0"
 #load ".build/coverlet.cake"
 #load ".build/codecov.cake"
@@ -52,39 +51,47 @@ Task("DotNetCore-Publish")
         NoBuild = true,
         NoRestore = true,
         OutputDirectory = BuildParameters.Paths.Directories.NuGetPackages,
-        MSBuildSettings = msBuildSettings
+        MSBuildSettings = msBuildSettings,
     });
 
     var project = ParseProject(BuildParameters.SourceDirectoryPath + "/Codecov/Codecov.csproj", BuildParameters.Configuration);
     var runtimeIdentifiers = project.NetCore.RuntimeIdentifiers;
+    EnsureDirectoryExists(BuildParameters.Paths.Directories.Build);
 
     foreach (var runtime in runtimeIdentifiers) {
+        msBuildSettings = msBuildSettings
+            .WithProperty("PublishSingleFile", "true")
+            .WithProperty("PublishTrimmed", "true");
         var outputDirectory = publishDirectory + "/" + runtime;
-        WarpPlatforms warpPlatform;
         string warpOutputBase = BuildParameters.Paths.Directories.Build + "/codecov-";
         if (runtime.StartsWith("win"))
         {
-            warpPlatform = WarpPlatforms.WindowsX64;
             warpOutputBase += "windows-x64.exe";
         }
         else if (runtime.StartsWith("osx"))
         {
-            warpPlatform = WarpPlatforms.MacOSX64;
             warpOutputBase += "osx-x64";
         }
         else
         {
-            warpPlatform = WarpPlatforms.LinuxX64;
             warpOutputBase += "linux-x64";
         }
 
         DotNetCorePublish(project.ProjectFilePath.FullPath, new DotNetCorePublishSettings {
             Runtime = runtime,
+            SelfContained = true,
             OutputDirectory = outputDirectory,
             MSBuildSettings = msBuildSettings
         });
 
-        Warp(outputDirectory, (warpPlatform == WarpPlatforms.WindowsX64 ? "codecov.exe" : "codecov"), warpOutputBase, warpPlatform);
+        var files = GetFiles(outputDirectory + "/codecov*");
+        foreach (var file in files)
+        {
+            if (file.GetExtension() != ".pdb")
+            {
+                CopyFile(file, warpOutputBase);
+            }
+        }
     }
 });
 

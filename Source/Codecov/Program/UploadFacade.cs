@@ -14,6 +14,7 @@ using Codecov.Services.VersionControlSystems;
 using Codecov.Terminal;
 using Codecov.Upload;
 using Codecov.Url;
+using Codecov.Utilities;
 using Codecov.Yaml;
 
 namespace Codecov.Program
@@ -110,6 +111,14 @@ namespace Codecov.Program
                 Log.Information($"url: {Url.GetUrl}");
                 Log.Information(Report.Reporter);
                 return;
+            }
+
+            // We warn if the total file size is above 20 MB
+            var fileSizes = Coverage.CoverageReports.Sum(x => FileSystem.GetFileSize(x.File));
+            if (fileSizes > 20_971_520)
+            {
+                Log.Warning($"Total file size of reports is above 20MB, this may prevent report being shown on {Url.GetUrl.Host}");
+                Log.Warning("Reduce the total upload size if this occurs");
             }
 
             Log.Information("Uploading Reports.");

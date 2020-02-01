@@ -42,13 +42,11 @@ namespace Codecov.Upload
             content.Headers.ContentType = new MediaTypeHeaderValue("application/x-gzip");
         }
 
-        protected virtual void ConfigureRequest(HttpRequestMessage request)
-            => request.Headers.TryAddWithoutValidation("x-amz-acl", "public-read");
+        protected virtual void ConfigureRequest(HttpRequestMessage request) {}
 
         protected virtual HttpResponseMessage CreateResponse(HttpRequestMessage request)
         {
             ConfigureRequest(request);
-
             request.Content = new ByteArrayContent(GetReportBytes());
 
             ConfigureContent(request.Content);

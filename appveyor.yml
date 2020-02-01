@@ -22,7 +22,7 @@ for:
     NUGET_SOURCE: https://www.nuget.org/api/v2/package
 - matrix:
     only:
-      - image: Visual Studio 2017
+      - image: Visual Studio 2019
   environment:
     APPVEYOR_API_TOKEN:
       secure: QHpexV7pcFPNcXT0clrRuSDwDXXXI6oxFwBw5NDIRRg=

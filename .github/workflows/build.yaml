@@ -12,10 +12,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Setup .NET Core
+    - name: Setup .NET Core 3.1
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 2.2.108
+        dotnet-version: 3.1.101
     - name: Build with cake
       run: ./build.ps1 -Verbosity Diagnostic
       shell: powershell

@@ -56,6 +56,84 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
+        public void Build_Should_Be_Empty_When_Environment_Variable_Does_Not_Exist()
+        {
+            // Given
+            var ga = new Mock<GitHubAction>() { CallBase = true };
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_RUN_ID")).Returns(string.Empty);
+            var githubAction = ga.Object;
+
+            // When
+            var build = githubAction.Build;
+
+            // Then
+            build.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Build_Should_Be_Set_When_Enviornment_Variable_Exits()
+        {
+            // Given
+            var ga = new Mock<GitHubAction>() { CallBase = true };
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_RUN_ID")).Returns("32402849");
+            var githubAction = ga.Object;
+
+            // When
+            var build = githubAction.Build;
+
+            // Then
+            build.Should().Be("32402849");
+        }
+
+        [Fact]
+        public void BuildUrl_Should_Be_Empty_When_Build_Is_Empty()
+        {
+            // Given
+            var ga = new Mock<GitHubAction>() { CallBase = true };
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REPOSITORY")).Returns("codecov/codecov-exe");
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_RUN_ID")).Returns(string.Empty);
+            var githubAction = ga.Object;
+
+            // When
+            var buildUrl = githubAction.BuildUrl;
+
+            // Then
+            buildUrl.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void BuildUrl_Should_Be_Empty_When_Slug_Is_Empty()
+        {
+            // Given
+            var ga = new Mock<GitHubAction>() { CallBase = true };
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REPOSITORY")).Returns(string.Empty);
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_RUN_ID")).Returns("some-id");
+            var githubAction = ga.Object;
+
+            // When
+            var buildUrl = githubAction.BuildUrl;
+
+            // Then
+            buildUrl.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void BuildUrl_Should_Not_Be_Empty_When_Environment_Variables_Exist()
+        {
+            // Given
+            var ga = new Mock<GitHubAction>() { CallBase = true };
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REPOSITORY")).Returns("codecov/codecov-exe");
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_RUN_ID")).Returns("23432");
+            var githubAction = ga.Object;
+
+            // When
+            var buildUrl = githubAction.BuildUrl;
+
+            // Then
+            buildUrl.Should().Be("https://github.com/codecov/codecov-exe/actions/runs/23432");
+        }
+
+        [Fact]
         public void Commit_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
         {
             // Given

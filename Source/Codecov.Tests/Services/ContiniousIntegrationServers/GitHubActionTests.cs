@@ -13,6 +13,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
             // Given
             var ga = new Mock<GitHubAction>() { CallBase = true };
             ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REF")).Returns(string.Empty);
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_HEAD_REF")).Returns(string.Empty);
             var githubAction = ga.Object;
 
             // When
@@ -23,11 +24,28 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
+        public void Branch_Should_Be_Set_From_Head_Ref_When_Environment_Variable_Exist()
+        {
+            // Given
+            var ga = new Mock<GitHubAction>() { CallBase = true };
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REF")).Returns("refs/pull/234/merge");
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_HEAD_REF")).Returns("develop");
+            var githubAction = ga.Object;
+
+            // When
+            var branch = githubAction.Branch;
+
+            // Then
+            branch.Should().Be("develop");
+        }
+
+        [Fact]
         public void Branch_Should_Be_Set_When_Enviornment_Variable_Exits()
         {
             // Given
             var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REF")).Returns("ref/heads/develop");
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REF")).Returns("refs/heads/develop");
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_HEAD_REF")).Returns(string.Empty);
             var githubAction = ga.Object;
 
             // When
@@ -129,6 +147,39 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
 
             // Then
             detecter.Should().BeTrue();
+        }
+
+        [Fact]
+        public void PR_Should_Not_Be_Empty_When_Environment_Variables_Exist()
+        {
+            // Given
+            var ga = new Mock<GitHubAction>() { CallBase = true };
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_HEAD_REF")).Returns("patch-2");
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REF")).Returns("refs/pull/7/merge");
+            var githubAction = ga.Object;
+
+            // When
+            var pr = githubAction.Pr;
+            var branch = githubAction.Branch;
+
+            // Then
+            pr.Should().Be("7");
+            branch.Should().Be("patch-2");
+        }
+
+        [Fact]
+        public void PR_Should_Not_be_Set_If_Head_Ref_Is_Empyt()
+        {
+            // Given
+            var ga = new Mock<GitHubAction>() { CallBase = true };
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_HEAD_REF")).Returns(string.Empty);
+            var githubAction = ga.Object;
+
+            // When
+            var pr = githubAction.Pr;
+
+            // THen
+            pr.Should().BeEmpty();
         }
 
         [Fact]

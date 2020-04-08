@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Codecov.Services.ContinuousIntegrationServers;
 
 namespace Codecov.Url

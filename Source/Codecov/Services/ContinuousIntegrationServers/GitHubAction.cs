@@ -13,7 +13,7 @@ namespace Codecov.Services.ContinuousIntegrationServers
         {
             _branch = new Lazy<string>(LoadBranch);
             _commit = new Lazy<string>(() => GetEnvironmentVariable("GITHUB_SHA"));
-            _detecter = new Lazy<bool>(() => CheckEnvironmentVariables("GITHUB_ACTIONS"));
+            _detecter = new Lazy<bool>(() => CheckEnvironmentVariables("GITHUB_ACTIONS") || !string.IsNullOrWhiteSpace(GetEnvironmentVariable("GITHUB_ACTION")));
             _slug = new Lazy<string>(() => GetEnvironmentVariable("GITHUB_REPOSITORY"));
         }
 

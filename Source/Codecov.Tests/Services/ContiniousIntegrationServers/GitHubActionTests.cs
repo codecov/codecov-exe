@@ -1,4 +1,3 @@
-﻿using System;
 using Codecov.Services.ContinuousIntegrationServers;
 using FluentAssertions;
 using Moq;
@@ -68,12 +67,13 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
             commit.Should().Be("123");
         }
 
-        [Theory, InlineData(null), InlineData(""), InlineData("False"), InlineData("false"), InlineData("foo")]
-        public void Detecter_Should_Be_False_When_Actions_Environment_Variable_Does_Not_Exist_Or_Is_Not_True(string environmentData)
+        [Fact]
+        public void Detecter_Should_Be_False_When_Action_Environment_Variable_Is_Null_Or_Empty()
         {
             // Given
             var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTIONS")).Returns(environmentData);
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTION")).Returns(string.Empty);
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTIONS")).Returns(string.Empty);
             var githubAction = ga.Object;
 
             // When
@@ -83,12 +83,45 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
             detecter.Should().BeFalse();
         }
 
+        [Theory, InlineData(null), InlineData(""), InlineData("False"), InlineData("false"), InlineData("foo")]
+        public void Detecter_Should_Be_False_When_Actions_And_Action_Environment_Variable_Does_Not_Exist_Or_Is_Not_True(string environmentData)
+        {
+            // Given
+            var ga = new Mock<GitHubAction>() { CallBase = true };
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTIONS")).Returns(environmentData);
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTION")).Returns(string.Empty);
+            var githubAction = ga.Object;
+
+            // When
+            var detecter = githubAction.Detecter;
+
+            // Then
+            detecter.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Detecter_Should_Be_True_When_Action_Environment_Variable_Exist_And_Is_Not_Empty()
+        {
+            // Given
+            var ga = new Mock<GitHubAction>() { CallBase = true };
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTION")).Returns("my-awesome-github-action");
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTIONS")).Returns(string.Empty);
+            var githubActions = ga.Object;
+
+            // When
+            var detecter = githubActions.Detecter;
+
+            // Then
+            detecter.Should().BeTrue();
+        }
+
         [Theory, InlineData("True"), InlineData("true")]
         public void Detecter_Should_Be_True_When_Actions_Environment_Variable_Exist_And_Is_True(string environmentData)
         {
             // Given
             var ga = new Mock<GitHubAction>() { CallBase = true };
             ga.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTIONS")).Returns(environmentData);
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTION")).Returns(string.Empty);
             var githubAction = ga.Object;
 
             // When

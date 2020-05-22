@@ -42,7 +42,8 @@ namespace Codecov.Upload
             content.Headers.ContentType = new MediaTypeHeaderValue("application/x-gzip");
         }
 
-      
+        protected virtual void ConfigureRequest(HttpRequestMessage request) { }
+
         protected virtual HttpResponseMessage CreateResponse(HttpRequestMessage request)
         {
             request.Content = new ByteArrayContent(GetReportBytes());

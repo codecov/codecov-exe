@@ -1,0 +1,31 @@
+name: Create Release Notes
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "*.md"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v2.2.0
+        with:
+          fetch-depth: 0
+      - name: Setup .NET Core 3.1
+        uses: actions/setup-dotnet@v1.5.0
+        with:
+          dotnet-version: 3.1.x
+      - name: Build with cake
+        uses: cake-build/cake-action@v1.1.1
+        with:
+          script-path: setup.cake
+          target: Create-MilestoneReleaseNotes
+          verbosity: Diagnostic
+          cake-version: 0.38.1
+          cake-bootstrap: true

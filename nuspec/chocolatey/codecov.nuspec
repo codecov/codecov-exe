@@ -20,9 +20,5 @@
     <description>A global executable uploader for PowerShell and Windows Command Line (cmd), which allows users to upload code coverage reports to [Codecov](https://codecov.io). This uploader supports Windows 7 (x64) and above.</description>
     <releaseNotes>All release notes for Codecov can be found on the GitHub site - https://github.com/codecov/codecov-exe/releases/tag/$version$</releaseNotes>
   </metadata>
-  <files>
-    <file src="..\..\BuildArtifacts\Codecov-win7-x64.zip" target="tools" />
-    <file src="..\..\LICENSE.txt" target="tools" />
-    <file src="tools\**" target="tools" />
-  </files>
+  <files />
 </package>

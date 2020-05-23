@@ -3,9 +3,9 @@
         <TargetFrameworks>netcoreapp2.1;netcoreapp3.0</TargetFrameworks>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="coverlet.msbuild" Version="2.8.0">
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-            <PrivateAssets>all</PrivateAssets>
+        <PackageReference Include="coverlet.collector" Version="1.2.1">
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
         <PackageReference Include="FluentAssertions" Version="5.10.0" />

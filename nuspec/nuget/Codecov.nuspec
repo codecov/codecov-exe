@@ -19,8 +19,8 @@ Codecov global executable uploader for PowerShell and .NET applications/librarie
     <tags>coverage codecov</tags>
   </metadata>
   <files>
-    <file src="../../../codecov-windows-x64.exe" target="tools/codecov.exe" />
-    <file src="../../../codecov-linux-x64" target="tools/linux-x64/codecov" />
-    <file src="../../../codecov-osx-x64" target="tools/osx-x64/codecov" />
+    <file src="win7-x64/codecov.exe" target="tools" />
+    <file src="win7-x64/codecov.pdb" target="tools" />
+    <file src="**" target="tools" exclude="win7-x64/**" />
   </files>
 </package>

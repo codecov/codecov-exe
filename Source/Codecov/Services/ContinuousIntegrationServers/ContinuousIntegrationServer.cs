@@ -65,7 +65,7 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
         public virtual string GetEnvironmentVariable(string name)
         {
-            if (UserEnvironmentVariables?.ContainsKey(name) == true)
+            if (UserEnvironmentVariables != null && UserEnvironmentVariables.ContainsKey(name))
             {
                 return UserEnvironmentVariables[name];
             }

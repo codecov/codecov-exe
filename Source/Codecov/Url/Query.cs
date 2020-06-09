@@ -37,7 +37,7 @@ namespace Codecov.Url
 
         private IYaml Yaml { get; }
 
-        private IEnviornmentVariables enviornmentVariables;
+        private IEnviornmentVariables EnvironmentVariables;
 
         private static string EscapeKnownProblematicCharacters(string data)
         {
@@ -216,7 +216,7 @@ namespace Codecov.Url
                 }
             }
 
-            var slugEnv = enviornmentVariables.GetEnviornmentVariables["CODECOV_SLUG"];
+            var slugEnv = EnvironmentVariables.GetEnviornmentVariables["CODECOV_SLUG"];
             if (!string.IsNullOrWhiteSpace(slugEnv))
             {
                 QueryParameters["slug"] = WebUtility.UrlEncode(slugEnv.Trim());
@@ -248,7 +248,7 @@ namespace Codecov.Url
         {
             QueryParameters["token"] = string.Empty;
 
-            var tokenEnv = enviornmentVariables.GetEnviornmentVariables["CODECOV_TOKEN"];
+            var tokenEnv = EnvironmentVariables.GetEnvironmentVariable("CODECOV_TOKEN");
             if (!string.IsNullOrWhiteSpace(tokenEnv))
             {
                 QueryParameters["token"] = tokenEnv.RemoveAllWhiteSpace();

@@ -108,12 +108,9 @@ namespace Codecov.Tests.Url
             var repository = Substitute.For<IEnumerable<IRepository>>();
             var build = Substitute.For<IBuild>();
             var yaml = Substitute.For<IYaml>();
-            var envVars = new Dictionary<string, string> {
-                { "CODECOV_SLUG", null },
-                { "CODECOV_TOKEN", null }
-            };
             var envVariables = Substitute.For<IEnviornmentVariables>();
-            envVariables.GetEnviornmentVariables.Returns(envVars);
+            envVariables.GetEnvironmentVariable("CODECOV_SLUG").Returns((string)null);
+            envVariables.GetEnvironmentVariable("CODECOV_TOKEN").Returns((string)null);
             var query = new Query(queryOptions, repository, build, yaml, envVariables);
 
             // When
@@ -204,12 +201,9 @@ namespace Codecov.Tests.Url
             var repository = Substitute.For<IEnumerable<IRepository>>();
             var build = Substitute.For<IBuild>();
             var yaml = Substitute.For<IYaml>();
-            var envVars = new Dictionary<string, string> {
-                { "CODECOV_SLUG", "fizz/bang" },
-                { "CODECOV_TOKEN", "10000000-0000-0000-0000-000000000000" }
-            };
             var envVariables = Substitute.For<IEnviornmentVariables>();
-            envVariables.GetEnviornmentVariables.Returns(envVars);
+            envVariables.GetEnvironmentVariable("CODECOV_SLUG").Returns("fizz/bang");
+            envVariables.GetEnvironmentVariable("CODECOV_TOKEN").Returns("10000000-0000-0000-0000-000000000000");
             var query = new Query(queryOptions, repository, build, yaml, envVariables);
 
             // When
@@ -333,11 +327,8 @@ namespace Codecov.Tests.Url
             var repository = Substitute.For<IEnumerable<IRepository>>();
             var build = Substitute.For<IBuild>();
             var yaml = Substitute.For<IYaml>();
-            var envVars = new Dictionary<string, string> {
-                { "CODECOV_SLUG", "fizz/bang" },
-            };
             var envVariables = Substitute.For<IEnviornmentVariables>();
-            envVariables.GetEnviornmentVariables.Returns(envVars);
+            envVariables.GetEnvironmentVariable("CODECOV_SLUG").Returns("fizz/bang");
             var query = new Query(queryOptions, repository, build, yaml, envVariables);
 
             // When
@@ -371,17 +362,13 @@ namespace Codecov.Tests.Url
         public void Slug_Should_Override_Repository_And_Set_From_Enviornment_Variable()
         {
             // Given
-            Environment.SetEnvironmentVariable("CODECOV_SLUG", "foo/bar");
             var queryOptions = Substitute.For<IQueryOptions>();
             var repository = Substitute.For<IRepository>();
             repository.Slug.Returns("fizz%2Fbang");
             var build = Substitute.For<IBuild>();
             var yaml = Substitute.For<IYaml>();
-            var envVars = new Dictionary<string, string> {
-                { "CODECOV_SLUG", "foo/bar" },
-            };
             var envVariables = Substitute.For<IEnviornmentVariables>();
-            envVariables.GetEnviornmentVariables.Returns(envVars);
+            envVariables.GetEnvironmentVariable("CODECOV_SLUG").Returns("foo/bar");
             var query = new Query(queryOptions, new[] { repository }, build, yaml, envVariables);
 
             // When
@@ -400,11 +387,8 @@ namespace Codecov.Tests.Url
             var repository = Substitute.For<IEnumerable<IRepository>>();
             var build = Substitute.For<IBuild>();
             var yaml = Substitute.For<IYaml>();
-            var envVars = new Dictionary<string, string> {
-                { "CODECOV_TOKEN", "00000000-0000-0000-0000-000000000000" }
-            };
             var envVariables = Substitute.For<IEnviornmentVariables>();
-            envVariables.GetEnviornmentVariables.Returns(envVars);
+            envVariables.GetEnvironmentVariable("CODECOV_TOKEN").Returns("00000000-0000-0000-0000-000000000000");
             var query = new Query(queryOptions, repository, build, yaml, envVariables);
 
             // When

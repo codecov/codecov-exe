@@ -32,7 +32,7 @@ namespace Codecov.Program
 
         private ICoverage Coverage => new Coverage.Tool.Coverage(CommandLineCommandLineOptions);
 
-        private IUrl Url => new Url.Url(new Host(CommandLineCommandLineOptions), new Route(), new Query(CommandLineCommandLineOptions, Repositories, ContinuousIntegrationServer, Yaml));
+        private IUrl Url => new Url.Url(new Host(CommandLineCommandLineOptions, EnviornmentVariables), new Route(), new Query(CommandLineCommandLineOptions, Repositories, ContinuousIntegrationServer, Yaml, EnviornmentVariables));
 
         private IYaml Yaml => new Yaml.Yaml(SourceCode);
 

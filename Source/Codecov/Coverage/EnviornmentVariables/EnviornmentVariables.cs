@@ -21,6 +21,22 @@ namespace Codecov.Coverage.EnviornmentVariables
 
         private IEnviornmentVariablesOptions Options { get; }
 
+        public string GetEnvironmentVariable(string name)
+        {
+            if (GetEnviornmentVariables.ContainsKey(name))
+            {
+                return GetEnviornmentVariables[name];
+            }
+
+            var value = Environment.GetEnvironmentVariable(name);
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return null;
+            }
+
+            return value; // We don't set the dictionary since it is used for user customized values
+        }
+
         private IDictionary<string, string> LoadEnviornmentVariables()
         {
             var enviornmentVariables = new Dictionary<string, string>(ContinuousIntegrationServer.GetEnviornmentVariables);

@@ -57,6 +57,22 @@ namespace Codecov.Services.ContinuousIntegrationServers
             return !string.IsNullOrEmpty(firstValue) && foundVariables.Skip(1).All(v => v.Equals(firstValue, StringComparison.Ordinal));
         }
 
+        public string GetEnvironmentVariable(string name)
+        {
+            if (GetEnviornmentVariables.ContainsKey(name))
+            {
+                return GetEnviornmentVariables[name];
+            }
+
+            var value = Environment.GetEnvironmentVariable(name);
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return null;
+            }
+
+            return value;
+        }
+
         protected void AddEnviornmentVariable(string name)
         {
             if (GetEnviornmentVariables.ContainsKey(name))

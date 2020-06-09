@@ -20,13 +20,13 @@ namespace Codecov.Tests.Coverage.Report
         {
             // Given
             var enviornmentVariables = Substitute.For<IEnviornmentVariables>();
-            enviornmentVariables.GetEnviornmentVariables.Returns(new Dictionary<string, string> { { "foo", "bar" }, { "fizz", "bizz" } });
+            enviornmentVariables.UserEnvironmentVariables.Returns(new Dictionary<string, string> { { "foo", "bar" }, { "fizz", "bizz" } });
             var options = Substitute.For<IReportOptions>();
             options.DisableNetwork = true;
             var sourceCode = Substitute.For<ISourceCode>();
             sourceCode.GetAllButCodecovIgnored.Returns(new[] {
-                 Path.Combine(_systemDrive, "foo", "Class.cs"),
-                 Path.Combine(_systemDrive, "foo", "Interface", "IClass.cs")
+                Path.Combine(_systemDrive, "foo", "Class.cs"),
+                Path.Combine(_systemDrive, "foo", "Interface", "IClass.cs")
             });
             sourceCode.Directory.Returns(Path.Combine(_systemDrive, "foo"));
             var coverage = Substitute.For<ICoverage>();
@@ -45,13 +45,13 @@ namespace Codecov.Tests.Coverage.Report
         {
             // Given
             var enviornmentVariables = Substitute.For<IEnviornmentVariables>();
-            enviornmentVariables.GetEnviornmentVariables.Returns(new Dictionary<string, string> { { "foo", "bar" }, { "fizz", "bizz" } });
+            enviornmentVariables.UserEnvironmentVariables.Returns(new Dictionary<string, string> { { "foo", "bar" }, { "fizz", "bizz" } });
             var options = Substitute.For<IReportOptions>();
             options.DisableNetwork = false;
             var sourceCode = Substitute.For<ISourceCode>();
             sourceCode.GetAllButCodecovIgnored.Returns(new[] {
-                 Path.Combine(_systemDrive, "foo", "Class.cs"),
-                 Path.Combine(_systemDrive, "foo", "Interface", "IClass.cs")
+                Path.Combine(_systemDrive, "foo", "Class.cs"),
+                Path.Combine(_systemDrive, "foo", "Interface", "IClass.cs")
             });
             sourceCode.Directory.Returns(Path.Combine(_systemDrive, "foo"));
             var coverage = Substitute.For<ICoverage>();

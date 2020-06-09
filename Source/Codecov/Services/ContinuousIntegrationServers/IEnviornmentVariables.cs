@@ -4,7 +4,7 @@ namespace Codecov.Services.ContinuousIntegrationServers
 {
     internal interface IEnviornmentVariables
     {
-        IDictionary<string, string> GetEnviornmentVariables { get; }
+        IDictionary<string, string> UserEnvironmentVariables { get; }
 
         string GetEnvironmentVariable(string name);
     }

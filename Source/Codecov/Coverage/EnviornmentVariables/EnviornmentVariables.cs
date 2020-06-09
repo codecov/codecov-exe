@@ -15,7 +15,7 @@ namespace Codecov.Coverage.EnviornmentVariables
             _getEnviornmentVariables = new Lazy<IDictionary<string, string>>(LoadEnviornmentVariables);
         }
 
-        public IDictionary<string, string> GetEnviornmentVariables => _getEnviornmentVariables.Value;
+        public IDictionary<string, string> UserEnvironmentVariables => _getEnviornmentVariables.Value;
 
         private IContinuousIntegrationServer ContinuousIntegrationServer { get; }
 
@@ -23,9 +23,9 @@ namespace Codecov.Coverage.EnviornmentVariables
 
         public string GetEnvironmentVariable(string name)
         {
-            if (GetEnviornmentVariables.ContainsKey(name))
+            if (UserEnvironmentVariables.ContainsKey(name))
             {
-                return GetEnviornmentVariables[name];
+                return UserEnvironmentVariables[name];
             }
 
             var value = Environment.GetEnvironmentVariable(name);
@@ -39,7 +39,7 @@ namespace Codecov.Coverage.EnviornmentVariables
 
         private IDictionary<string, string> LoadEnviornmentVariables()
         {
-            var enviornmentVariables = new Dictionary<string, string>(ContinuousIntegrationServer.GetEnviornmentVariables);
+            var enviornmentVariables = new Dictionary<string, string>(ContinuousIntegrationServer.UserEnvironmentVariables);
 
             const string codecovName = "CODECOV_ENV";
             var codecovValue = Environment.GetEnvironmentVariable(codecovName);

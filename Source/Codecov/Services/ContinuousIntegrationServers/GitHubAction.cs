@@ -1,14 +1,21 @@
 ﻿using System;
-using Codecov.Utilities;
 
 namespace Codecov.Services.ContinuousIntegrationServers
 {
     internal class GitHubAction : ContinuousIntegrationServer
     {
-        private readonly Lazy<string> _branch = new Lazy<string>(LoadBranch);
-        private readonly Lazy<string> _commit = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("GITHUB_SHA"));
-        private readonly Lazy<bool> _detecter = new Lazy<bool>(() => CheckEnvironmentVariables("GITHUB_ACTIONS"));
-        private readonly Lazy<string> _slug = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("GITHUB_REPOSITORY"));
+        private readonly Lazy<string> _branch;
+        private readonly Lazy<string> _commit;
+        private readonly Lazy<bool> _detecter;
+        private readonly Lazy<string> _slug;
+
+        public GitHubAction()
+        {
+            _branch = new Lazy<string>(LoadBranch);
+            _commit = new Lazy<string>(() => GetEnvironmentVariable("GITHUB_SHA"));
+            _detecter = new Lazy<bool>(() => CheckEnvironmentVariables("GITHUB_ACTIONS"));
+            _slug = new Lazy<string>(() => GetEnvironmentVariable("GITHUB_REPOSITORY"));
+        }
 
         public override string Branch => _branch.Value;
 
@@ -20,9 +27,9 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
         public override string Slug => _slug.Value;
 
-        private static string LoadBranch()
+        private string LoadBranch()
         {
-            var branch = EnviornmentVariable.GetEnviornmentVariable("GITHUB_REF");
+            var branch = GetEnvironmentVariable("GITHUB_REF");
 
             return string.IsNullOrWhiteSpace(branch) ? string.Empty : branch.StartsWith("ref/heads/") ? branch.Substring(10) : branch;
         }

@@ -14,13 +14,15 @@ namespace Codecov.Url
     {
         private readonly Lazy<string> _getQuery;
 
+        private readonly IEnviornmentVariables _environmentVariables;
+
         public Query(IQueryOptions options, IEnumerable<IRepository> repositories, IBuild build, IYaml yaml, IEnviornmentVariables environmentVariables)
         {
             Options = options;
             Repositories = repositories;
             Build = build;
             Yaml = yaml;
-            EnvironmentVariables = environmentVariables;
+            _environmentVariables = environmentVariables;
             SetQueryParameters();
             _getQuery = new Lazy<string>(() => string.Join("&", QueryParameters.Select(x => $"{x.Key}={x.Value ?? string.Empty}")));
         }
@@ -36,8 +38,6 @@ namespace Codecov.Url
         private IEnumerable<IRepository> Repositories { get; }
 
         private IYaml Yaml { get; }
-
-        private IEnviornmentVariables EnvironmentVariables;
 
         private static string EscapeKnownProblematicCharacters(string data)
         {
@@ -216,7 +216,7 @@ namespace Codecov.Url
                 }
             }
 
-            var slugEnv = EnvironmentVariables.GetEnviornmentVariables["CODECOV_SLUG"];
+            var slugEnv = _environmentVariables.GetEnvironmentVariable("CODECOV_SLUG");
             if (!string.IsNullOrWhiteSpace(slugEnv))
             {
                 QueryParameters["slug"] = WebUtility.UrlEncode(slugEnv.Trim());
@@ -248,7 +248,7 @@ namespace Codecov.Url
         {
             QueryParameters["token"] = string.Empty;
 
-            var tokenEnv = EnvironmentVariables.GetEnvironmentVariable("CODECOV_TOKEN");
+            var tokenEnv = _environmentVariables.GetEnvironmentVariable("CODECOV_TOKEN");
             if (!string.IsNullOrWhiteSpace(tokenEnv))
             {
                 QueryParameters["token"] = tokenEnv.RemoveAllWhiteSpace();

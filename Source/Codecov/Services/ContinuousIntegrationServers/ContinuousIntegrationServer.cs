@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Codecov.Utilities;
 
 namespace Codecov.Services.ContinuousIntegrationServers
 {
     internal class ContinuousIntegrationServer : IContinuousIntegrationServer
     {
-        private readonly Lazy<string> _build = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("CI_BUILD_ID"));
-        private readonly Lazy<string> _buildUrl = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("CI_BUILD_URL"));
-        private readonly Lazy<string> _job = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("CI_JOB_ID"));
+        private readonly Lazy<string> _build;
+        private readonly Lazy<string> _buildUrl;
+        private readonly Lazy<string> _job;
+
+        public ContinuousIntegrationServer()
+        {
+            _build = new Lazy<string>(() => GetEnvironmentVariable("CI_BUILD_ID"));
+            _buildUrl = new Lazy<string>(() => GetEnvironmentVariable("CI_BUILD_URL"));
+            _job = new Lazy<string>(() => GetEnvironmentVariable("CI_JOB_ID"));
+        }
 
         public virtual string Branch => string.Empty;
 
@@ -21,7 +27,7 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
         public virtual bool Detecter => false;
 
-        public virtual IDictionary<string, string> GetEnviornmentVariables => new Dictionary<string, string>();
+        public virtual IDictionary<string, string> UserEnvironmentVariables => new Dictionary<string, string>();
 
         public virtual string Job => _job.Value;
 
@@ -37,13 +43,13 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
         public virtual string Tag => string.Empty;
 
-        protected static bool CheckEnvironmentVariables(params string[] environmentVariables)
+        protected bool CheckEnvironmentVariables(params string[] environmentVariables)
         {
             var foundVariables = new List<string>();
 
             foreach (var variable in environmentVariables)
             {
-                var ci = EnviornmentVariable.GetEnviornmentVariable(variable);
+                var ci = GetEnvironmentVariable(variable);
 
                 if (string.IsNullOrWhiteSpace(ci) || !ci.Equals("True", StringComparison.OrdinalIgnoreCase))
                 {
@@ -57,25 +63,20 @@ namespace Codecov.Services.ContinuousIntegrationServers
             return !string.IsNullOrEmpty(firstValue) && foundVariables.Skip(1).All(v => v.Equals(firstValue, StringComparison.Ordinal));
         }
 
-        public string GetEnvironmentVariable(string name)
+        public virtual string GetEnvironmentVariable(string name)
         {
-            if (GetEnviornmentVariables.ContainsKey(name))
+            if (UserEnvironmentVariables?.ContainsKey(name) == true)
             {
-                return GetEnviornmentVariables[name];
+                return UserEnvironmentVariables[name];
             }
 
             var value = Environment.GetEnvironmentVariable(name);
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return null;
-            }
-
-            return value;
+            return string.IsNullOrWhiteSpace(value) ? string.Empty : value;
         }
 
         protected void AddEnviornmentVariable(string name)
         {
-            if (GetEnviornmentVariables.ContainsKey(name))
+            if (UserEnvironmentVariables.ContainsKey(name))
             {
                 return;
             }
@@ -86,7 +87,7 @@ namespace Codecov.Services.ContinuousIntegrationServers
                 return;
             }
 
-            GetEnviornmentVariables[name] = value;
+            UserEnvironmentVariables[name] = value;
         }
     }
 }

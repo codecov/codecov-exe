@@ -99,10 +99,10 @@ namespace Codecov.Program
             Log.Information("Reading reports.");
             Log.Information(string.Join("\n", Coverage.CoverageReports.Select(x => x.File)));
 
-            if (EnviornmentVariables.GetEnviornmentVariables.Any())
+            if (EnviornmentVariables.UserEnvironmentVariables.Any())
             {
                 Log.Information("Appending build variables");
-                Log.Information(string.Join("\n", EnviornmentVariables.GetEnviornmentVariables.Select(x => x.Key.Trim()).ToArray()));
+                Log.Information(string.Join("\n", EnviornmentVariables.UserEnvironmentVariables.Select(x => x.Key.Trim()).ToArray()));
             }
 
             if (CommandLineCommandLineOptions.Dump)

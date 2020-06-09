@@ -19,7 +19,7 @@ namespace Codecov.Tests.Coverage.EnviornmentVariables
             var enviornmentVariables = new Codecov.Coverage.EnviornmentVariables.EnviornmentVariables(options, continuousIntegrationServer);
 
             // When
-            var getEnviornmentVariables = enviornmentVariables.GetEnviornmentVariables;
+            var getEnviornmentVariables = enviornmentVariables.UserEnvironmentVariables;
 
             // Then
             getEnviornmentVariables.Should().NotBeNull();
@@ -35,7 +35,7 @@ namespace Codecov.Tests.Coverage.EnviornmentVariables
             Environment.SetEnvironmentVariable("CODECOV_ENV", "foo");
 
             // When
-            var getEnviornmentVariables = enviornmentVariables.GetEnviornmentVariables;
+            var getEnviornmentVariables = enviornmentVariables.UserEnvironmentVariables;
 
             // Then
             getEnviornmentVariables["CODECOV_ENV"].Should().Be("foo");
@@ -47,13 +47,13 @@ namespace Codecov.Tests.Coverage.EnviornmentVariables
             // Given
             var options = Substitute.For<IEnviornmentVariablesOptions>();
             var continuousIntegrationServer = Substitute.For<IContinuousIntegrationServer>();
-            continuousIntegrationServer.GetEnviornmentVariables.Returns(new Dictionary<string, string> { { "foo", "bar" }, { "fizz", "bizz" } });
+            continuousIntegrationServer.UserEnvironmentVariables.Returns(new Dictionary<string, string> { { "foo", "bar" }, { "fizz", "bizz" } });
             var enviornmentVariables = new Codecov.Coverage.EnviornmentVariables.EnviornmentVariables(options, continuousIntegrationServer);
             Environment.SetEnvironmentVariable("foo", null);
             Environment.SetEnvironmentVariable("fizz", null);
 
             // When
-            var getEnviornmentVariables = enviornmentVariables.GetEnviornmentVariables;
+            var getEnviornmentVariables = enviornmentVariables.UserEnvironmentVariables;
 
             // Then
             getEnviornmentVariables["foo"].Should().Be("bar");
@@ -72,7 +72,7 @@ namespace Codecov.Tests.Coverage.EnviornmentVariables
             Environment.SetEnvironmentVariable("fizz", "bizz");
 
             // When
-            var getEnviornmentVariables = enviornmentVariables.GetEnviornmentVariables;
+            var getEnviornmentVariables = enviornmentVariables.UserEnvironmentVariables;
 
             // Then
             getEnviornmentVariables["foo"].Should().Be("bar");

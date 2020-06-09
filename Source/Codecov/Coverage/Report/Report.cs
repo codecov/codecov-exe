@@ -41,7 +41,7 @@ namespace Codecov.Coverage.Report
 
         private ICoverage Coverage { get; }
 
-        private string Env => !EnviornmentVariables.GetEnviornmentVariables.Any() ? string.Empty : $"{string.Join("\n", EnviornmentVariables.GetEnviornmentVariables.Select(x => x.Key.Trim() + "=" + x.Value.Trim()).ToArray())}\n<<<<<< ENV\n";
+        private string Env => !EnviornmentVariables.UserEnvironmentVariables.Any() ? string.Empty : $"{string.Join("\n", EnviornmentVariables.UserEnvironmentVariables.Select(x => x.Key.Trim() + "=" + x.Value.Trim()).ToArray())}\n<<<<<< ENV\n";
 
         private IEnviornmentVariables EnviornmentVariables { get; }
 

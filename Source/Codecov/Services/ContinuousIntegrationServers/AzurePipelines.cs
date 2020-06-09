@@ -1,24 +1,32 @@
 ﻿using System;
-using Codecov.Utilities;
 
 namespace Codecov.Services.ContinuousIntegrationServers
 {
     internal class AzurePipelines : ContinuousIntegrationServer
     {
-        private readonly Lazy<string> _branch = new Lazy<string>(LoadBranch);
-        private readonly Lazy<string> _build = new Lazy<string>(LoadBuild);
+        private readonly Lazy<string> _branch;
+        private readonly Lazy<string> _build;
         private readonly Lazy<string> _buildUrl;
-        private readonly Lazy<string> _commit = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("BUILD_SOURCEVERSION"));
-        private readonly Lazy<bool> _detecter = new Lazy<bool>(() => CheckEnvironmentVariables("TF_BUILD"));
-        private readonly Lazy<string> _job = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("BUILD_BUILDID"));
-        private readonly Lazy<string> _pr = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("SYSTEM_PULLREQUEST_PULLREQUESTNUMBER"));
-        private readonly Lazy<string> _project = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("SYSTEM_TEAMPROJECT"));
-        private readonly Lazy<string> _serverUri = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("SYSTEM_TEAMFOUNDATIONSERVERURI"));
-        private readonly Lazy<string> _slug = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("BUILD_REPOSITORY_NAME"));
+        private readonly Lazy<string> _commit;
+        private readonly Lazy<bool> _detecter;
+        private readonly Lazy<string> _job;
+        private readonly Lazy<string> _pr;
+        private readonly Lazy<string> _project;
+        private readonly Lazy<string> _serverUri;
+        private readonly Lazy<string> _slug;
 
         public AzurePipelines()
         {
+            _branch = new Lazy<string>(LoadBranch);
+            _build = new Lazy<string>(LoadBuild);
             _buildUrl = new Lazy<string>(LoadBuildUrl);
+            _commit = new Lazy<string>(() => GetEnvironmentVariable("BUILD_SOURCEVERSION"));
+            _detecter = new Lazy<bool>(() => CheckEnvironmentVariables("TF_BUILD"));
+            _job = new Lazy<string>(() => GetEnvironmentVariable("BUILD_BUILDID"));
+            _pr = new Lazy<string>(() => GetEnvironmentVariable("SYSTEM_PULLREQUEST_PULLREQUESTNUMBER"));
+            _project = new Lazy<string>(() => GetEnvironmentVariable("SYSTEM_TEAMPROJECT"));
+            _serverUri = new Lazy<string>(() => GetEnvironmentVariable("SYSTEM_TEAMFOUNDATIONSERVERURI"));
+            _slug = new Lazy<string>(() => GetEnvironmentVariable("BUILD_REPOSITORY_NAME"));
         }
 
         public override string Branch => _branch.Value;
@@ -43,20 +51,20 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
         public override string Slug => _slug.Value;
 
-        private static string LoadBranch()
+        private string LoadBranch()
         {
-            var pullRequestBranch = EnviornmentVariable.GetEnviornmentVariable("SYSTEM_PULLREQUEST_TARGETBRANCH");
+            var pullRequestBranch = GetEnvironmentVariable("SYSTEM_PULLREQUEST_TARGETBRANCH");
             if (!string.IsNullOrEmpty(pullRequestBranch))
             {
                 return pullRequestBranch;
             }
 
-            return EnviornmentVariable.GetEnviornmentVariable("BUILD_SOURCEBRANCHNAME");
+            return GetEnvironmentVariable("BUILD_SOURCEBRANCHNAME");
         }
 
-        private static string LoadBuild()
+        private string LoadBuild()
         {
-            var build = EnviornmentVariable.GetEnviornmentVariable("BUILD_BUILDNUMBER");
+            var build = GetEnvironmentVariable("BUILD_BUILDNUMBER");
             return !string.IsNullOrWhiteSpace(build) ? Uri.EscapeDataString(build) : string.Empty;
         }
 

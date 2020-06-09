@@ -1,18 +1,20 @@
 ﻿using System;
 using Codecov.Services.ContinuousIntegrationServers;
 using FluentAssertions;
+using Moq;
 using Xunit;
 
 namespace Codecov.Tests.Services.ContiniousIntegrationServers
 {
-    public class GitHubActionTests : IDisposable
+    public class GitHubActionTests
     {
         [Fact]
         public void Branch_Should_Be_Empty_When_Environment_Variable_Does_Not_Exist()
         {
             // Given
-            Environment.SetEnvironmentVariable("GITHUB_REF", null);
-            var githubAction = new GitHubAction();
+            var ga = new Mock<GitHubAction>() { CallBase = true };
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REF")).Returns(string.Empty);
+            var githubAction = ga.Object;
 
             // When
             var branch = githubAction.Branch;
@@ -25,8 +27,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Branch_Should_Be_Set_When_Enviornment_Variable_Exits()
         {
             // Given
-            Environment.SetEnvironmentVariable("GITHUB_REF", "ref/heads/develop");
-            var githubAction = new GitHubAction();
+            var ga = new Mock<GitHubAction>() { CallBase = true };
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REF")).Returns("ref/heads/develop");
+            var githubAction = ga.Object;
 
             // When
             var branch = githubAction.Branch;
@@ -39,8 +42,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Commit_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
         {
             // Given
-            Environment.SetEnvironmentVariable("GITHUB_SHA", null);
-            var githubAction = new GitHubAction();
+            var ga = new Mock<GitHubAction>() { CallBase = true };
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_SHA")).Returns(string.Empty);
+            var githubAction = ga.Object;
 
             // When
             var commit = githubAction.Commit;
@@ -53,8 +57,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Commit_Should_Be_Set_When_Enviornment_Variable_Exits()
         {
             // Given
-            Environment.SetEnvironmentVariable("GITHUB_SHA", "123");
-            var githubAction = new GitHubAction();
+            var ga = new Mock<GitHubAction>() { CallBase = true };
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_SHA")).Returns("123");
+            var githubAction = ga.Object;
 
             // When
             var commit = githubAction.Commit;
@@ -67,11 +72,12 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Detecter_Should_Be_False_When_Actions_Environment_Variable_Does_Not_Exist_Or_Is_Not_True(string environmentData)
         {
             // Given
-            Environment.SetEnvironmentVariable("GITHUB_ACTIONS", environmentData);
-            var githubActions = new GitHubAction();
+            var ga = new Mock<GitHubAction>() { CallBase = true };
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTIONS")).Returns(environmentData);
+            var githubAction = ga.Object;
 
             // When
-            var detecter = githubActions.Detecter;
+            var detecter = githubAction.Detecter;
 
             // Then
             detecter.Should().BeFalse();
@@ -81,11 +87,12 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Detecter_Should_Be_True_When_Actions_Environment_Variable_Exist_And_Is_True(string environmentData)
         {
             // Given
-            Environment.SetEnvironmentVariable("GITHUB_ACTIONS", environmentData);
-            var githubActions = new GitHubAction();
+            var ga = new Mock<GitHubAction>() { CallBase = true };
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTIONS")).Returns(environmentData);
+            var githubAction = ga.Object;
 
             // When
-            var detecter = githubActions.Detecter;
+            var detecter = githubAction.Detecter;
 
             // Then
             detecter.Should().BeTrue();
@@ -108,8 +115,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Slug_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exist()
         {
             // Given
-            Environment.SetEnvironmentVariable("GITHUB_REPOSITORY", null);
-            var githubAction = new GitHubAction();
+            var ga = new Mock<GitHubAction>() { CallBase = true };
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REPOSITORY")).Returns(string.Empty);
+            var githubAction = ga.Object;
 
             // When
             var slug = githubAction.Slug;
@@ -122,31 +130,15 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Slug_Should_Be_Set_When_Environment_Variable_Exist()
         {
             // Given
-            Environment.SetEnvironmentVariable("GITHUB_REPOSITORY", "foo/bar");
-            var githubAction = new GitHubAction();
+            var ga = new Mock<GitHubAction>() { CallBase = true };
+            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REPOSITORY")).Returns("foo/bar");
+            var githubAction = ga.Object;
 
             // When
             var slug = githubAction.Slug;
 
             // Then
             slug.Should().Be("foo/bar");
-        }
-
-        public void Dispose()
-        {
-            // We will remove all environment variables that could have been set during unit test
-            var envVariable = new[]
-            {
-                "GITHUB_REF",
-                "GITHUB_SHA",
-                "GITHUB_ACTIONS",
-                "GITHUB_REPOSITORY"
-            };
-
-            foreach (var variable in envVariable)
-            {
-                Environment.SetEnvironmentVariable(variable, null);
-            }
         }
     }
 }

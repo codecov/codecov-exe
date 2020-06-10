@@ -46,7 +46,10 @@ public class BuildFiles
 }
 
 Setup<BuildVersion>((ctx) => {
-        var gitVersion = ctx.GitVersion();
+        var gitVersion = ctx.GitVersion(new GitVersionSettings
+        {
+            OutputType = GitVersionOutput.Json,
+        });
 
         var version = new BuildVersion
         {

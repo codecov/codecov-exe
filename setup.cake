@@ -15,6 +15,15 @@ Task("Cleanup")
     CleanDirectories(directories);
 });
 
+Task("Init")
+    .Does(() =>
+{
+    GitVersion(new GitVersionSettings
+    {
+        OutputType = GitVersionOutput.BuildServer,
+    });
+});
+
 Task("Default")
     .IsDependentOn("Cleanup")
     .IsDependentOn(testTask)

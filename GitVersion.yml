@@ -3,4 +3,4 @@ branches: {}
 ignore:
   sha: []
 merge-message-formats: {}
-tag-prefix:
+tag-prefix: ""

@@ -129,7 +129,7 @@ var publishDotNetToolTask = Task("Publish-DotNetToolPackage")
 {
     var packages = GetFiles("./artifacts/packages/dotnet/*.nupkg");
 
-    DotNetCoreNuGetPush(data.Directories.Packages + "/dotnet/*.nupkg", new DotNetCoreNuGetPushSettings {
+    DotNetCoreNuGetPush(packages.First().ToString(), new DotNetCoreNuGetPushSettings {
         Source = EnvironmentVariable("NUGET_SOURCE"),
         ApiKey = EnvironmentVariable("NUGET_API_KEY"),
     });

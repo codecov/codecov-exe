@@ -35,6 +35,6 @@ jobs:
           add: Changelog.md
           message: "(docs) Updated changelog"
       - name: Push Changelog
-        uses: ad-m/github-push-action@
+        uses: ad-m/github-push-action@0.6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

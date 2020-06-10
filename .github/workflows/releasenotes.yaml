@@ -31,6 +31,7 @@ jobs:
           cake-bootstrap: true
       - name: Push Changelog
         uses: github-actions-x/commit@v2.6
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        commit-message: "(docs) Updated changelog"
-        files: Changelog.md
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "(docs) Updated changelog"
+          files: Changelog.md

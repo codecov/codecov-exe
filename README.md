@@ -1,7 +1,8 @@
 # Codecov global executable uploader for .NET Framework/Core based builds.
 
 | [https://codecov.io/](https://codecov.io/) | [@codecov](https://twitter.com/codecov) | [hello@codecov.io](mailto:hello@codecov.io) |
-| ------------------------ | ------------- | --------------------- |
+| ------------------------------------------ | --------------------------------------- | ------------------------------------------- |
+
 
 ## Introduction
 
@@ -18,7 +19,7 @@
 
 3. Many Codecov CLI options are supported. Run `.\codecov.exe --help` or see [CommandLineOptions.cs](https://github.com/codecov/codecov-exe/blob/master/Source/Codecov/Program/CommandLineOptions.cs) for more details.
 
-4. On windows you can download the exe from [NuGet](https://www.nuget.org/packages/Codecov) or [Chocolatey](https://chocolatey.org/packages/codecov). There is also the .Net tool called [Codecov.Tool](https://www.nuget.org/packages/Codecov.Tool) which supports all platforms. As an alternative to NuGet or Chocolatey you can download the exe as the asset *Codecov-{os}.zip* under the release. The following PowerShell (version 5) commands might be helpful.
+4. On windows you can download the exe from [NuGet](https://www.nuget.org/packages/Codecov) or [Chocolatey](https://chocolatey.org/packages/codecov). There is also the .Net tool called [Codecov.Tool](https://www.nuget.org/packages/Codecov.Tool) which supports all platforms. As an alternative to NuGet or Chocolatey you can download the exe as the asset _Codecov-{os}.zip_ under the release. The following PowerShell (version 5) commands might be helpful.
 
 ```PowerShell
 (New-Object System.Net.WebClient).DownloadFile("<url>", (Join-Path $pwd "Codecov.zip")) # Download Codecov.zip from github release.
@@ -42,15 +43,23 @@ dotnet tool install --global Codecov.Tool
 codecov -f <path to coverage report> -t <Codecov upload token>
 ```
 
-For an AppVeyor build, the *appveyor.yml* file would look something like
+For an AppVeyor build, the _appveyor.yml_ file would look something like
 
 ```yml
 before_build:
-- choco install codecov # Can be changed to dotnet tool install --global Codecov.Tool
+    - choco install codecov # Can be changed to dotnet tool install --global Codecov.Tool
 test_script:
-# Note that, a Codecov upload token is not required.
-- codecov -f <path to coverage report>
+    # Note that, a Codecov upload token is not required.
+    - codecov -f <path to coverage report>
 ```
+
+You may also use globbing patterns for specifying files and codecov-exe will take care of resolving these paths, make sure to quote the path or depending on your shell it may be resolved before calling codecov-exe.
+
+```shell
+codecov -f "artifacts/coverage/**/*.xml" -t <Codecov upload token>
+```
+
+You can see additional globbing patterns supported by codecov-exe by heading over to: https://github.com/kthompson/glob/#supported-pattern-expressions
 
 ## Cake Addin
 
@@ -60,19 +69,19 @@ If you use [Cake](http://cakebuild.net/) (C# Make) for your builds, you may be i
 
 The following CI providers are supported:
 
-|     Company     |       Supported           |  Token Required  |
-| --------------- | ------------------------- | ---------------- |
-| AppVeyor        | Yes                       | Private only     |
-| Azure Pipelines | Yes                       | Private          |
-| Git             | Yes (as a fallback)       | Public & Private |
-| GitHub Actions  | Partial (git as fallback) | Public & Private |
-| Jenkins         | Yes                       | Public & Private |
-| TeamCity        | Yes (See below)           | Public & Private |
-| Travis CI       | Yes                       | Private only     |
+| Company         | Supported           | Token Required   |
+| --------------- | ------------------- | ---------------- |
+| AppVeyor        | Yes                 | Private only     |
+| Azure Pipelines | Yes                 | Private          |
+| Git             | Yes (as a fallback) | Public & Private |
+| GitHub Actions  | Yes                 | Private only     |
+| Jenkins         | Yes                 | Public & Private |
+| TeamCity        | Yes (See below)     | Public & Private |
+| Travis CI       | Yes                 | Private only     |
 
 ### TeamCity
 
-TeamCity does not automatically make build parameters available as environment variables. You will need to add the [following environment parameters](https://github.com/codecov/support/wiki/TeamCity) to the build configuration. To do this make sure your *Branch specification* under the VCS Root is configured correctly,
+TeamCity does not automatically make build parameters available as environment variables. You will need to add the [following environment parameters](https://github.com/codecov/support/wiki/TeamCity) to the build configuration. To do this make sure your _Branch specification_ under the VCS Root is configured correctly,
 
 <p>
   <img src="./Images/branch-spec.png" width="1000em"/>
@@ -99,18 +108,15 @@ All types of contributions are welcome! Feel free to open an [issue](https://git
 
 ### Known Issues
 
-- Specifiyng file paths with spaces is currently not possible without a workaround.
-  This is expected to be fixed when a new major release of codecov-exe is released (See issue [#71](https://github.com/codecov/codecov-exe/issues/71) for possible workaround and tracking).
-  
-- If you're seeing an **HTTP 400 error when uploading reports to S3**, make sure you've updated to at least version 1.11.0. 
-
-
+-   Specifiyng file paths with spaces is currently not possible without a workaround.
+    This is expected to be fixed when a new major release of codecov-exe is released (See issue [#71](https://github.com/codecov/codecov-exe/issues/71) for possible workaround and tracking).
+-   If you're seeing an **HTTP 400 error when uploading reports to S3**, make sure you've updated to at least version 1.11.0.
 
 ## Maintainers
 
 To create a relase, please do the following:
 
-- Push the latest changes to the master branch on github
-- Navigate to the release page and view the drafted release.
-- Make any necessary changes.
-- Publish the draft release on GitHub, targeting the master branch.
+-   Push the latest changes to the master branch on github
+-   Navigate to the release page and view the drafted release.
+-   Make any necessary changes.
+-   Publish the draft release on GitHub, targeting the master branch.

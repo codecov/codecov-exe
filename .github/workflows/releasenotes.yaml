@@ -29,9 +29,12 @@ jobs:
           verbosity: Diagnostic
           cake-version: 0.38.1
           cake-bootstrap: true
-      - name: Push Changelog
-        uses: github-actions-x/commit@v2.6
+      - name: Commit Changelog
+        uses: EndBug/add-and-commit@v4.2.0
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "(docs) Updated changelog"
-          files: Changelog.md
+          add: Changelog.md
+          message: "(docs) Updated changelog"
+      - name: Push Changelog
+        uses: ad-m/github-push-action@
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}

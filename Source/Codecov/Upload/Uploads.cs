@@ -42,6 +42,7 @@ namespace Codecov.Upload
             {
                 uploaders.Add(new CodecovUploader(url, report));
             }
+
             uploaders.Add(new CodecovFallbackUploader(url, report));
 
             return uploaders;

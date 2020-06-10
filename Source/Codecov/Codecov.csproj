@@ -10,7 +10,6 @@
         <Product>codecov-exe</Product>
         <Copyright>Copyright (c) 2017-Present Larz White, Kim J. Nordmo</Copyright>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-        <DebugType>pdbonly</DebugType>
         <CheckForOverflowUnderflow Condition="'$(Configuration)' == 'Release'">true</CheckForOverflowUnderflow>
         <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)\Codecov.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>

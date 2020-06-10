@@ -20,6 +20,13 @@ environment:
 
 install:
   - sh: sudo apt-get update && sudo apt-get install -y libgit2-dev
+  - pwsh: |
+      if ($env:APPVEYOR_REPO_TAG) {
+        # We assume that the target branch is master
+        # and as such we need to switch to it to
+        # get gitversion to work correctly
+        git switch master
+      }
 
 build_script:
   - ps: .\build.ps1 --target=Init --verbosity=Diagnostic

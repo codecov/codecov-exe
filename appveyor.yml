@@ -26,7 +26,6 @@ install:
         # and as such we need to switch to it to
         # get gitversion to work correctly
         git switch master
-        git branch -d $env:APPVEYOR_REPO_TAG_NAME # We don't want gitversion to use the tag as a branch name
       }
 
 build_script:

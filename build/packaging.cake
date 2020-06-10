@@ -85,6 +85,7 @@ var createDotNetToolTask = Task("Create-DotNetToolPackage")
         NoRestore = true,
         OutputDirectory = output,
         MSBuildSettings = data.MSBuildSettings,
+        IncludeSymbols = true,
     });
 });
 

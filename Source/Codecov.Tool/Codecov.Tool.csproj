@@ -16,6 +16,7 @@
         <PackageReleaseNotes>All release notes for Codecov can be found on the GitHub site - https://github.com/codecov/codecov-exe/releases/tag/$(Version)</PackageReleaseNotes>
         <PackageTags>coverage;codecov</PackageTags>
         <RepositoryUrl>https://github.com/codecov/codecov-exe</RepositoryUrl>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="../Codecov/**/*.cs" Exclude="../Codecov/obj/**/*.cs;../Codecov/bin/**/*.cs" />

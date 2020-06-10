@@ -10,7 +10,7 @@ matrix:
 environment:
   APPVEYOR_YML_DISABLE_PS_LINUX: true
   NUGET_API_KEY:
-    secure: koMAZYSTMVgMKHVVuyfoyVsqyFJc7KQ7UpmNixgflGJC0Mo6CQa8S5cQfbXaBXTH
+    secure: yBUbV2hX9g4oJCmJxZKOszcGAHi34RYzJedDIpyysIvXVpUKYZSzoWtTSqasi+Ou
   NUGET_SOURCE: https://www.nuget.org/api/v2/package
   GITHUB_TOKEN:
     secure: 3bqzyVjmzE137kZ0lmMBKqM725nQd0hKAATVeE2trpWaPS+5bOpZfjy6zD5INfjV

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 
 namespace Codecov.Utilities
 {
@@ -15,7 +14,7 @@ namespace Codecov.Utilities
         {
             foreach (var name in names)
             {
-                var env = Environment.GetEnvironmentVariable(name);
+                var env = GetEnviornmentVariable(name);
 
                 if (!string.IsNullOrWhiteSpace(env))
                 {

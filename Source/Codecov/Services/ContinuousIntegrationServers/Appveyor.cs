@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace Codecov.Services.ContinuousIntegrationServers
@@ -44,6 +44,9 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
         public override string Slug => _slug.Value;
 
+        private static bool IsNullOrEmpty(params string[] parameters)
+            => parameters.Any(x => string.IsNullOrEmpty(x));
+
         private string LoadBuild()
         {
             var build = GetEnvironmentVariable("APPVEYOR_JOB_ID");
@@ -81,8 +84,5 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
             return job;
         }
-
-        private static bool IsNullOrEmpty(params string[] parameters)
-            => parameters.Any(x => string.IsNullOrEmpty(x));
     }
 }

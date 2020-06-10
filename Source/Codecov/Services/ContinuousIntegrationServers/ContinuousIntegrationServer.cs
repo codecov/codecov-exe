@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -43,6 +43,17 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
         public virtual string Tag => string.Empty;
 
+        public virtual string GetEnvironmentVariable(string name)
+        {
+            if (UserEnvironmentVariables != null && UserEnvironmentVariables.ContainsKey(name))
+            {
+                return UserEnvironmentVariables[name];
+            }
+
+            var value = Environment.GetEnvironmentVariable(name);
+            return string.IsNullOrWhiteSpace(value) ? string.Empty : value;
+        }
+
         protected bool CheckEnvironmentVariables(params string[] environmentVariables)
         {
             var foundVariables = new List<string>();
@@ -63,17 +74,6 @@ namespace Codecov.Services.ContinuousIntegrationServers
             return !string.IsNullOrEmpty(firstValue) && foundVariables.Skip(1).All(v => v.Equals(firstValue, StringComparison.Ordinal));
         }
 
-        public virtual string GetEnvironmentVariable(string name)
-        {
-            if (UserEnvironmentVariables?.ContainsKey(name) == true)
-            {
-                return UserEnvironmentVariables[name];
-            }
-
-            var value = Environment.GetEnvironmentVariable(name);
-            return string.IsNullOrWhiteSpace(value) ? string.Empty : value;
-        }
-
         protected void AddEnviornmentVariable(string name)
         {
             if (UserEnvironmentVariables.ContainsKey(name))
@@ -81,7 +81,7 @@ namespace Codecov.Services.ContinuousIntegrationServers
                 return;
             }
 
-            var value = Environment.GetEnvironmentVariable(name);
+            var value = GetEnvironmentVariable(name);
             if (string.IsNullOrWhiteSpace(value))
             {
                 return;

@@ -266,3 +266,6 @@ nuspec/chocolatey/tools/Codecov.zip
 
 # Visual Studio Launch Settings
 launchSettings.json
+
+# .NET Core installation
+.dotnet/

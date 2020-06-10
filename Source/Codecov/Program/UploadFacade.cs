@@ -32,7 +32,7 @@ namespace Codecov.Program
 
         private ICoverage Coverage => new Coverage.Tool.Coverage(CommandLineCommandLineOptions);
 
-        private IUrl Url => new Url.Url(new Host(CommandLineCommandLineOptions), new Route(), new Query(CommandLineCommandLineOptions, Repositories, ContinuousIntegrationServer, Yaml));
+        private IUrl Url => new Url.Url(new Host(CommandLineCommandLineOptions, EnviornmentVariables), new Route(), new Query(CommandLineCommandLineOptions, Repositories, ContinuousIntegrationServer, Yaml, EnviornmentVariables));
 
         private IYaml Yaml => new Yaml.Yaml(SourceCode);
 
@@ -56,7 +56,7 @@ namespace Codecov.Program
 
         private ISourceCode SourceCode => new SourceCode(VersionControlSystem);
 
-        private IUpload Upload => new Uploads(Url, Report);
+        private IUpload Upload => new Uploads(Url, Report, CommandLineCommandLineOptions.Features);
 
         private IVersionControlSystem VersionControlSystem => VersionControlSystemFactory.Create(CommandLineCommandLineOptions, Terminals[TerminalName.Generic]);
 
@@ -99,10 +99,10 @@ namespace Codecov.Program
             Log.Information("Reading reports.");
             Log.Information(string.Join("\n", Coverage.CoverageReports.Select(x => x.File)));
 
-            if (EnviornmentVariables.GetEnviornmentVariables.Any())
+            if (EnviornmentVariables.UserEnvironmentVariables.Any())
             {
                 Log.Information("Appending build variables");
-                Log.Information(string.Join("\n", EnviornmentVariables.GetEnviornmentVariables.Select(x => x.Key.Trim()).ToArray()));
+                Log.Information(string.Join("\n", EnviornmentVariables.UserEnvironmentVariables.Select(x => x.Key.Trim()).ToArray()));
             }
 
             if (CommandLineCommandLineOptions.Dump)

@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Codecov.Coverage.Report;
 using Codecov.Logger;
 using Codecov.Url;
@@ -10,9 +11,9 @@ namespace Codecov.Upload
     {
         private readonly Lazy<IEnumerable<IUpload>> _uploaders;
 
-        public Uploads(IUrl url, IReport report)
+        public Uploads(IUrl url, IReport report, IEnumerable<string> features)
         {
-            _uploaders = new Lazy<IEnumerable<IUpload>>(() => SetUploaders(url, report));
+            _uploaders = new Lazy<IEnumerable<IUpload>>(() => SetUploaders(url, report, features));
         }
 
         private IEnumerable<IUpload> Uploaders => _uploaders.Value;
@@ -33,13 +34,17 @@ namespace Codecov.Upload
             throw new Exception("Failed to upload the report.");
         }
 
-        private static IEnumerable<IUpload> SetUploaders(IUrl url, IReport report)
+        private static IEnumerable<IUpload> SetUploaders(IUrl url, IReport report, IEnumerable<string> features)
         {
-            return new List<IUpload>
+            var uploaders = new List<IUpload>();
+
+            if (!features.Any(f => string.Compare(f, "s3", StringComparison.OrdinalIgnoreCase) == 0))
             {
-                new CodecovUploader(url, report),
-                new CodecovFallbackUploader(url, report)
-            };
+                uploaders.Add(new CodecovUploader(url, report));
+            }
+            uploaders.Add(new CodecovFallbackUploader(url, report));
+
+            return uploaders;
         }
     }
 }

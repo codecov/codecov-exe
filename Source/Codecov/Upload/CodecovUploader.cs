@@ -43,7 +43,8 @@ namespace Codecov.Upload
         }
 
         protected virtual void ConfigureRequest(HttpRequestMessage request)
-            => request.Headers.TryAddWithoutValidation("x-amz-acl", "public-read");
+        {
+        }
 
         protected virtual HttpResponseMessage CreateResponse(HttpRequestMessage request)
         {

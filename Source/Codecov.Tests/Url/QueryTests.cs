@@ -25,7 +25,8 @@ namespace Codecov.Tests.Url
             versionControlSystem.Branch.Returns("dev");
             var build = Substitute.For<IBuild>();
             var yaml = Substitute.For<IYaml>();
-            var query = new Query(queryOptions, new[] { continiousIntegrationServer, versionControlSystem }, build, yaml);
+            var envVariables = Substitute.For<IEnviornmentVariables>();
+            var query = new Query(queryOptions, new[] { continiousIntegrationServer, versionControlSystem }, build, yaml, envVariables);
 
             // When
             var getQuery = query.GetQuery.Split('&');
@@ -45,7 +46,8 @@ namespace Codecov.Tests.Url
             versionControlSystem.Branch.Returns("dev");
             var build = Substitute.For<IBuild>();
             var yaml = Substitute.For<IYaml>();
-            var query = new Query(queryOptions, new[] { continiousIntegrationServer, versionControlSystem }, build, yaml);
+            var envVariables = Substitute.For<IEnviornmentVariables>();
+            var query = new Query(queryOptions, new[] { continiousIntegrationServer, versionControlSystem }, build, yaml, envVariables);
 
             // When
             var getQuery = query.GetQuery.Split('&');
@@ -65,7 +67,8 @@ namespace Codecov.Tests.Url
             build.BuildUrl.Returns("www.google.com");
             build.Job.Returns("codecov/codecov-exe/1.0.4-beta.1+5.build.63");
             var yaml = Substitute.For<IYaml>();
-            var query = new Query(queryOptions, repository, build, yaml);
+            var envVariables = Substitute.For<IEnviornmentVariables>();
+            var query = new Query(queryOptions, repository, build, yaml, envVariables);
 
             // When
             var getQuery = query.GetQuery.Split('&');
@@ -87,7 +90,8 @@ namespace Codecov.Tests.Url
             build.Job.Returns("0");
             repository.Branch.Returns("#8-move-docs");
             var yaml = Substitute.For<IYaml>();
-            var query = new Query(queryOptions, repositoryRange, build, yaml);
+            var envVariables = Substitute.For<IEnviornmentVariables>();
+            var query = new Query(queryOptions, repositoryRange, build, yaml, envVariables);
 
             // When
             var getQuery = query.GetQuery.Split('&');
@@ -100,13 +104,14 @@ namespace Codecov.Tests.Url
         public void Should_Return_Defaults()
         {
             // Given
-            Environment.SetEnvironmentVariable("CODECOV_SLUG", null);
-            Environment.SetEnvironmentVariable("CODECOV_TOKEN", null);
             var queryOptions = Substitute.For<IQueryOptions>();
             var repository = Substitute.For<IEnumerable<IRepository>>();
             var build = Substitute.For<IBuild>();
             var yaml = Substitute.For<IYaml>();
-            var query = new Query(queryOptions, repository, build, yaml);
+            var envVariables = Substitute.For<IEnviornmentVariables>();
+            envVariables.GetEnvironmentVariable("CODECOV_SLUG").Returns((string)null);
+            envVariables.GetEnvironmentVariable("CODECOV_TOKEN").Returns((string)null);
+            var query = new Query(queryOptions, repository, build, yaml, envVariables);
 
             // When
             var getQuery = query.GetQuery.Split('&');
@@ -140,7 +145,8 @@ namespace Codecov.Tests.Url
             build.Job.Returns("0");
             build.Service.Returns("appveyor");
             var yaml = Substitute.For<IYaml>();
-            var query = new Query(queryOptions, repository, build, yaml);
+            var envVariables = Substitute.For<IEnviornmentVariables>();
+            var query = new Query(queryOptions, repository, build, yaml, envVariables);
 
             // When
             var getQuery = query.GetQuery.Split('&');
@@ -169,7 +175,8 @@ namespace Codecov.Tests.Url
             var repository = Substitute.For<IEnumerable<IRepository>>();
             var build = Substitute.For<IBuild>();
             var yaml = Substitute.For<IYaml>();
-            var query = new Query(queryOptions, repository, build, yaml);
+            var envVariables = Substitute.For<IEnviornmentVariables>();
+            var query = new Query(queryOptions, repository, build, yaml, envVariables);
 
             // When
             var getQuery = query.GetQuery.Split('&');
@@ -190,13 +197,14 @@ namespace Codecov.Tests.Url
         public void Should_Set_From_Enviornmentvariable()
         {
             // Given
-            Environment.SetEnvironmentVariable("CODECOV_SLUG", "fizz/bang");
-            Environment.SetEnvironmentVariable("CODECOV_TOKEN", "10000000-0000-0000-0000-000000000000");
             var queryOptions = Substitute.For<IQueryOptions>();
             var repository = Substitute.For<IEnumerable<IRepository>>();
             var build = Substitute.For<IBuild>();
             var yaml = Substitute.For<IYaml>();
-            var query = new Query(queryOptions, repository, build, yaml);
+            var envVariables = Substitute.For<IEnviornmentVariables>();
+            envVariables.GetEnvironmentVariable("CODECOV_SLUG").Returns("fizz/bang");
+            envVariables.GetEnvironmentVariable("CODECOV_TOKEN").Returns("10000000-0000-0000-0000-000000000000");
+            var query = new Query(queryOptions, repository, build, yaml, envVariables);
 
             // When
             var getQuery = query.GetQuery.Split('&');
@@ -204,10 +212,6 @@ namespace Codecov.Tests.Url
             // Then
             getQuery.FirstOrDefault(x => x.StartsWith("slug=")).Should().Be("slug=fizz%2Fbang");
             getQuery.FirstOrDefault(x => x.StartsWith("token=")).Should().Be("token=10000000-0000-0000-0000-000000000000");
-
-            // Cleanup
-            Environment.SetEnvironmentVariable("CODECOV_SLUG", null);
-            Environment.SetEnvironmentVariable("CODECOV_TOKEN", null);
         }
 
         [Fact]
@@ -225,7 +229,9 @@ namespace Codecov.Tests.Url
             repository.Slug.Returns("larz/codecov-exe");
             var build = Substitute.For<IBuild>();
             var yaml = Substitute.For<IYaml>();
-            var query = new Query(queryOptions, new[] { repository }, build, yaml);
+            var envVars = new Dictionary<string, string>();
+            var envVariables = Substitute.For<IEnviornmentVariables>();
+            var query = new Query(queryOptions, new[] { repository }, build, yaml, envVariables);
 
             // When
             var getQuery = query.GetQuery.Split('&');
@@ -255,7 +261,8 @@ namespace Codecov.Tests.Url
             repository.Slug.Returns("larz/codecov-exe");
             var build = Substitute.For<IBuild>();
             var yaml = Substitute.For<IYaml>();
-            var query = new Query(queryOptions, new[] { repository }, build, yaml);
+            var envVariables = Substitute.For<IEnviornmentVariables>();
+            var query = new Query(queryOptions, new[] { repository }, build, yaml, envVariables);
 
             // When
             var getQuery = query.GetQuery.Split('&');
@@ -279,7 +286,8 @@ namespace Codecov.Tests.Url
             var build = Substitute.For<IBuild>();
             var yaml = Substitute.For<IYaml>();
             yaml.FileName.Returns("codecov.yaml");
-            var query = new Query(queryOptions, repository, build, yaml);
+            var envVariables = Substitute.For<IEnviornmentVariables>();
+            var query = new Query(queryOptions, repository, build, yaml, envVariables);
 
             // When
             var getQuery = query.GetQuery.Split('&');
@@ -299,7 +307,8 @@ namespace Codecov.Tests.Url
             versionControlSystem.Branch.Returns("dev");
             var build = Substitute.For<IBuild>();
             var yaml = Substitute.For<IYaml>();
-            var query = new Query(queryOptions, new[] { continiousIntegrationServer, versionControlSystem }, build, yaml);
+            var envVariables = Substitute.For<IEnviornmentVariables>();
+            var query = new Query(queryOptions, new[] { continiousIntegrationServer, versionControlSystem }, build, yaml, envVariables);
 
             // When
             var getQuery = query.GetQuery.Split('&');
@@ -318,16 +327,15 @@ namespace Codecov.Tests.Url
             var repository = Substitute.For<IEnumerable<IRepository>>();
             var build = Substitute.For<IBuild>();
             var yaml = Substitute.For<IYaml>();
-            var query = new Query(queryOptions, repository, build, yaml);
+            var envVariables = Substitute.For<IEnviornmentVariables>();
+            envVariables.GetEnvironmentVariable("CODECOV_SLUG").Returns("fizz/bang");
+            var query = new Query(queryOptions, repository, build, yaml, envVariables);
 
             // When
             var getQuery = query.GetQuery.Split('&');
 
             // Then
             getQuery.FirstOrDefault(x => x.StartsWith("slug=")).Should().Be("slug=foo%2Fbar");
-
-            // Clean up
-            Environment.SetEnvironmentVariable("CODECOV_SLUG", null);
         }
 
         [Fact]
@@ -340,7 +348,8 @@ namespace Codecov.Tests.Url
             repository.Slug.Returns("fizz%2Fbang");
             var build = Substitute.For<IBuild>();
             var yaml = Substitute.For<IYaml>();
-            var query = new Query(queryOptions, new[] { repository }, build, yaml);
+            var envVariables = Substitute.For<IEnviornmentVariables>();
+            var query = new Query(queryOptions, new[] { repository }, build, yaml, envVariables);
 
             // When
             var getQuery = query.GetQuery.Split('&');
@@ -353,44 +362,40 @@ namespace Codecov.Tests.Url
         public void Slug_Should_Override_Repository_And_Set_From_Enviornment_Variable()
         {
             // Given
-            Environment.SetEnvironmentVariable("CODECOV_SLUG", "foo/bar");
             var queryOptions = Substitute.For<IQueryOptions>();
             var repository = Substitute.For<IRepository>();
             repository.Slug.Returns("fizz%2Fbang");
             var build = Substitute.For<IBuild>();
             var yaml = Substitute.For<IYaml>();
-            var query = new Query(queryOptions, new[] { repository }, build, yaml);
+            var envVariables = Substitute.For<IEnviornmentVariables>();
+            envVariables.GetEnvironmentVariable("CODECOV_SLUG").Returns("foo/bar");
+            var query = new Query(queryOptions, new[] { repository }, build, yaml, envVariables);
 
             // When
             var getQuery = query.GetQuery.Split('&');
 
             // Then
             getQuery.FirstOrDefault(x => x.StartsWith("slug=")).Should().Be("slug=foo%2Fbar");
-
-            // Clean Up
-            Environment.SetEnvironmentVariable("CODECOV_SLUG", null);
         }
 
         [Fact]
         public void Token_Should_Override_Enviornment_Variable_And_Set_From_CommandLine()
         {
             // Given
-            Environment.SetEnvironmentVariable("CODECOV_TOKEN", "00000000-0000-0000-0000-000000000000");
             var queryOptions = Substitute.For<IQueryOptions>();
             queryOptions.Token.Returns("10000000-0000-0000-0000-000000000000");
             var repository = Substitute.For<IEnumerable<IRepository>>();
             var build = Substitute.For<IBuild>();
             var yaml = Substitute.For<IYaml>();
-            var query = new Query(queryOptions, repository, build, yaml);
+            var envVariables = Substitute.For<IEnviornmentVariables>();
+            envVariables.GetEnvironmentVariable("CODECOV_TOKEN").Returns("00000000-0000-0000-0000-000000000000");
+            var query = new Query(queryOptions, repository, build, yaml, envVariables);
 
             // When
             var getQuery = query.GetQuery.Split('&');
 
             // Then
             getQuery.FirstOrDefault(x => x.StartsWith("token=")).Should().Be("token=10000000-0000-0000-0000-000000000000");
-
-            // Clean up
-            Environment.SetEnvironmentVariable("CODECOV_TOKEN", null);
         }
     }
 }

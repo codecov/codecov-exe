@@ -1,6 +1,6 @@
 image:
- - Ubuntu
- - Visual Studio 2019
+  - Ubuntu
+  - Visual Studio 2019
 
 pull_requests:
   do_not_increment_build_number: true
@@ -9,32 +9,29 @@ matrix:
   fast_finish: true
 environment:
   APPVEYOR_YML_DISABLE_PS_LINUX: true
-for:
-- matrix:
-    only:
-      - image: Ubuntu
-  environment:
-    NUGET_API_KEY:
-      secure: koMAZYSTMVgMKHVVuyfoyVsqyFJc7KQ7UpmNixgflGJC0Mo6CQa8S5cQfbXaBXTH
-    GITHUB_USERNAME: AdmiringWorm
-    GITHUB_PASSWORD:
-      secure: 3bqzyVjmzE137kZ0lmMBKqM725nQd0hKAATVeE2trpWaPS+5bOpZfjy6zD5INfjV
-    NUGET_SOURCE: https://www.nuget.org/api/v2/package
-- matrix:
-    only:
-      - image: Visual Studio 2017
-  environment:
-    APPVEYOR_API_TOKEN:
-      secure: QHpexV7pcFPNcXT0clrRuSDwDXXXI6oxFwBw5NDIRRg=
-    CHOCOLATEY_API_KEY:
-      secure: CzGGbCfsVKyCTbY193kYveGQDN5ilsyI30J3FYdo9+IpGsDwi/knjzBqCQbztIzY
-    CHOCOLATEY_SOURCE: https://push.chocolatey.org/
+  NUGET_API_KEY:
+    secure: koMAZYSTMVgMKHVVuyfoyVsqyFJc7KQ7UpmNixgflGJC0Mo6CQa8S5cQfbXaBXTH
+  NUGET_SOURCE: https://www.nuget.org/api/v2/package
+  GITHUB_TOKEN:
+    secure: 3bqzyVjmzE137kZ0lmMBKqM725nQd0hKAATVeE2trpWaPS+5bOpZfjy6zD5INfjV
+  CHOCOLATEY_API_KEY:
+    secure: CzGGbCfsVKyCTbY193kYveGQDN5ilsyI30J3FYdo9+IpGsDwi/knjzBqCQbztIzY
+  CHOCOLATEY_SOURCE: https://push.chocolatey.org/
 
 install:
-- sh: sudo apt-get update && sudo apt-get install -y libgit2-dev
+  - sh: sudo apt-get update && sudo apt-get install -y libgit2-dev
 
 build_script:
-- ps: .\build.ps1 -Target AppVeyor
-- sh: ./build.sh --target=AppVeyor
+  - ps: .\build.ps1 --target=CI
+  - sh: |
+      if [ "$CI_LINUX" == "true" ]; then
+        ./build.sh --target=CI --runtimes=linux-x64
+      else
+        ./build.sh --target=CI --runtimes=osx-x64
+      fi
 
-cache: tools -> setup.cake,appveyor.yml,tools/packages.config
+cache:
+  - tools -> build.config,build/tools_addins.cake
+  - .dotnet -> build.config
+artifacts:
+  - path: "artifacts/archives/*.zip"

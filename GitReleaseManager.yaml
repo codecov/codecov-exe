@@ -1,17 +1,32 @@
 create:
   include-footer: true
   footer-heading: Where to get it
-  footer-content: You can download this release from [chocolatey](https://chocolatey.org/packages/codecov/{milestone}),
-                  [nuget](https://nuget.org/packages/Codecov/{milestone})
-                  or as a [dotnet tool](https://nuget.org/packages/Codecov.Tool/{milestone})
+  footer-content: >-
+    You can download this release from [chocolatey](https://chocolatey.org/packages/codecov/{milestone}),
+    [nuget](https://nuget.org/packages/Codecov/{milestone})
+    or as a [dotnet tool](https://nuget.org/packages/Codecov.Tool/{milestone})
   footer-includes-milestone: true
-  milestone-replace-text: '{milestone}'
-# export:
-#   include-created-date-in-title: true | false
-#   created-date-string-format: MMMM dd, yyyy
-#   perform-regex-removal: true | false
-#   regex-text: '### Where to get it(\r\n)*You can .*\)'
-#   multiline-regex: true | false
+  milestone-replace-text: "{milestone}"
+  include-sha-section: true
+export:
+  include-created-date-in-title: true
+  created-date-string-format: yyyy-MM-dd
+  perform-regex-removal: true
+  regex-text: '### Where to get it(\r\n)*You can .*\)'
+  multiline-regex: true
+close:
+  use-issue-comments: true
+  issue-comment: |-
+    :tada: This issue has been resolved in version {milestone} :tada:
+
+    The release is available on:
+
+    - [.NET Core Tool](https://nuget.org/packages/Codecov.Tool/{milestone})
+    - [Chocolatey](https://chocolatey.org/packages/codecov/{milestone})
+    - [GitHub release](https://github.com/{owner}/{repository}/releases/tag/{milestone})
+    - [NuGet](https://nuget.org/packages/Codecov/{milestone})
+
+    Your friendly **[GitReleaseManager](https://github.com/GitTools/GitReleaseManager)** bot :package::rocket:
 issue-labels-include:
   - Bug
   - Documentation
@@ -20,6 +35,6 @@ issue-labels-include:
 issue-labels-exclude:
   - Build
 issue-labels-alias:
-  - name:    Documentation
-    header:  Documentation
-    plural:  Documentation
+  - name: Documentation
+    header: Documentation
+    plural: Documentation

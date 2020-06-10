@@ -1,15 +1,18 @@
-﻿using System;
+using System;
+using Codecov.Services.ContinuousIntegrationServers;
 
 namespace Codecov.Url
 {
     internal class Host : IHost
     {
         private readonly Lazy<string> _getHost;
+        private readonly IEnviornmentVariables _environmentVariables;
 
-        public Host(IHostOptions options)
+        public Host(IHostOptions options, IEnviornmentVariables environmentVariables)
         {
             Options = options;
             _getHost = new Lazy<string>(LoadHost);
+            _environmentVariables = environmentVariables;
         }
 
         public string GetHost => _getHost.Value;
@@ -25,7 +28,7 @@ namespace Codecov.Url
             }
 
             // Try to get it from enviornment variable else just use default url.
-            var urlEnv = Environment.GetEnvironmentVariable("CODECOV_URL");
+            var urlEnv = _environmentVariables.GetEnvironmentVariable("CODECOV_URL");
             return !string.IsNullOrWhiteSpace(urlEnv) ? urlEnv.Trim().TrimEnd('/') : "https://codecov.io";
         }
     }

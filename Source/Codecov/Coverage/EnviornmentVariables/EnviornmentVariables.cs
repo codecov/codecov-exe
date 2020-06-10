@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Codecov.Services.ContinuousIntegrationServers;
+using Codecov.Utilities;
 
 namespace Codecov.Coverage.EnviornmentVariables
 {
@@ -15,18 +16,34 @@ namespace Codecov.Coverage.EnviornmentVariables
             _getEnviornmentVariables = new Lazy<IDictionary<string, string>>(LoadEnviornmentVariables);
         }
 
-        public IDictionary<string, string> GetEnviornmentVariables => _getEnviornmentVariables.Value;
+        public IDictionary<string, string> UserEnvironmentVariables => _getEnviornmentVariables.Value;
 
         private IContinuousIntegrationServer ContinuousIntegrationServer { get; }
 
         private IEnviornmentVariablesOptions Options { get; }
 
+        public string GetEnvironmentVariable(string name)
+        {
+            if (UserEnvironmentVariables.ContainsKey(name))
+            {
+                return UserEnvironmentVariables[name];
+            }
+
+            var value = Environment.GetEnvironmentVariable(name);
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return null;
+            }
+
+            return value; // We don't set the dictionary since it is used for user customized values
+        }
+
         private IDictionary<string, string> LoadEnviornmentVariables()
         {
-            var enviornmentVariables = new Dictionary<string, string>(ContinuousIntegrationServer.GetEnviornmentVariables);
+            var enviornmentVariables = new Dictionary<string, string>(ContinuousIntegrationServer.UserEnvironmentVariables);
 
             const string codecovName = "CODECOV_ENV";
-            var codecovValue = Environment.GetEnvironmentVariable(codecovName);
+            var codecovValue = EnviornmentVariable.GetEnviornmentVariable(codecovName);
             if (!string.IsNullOrWhiteSpace(codecovValue) && !enviornmentVariables.ContainsKey(codecovName))
             {
                 enviornmentVariables[codecovName] = codecovValue;
@@ -40,13 +57,13 @@ namespace Codecov.Coverage.EnviornmentVariables
                     continue;
                 }
 
-                var value = Environment.GetEnvironmentVariable(enviornmentVariableName);
+                var value = EnviornmentVariable.GetEnviornmentVariable(enviornmentVariableName);
                 if (string.IsNullOrWhiteSpace(value))
                 {
                     continue;
                 }
 
-                enviornmentVariables[enviornmentVariableName] = Environment.GetEnvironmentVariable(enviornmentVariableName);
+                enviornmentVariables[enviornmentVariableName] = EnviornmentVariable.GetEnviornmentVariable(enviornmentVariableName);
             }
 
             return enviornmentVariables;

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Codecov.Services.ContinuousIntegrationServers;
 using Codecov.Url;
 using FluentAssertions;
 using NSubstitute;
@@ -13,7 +15,8 @@ namespace Codecov.Tests.Url
         {
             // Given
             var hostOptions = Substitute.For<IHostOptions>();
-            var host = new Host(hostOptions);
+            var environmentVariables = Substitute.For<IEnviornmentVariables>();
+            var host = new Host(hostOptions, environmentVariables);
 
             // When
             var getHost = host.GetHost;
@@ -28,7 +31,8 @@ namespace Codecov.Tests.Url
             // Given
             var hostOptions = Substitute.For<IHostOptions>();
             hostOptions.Url.Returns("www.google.com/");
-            var host = new Host(hostOptions);
+            var environmentVariables = Substitute.For<IEnviornmentVariables>();
+            var host = new Host(hostOptions, environmentVariables);
 
             // When
             var getHost = host.GetHost;
@@ -41,18 +45,16 @@ namespace Codecov.Tests.Url
         public void Should_Set_From_EnvironmentVariable()
         {
             // Given
-            Environment.SetEnvironmentVariable("CODECOV_URL", "www.google.com/");
             var hostOptions = Substitute.For<IHostOptions>();
-            var host = new Host(hostOptions);
+            var environmentVariables = Substitute.For<IEnviornmentVariables>();
+            environmentVariables.GetEnvironmentVariable("CODECOV_URL").Returns("www.google.com/");
+            var host = new Host(hostOptions, environmentVariables);
 
             // When
             var getHost = host.GetHost;
 
             // Then
             getHost.Should().Be("www.google.com");
-
-            // Cleanup
-            Environment.SetEnvironmentVariable("CODECOV_URL", null);
         }
     }
 }

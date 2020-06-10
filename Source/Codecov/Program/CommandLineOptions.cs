@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Codecov.Coverage.EnviornmentVariables;
 using Codecov.Coverage.Report;
 using Codecov.Coverage.Tool;
@@ -37,8 +37,8 @@ namespace Codecov.Program
         public string Commit { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to toggle functionalities. (1) --disable-network.
-        /// Disable uploading the file network.
+        /// Gets or sets a value indicating whether to toggle functionalities. (1)
+        /// --disable-network. Disable uploading the file network.
         /// </summary>
         /// <value>
         /// A value indicating whether to toggle functionalities. (1) --disable-network. Disable
@@ -64,6 +64,13 @@ namespace Codecov.Program
         /// </value>
         [Option('e', "env", Separator = ' ', HelpText = "Specify enviornment variables to be included with this build. (1) CODECOV_ENV=VAR1,VAR2. (2) -e VAR1 VAR2.")]
         public IEnumerable<string> Envs { get; set; }
+
+        /// <summary>
+        /// Gets or sets the features to toggle on/off.
+        /// </summary>
+        /// <value>The features to toggle.</value>
+        [Option('X', "feature", HelpText = "Toggle functionalites.\nUse -X s3 to disable the default uploader.")]
+        public IEnumerable<string> Features { get; set; }
 
         /// <summary>
         /// Gets or sets a value specifing the target file(s) to upload. (1) -f 'path/to/file'. Only
@@ -130,8 +137,8 @@ namespace Codecov.Program
         public bool Required { get; set; }
 
         /// <summary>
-        /// Gets or sets a value specifing the owner/repo slug used instead of the private repo token
-        /// in Enterprise. (option) Set environment variable CODECOV_SLUG=:owner/:repo.
+        /// Gets or sets a value specifing the owner/repo slug used instead of the private repo
+        /// token in Enterprise. (option) Set environment variable CODECOV_SLUG=:owner/:repo.
         /// </summary>
         /// <value>
         /// A value specifing the owner/repo slug used instead of the private repo token in
@@ -148,8 +155,8 @@ namespace Codecov.Program
         public string Tag { get; set; }
 
         /// <summary>
-        /// Gets or sets a value specifing the private repository token. (option) set the enviornment
-        /// variable CODECOV_TOKEN-uuid. (1) -t @/path/to/token_file. (2) -t uuid.
+        /// Gets or sets a value specifing the private repository token. (option) set the
+        /// enviornment variable CODECOV_TOKEN-uuid. (1) -t @/path/to/token_file. (2) -t uuid.
         /// </summary>
         /// <value>
         /// A value specifing the private repository token. (option) set the enviornment variable

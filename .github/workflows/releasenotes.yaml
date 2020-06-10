@@ -21,11 +21,16 @@ jobs:
         uses: actions/setup-dotnet@v1.5.0
         with:
           dotnet-version: 3.1.x
-      - name: Build with cake
+      - name: Build Release Notes
         uses: cake-build/cake-action@v1.1.1
         with:
           script-path: setup.cake
-          target: Create-MilestoneReleaseNotes
+          target: Build-ReleaseNotes
           verbosity: Diagnostic
           cake-version: 0.38.1
           cake-bootstrap: true
+      - name: Push Changelog
+        uses: github-actions-x/commit@v2.6
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: "(docs) Updated changelog"
+        files: Changelog.md

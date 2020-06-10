@@ -5,14 +5,14 @@
 var exportReleaseNotesTask = Task("Export-MilestoneReleaseNotes")
     .WithCriteria(() => HasEnvironmentVariable("GITHUB_TOKEN"))
     .WithCriteria(() => BuildSystem.AppVeyor.IsRunningOnAppVeyor)
-    .WithCriteria(() => BuildSystem.AppVeyor.Environment.Repository.Tag.IsTag)
+    .WithCriteria(() => BuildSystem.AppVeyor.Environment.Repository.Commit.Message == "(docs) Updated changelog")
     .Does<BuildData>((data) =>
 {
     var destination = data.Files.Milestone;
     var token = EnvironmentVariable("GITHUB_TOKEN");
 
     GitReleaseManagerExport(token, data.RepositoryOwner, data.RepositoryName, destination, new GitReleaseManagerExportSettings {
-        TagName = BuildSystem.AppVeyor.Environment.Repository.Tag.Name,
+        TagName = data.Version.SemVersion,
     });
 });
 
@@ -30,6 +30,19 @@ var createReleaseNotesTask = Task("Create-MilestoneReleaseNotes")
         Prerelease = data.Version.SemVersion.Contains('-'),
         TargetCommitish = BuildSystem.GitHubActions.Environment.Workflow.Ref,
     });
+});
+
+var exportAllReleaseNotesTask = Task("Export-AllReleaseNotes")
+    .WithCriteria(() => HasEnvironmentVariable("GITHUB_TOKEN"))
+    .WithCriteria(() => BuildSystem.GitHubActions.IsRunningOnGitHubActions)
+    .WithCriteria(() => !BuildSystem.GitHubActions.Environment.PullRequest.IsPullRequest)
+    .WithCriteria(() => BuildSystem.GitHubActions.Environment.Workflow.Ref != BuildSystem.GitHubActions.Environment.Workflow.HeadRef)
+    .IsDependentOn(createReleaseNotesTask)
+    .Does<BuildData>((data) =>
+{
+    var token = EnvironmentVariable("GITHUB_TOKEN");
+
+    GitReleaseManagerExport(token, data.RepositoryOwner, data.RepositoryName, "./Changelog.md");
 });
 
 var createTagTask = Task("Create-Tag")
@@ -56,7 +69,7 @@ var createTagTask = Task("Create-Tag")
 var uploadReleaseArtifactsTask = Task("Upload-ReleaseArtifacts")
     .WithCriteria(() => HasEnvironmentVariable("GITHUB_TOKEN"))
     .WithCriteria(() => BuildSystem.AppVeyor.IsRunningOnAppVeyor)
-    .WithCriteria(() => BuildSystem.AppVeyor.Environment.Repository.Tag.IsTag)
+    .WithCriteria(() => BuildSystem.AppVeyor.Environment.Repository.Commit.Message == "(docs) Updated changelog")
     .WithCriteria(IsRunningOnWindows)
     .IsDependentOn(createArchivesTask)
     .Does<BuildData>((data) =>
@@ -64,7 +77,7 @@ var uploadReleaseArtifactsTask = Task("Upload-ReleaseArtifacts")
     var files = string.Join(',', GetFiles(data.Directories.Archives + "/*.zip").Select(a => a.ToString()));
     var token = EnvironmentVariable("GITHUB_TOKEN");
 
-    GitReleaseManagerAddAssets(token, data.RepositoryOwner, data.RepositoryName, BuildSystem.AppVeyor.Environment.Repository.Tag.Name, files);
+    GitReleaseManagerAddAssets(token, data.RepositoryOwner, data.RepositoryName, data.Version.SemVersion, files);
 });
 
 var closeMilestoneTask = Task("Close-Milestones")
@@ -87,7 +100,7 @@ var publishChocolateyPackagesTask = Task("Publish-ChocolateyPackages")
     .WithCriteria(() => HasEnvironmentVariable("CHOCOLATEY_API_KEY"))
     .WithCriteria(() => HasEnvironmentVariable("CHOCOLATEY_SOURCE"))
     .WithCriteria(() => BuildSystem.AppVeyor.IsRunningOnAppVeyor)
-    .WithCriteria(() => BuildSystem.AppVeyor.Environment.Repository.Tag.IsTag)
+    .WithCriteria(() => BuildSystem.AppVeyor.Environment.Repository.Commit.Message == "(docs) Updated changelog")
     .WithCriteria(IsRunningOnWindows)
     .IsDependentOn(createChocolateyPackagesTask)
     .Does<BuildData>((data) =>
@@ -107,7 +120,7 @@ var publishNuGetPackagesTask = Task("Publish-NuGetPackages")
     .WithCriteria(() => HasEnvironmentVariable("NUGET_API_KEY"))
     .WithCriteria(() => HasEnvironmentVariable("NUGET_SOURCE"))
     .WithCriteria(() => BuildSystem.AppVeyor.IsRunningOnAppVeyor)
-    .WithCriteria(() => BuildSystem.AppVeyor.Environment.Repository.Tag.IsTag)
+    .WithCriteria(() => BuildSystem.AppVeyor.Environment.Repository.Commit.Message == "(docs) Updated changelog")
     .WithCriteria(IsRunningOnWindows)
     .IsDependentOn(createNuGetPackagesTask)
     .Does<BuildData>((data) =>
@@ -128,7 +141,7 @@ var publishDotNetToolTask = Task("Publish-DotNetToolPackage")
     .WithCriteria(() => HasEnvironmentVariable("NUGET_API_KEY"))
     .WithCriteria(() => HasEnvironmentVariable("NUGET_SOURCE"))
     .WithCriteria(() => BuildSystem.AppVeyor.IsRunningOnAppVeyor)
-    .WithCriteria(() => BuildSystem.AppVeyor.Environment.Repository.Tag.IsTag)
+    .WithCriteria(() => BuildSystem.AppVeyor.Environment.Repository.Commit.Message == "(docs) Updated changelog")
     .WithCriteria(IsRunningOnWindows)
     .IsDependentOn(createDotNetToolTask)
     .Does<BuildData>((data) =>
@@ -147,14 +160,14 @@ var publishDotNetToolTask = Task("Publish-DotNetToolPackage")
 var publishGitHubReleaseTask = Task("Publish-GitHubRelease")
     .WithCriteria(() => HasEnvironmentVariable("GITHUB_TOKEN"))
     .WithCriteria(() => BuildSystem.AppVeyor.IsRunningOnAppVeyor)
-    .WithCriteria(() => BuildSystem.AppVeyor.Environment.Repository.Tag.IsTag)
+    .WithCriteria(() => BuildSystem.AppVeyor.Environment.Repository.Commit.Message == "(docs) Updated changelog")
     .WithCriteria(IsRunningOnWindows)
     .IsDependentOn(uploadReleaseArtifactsTask)
     .Does<BuildData>((data) =>
 {
     var token = EnvironmentVariable("GITHUB_TOKEN");
 
-    GitReleaseManagerPublish(token, data.RepositoryOwner, data.RepositoryName, BuildSystem.AppVeyor.Environment.Repository.Tag.Name);
+    GitReleaseManagerPublish(token, data.RepositoryOwner, data.RepositoryName, data.Version.SemVersion);
 });
 
 var publishPackagesTask = Task("Publish-Packages")
@@ -162,3 +175,7 @@ var publishPackagesTask = Task("Publish-Packages")
     .IsDependentOn(publishNuGetPackagesTask)
     .IsDependentOn(publishDotNetToolTask)
     .IsDependentOn(publishGitHubReleaseTask);
+
+var buildReleaseNotesTask = Task("Build-ReleaseNotes")
+    .IsDependentOn(createReleaseNotesTask)
+    .IsDependentOn(exportAllReleaseNotesTask);

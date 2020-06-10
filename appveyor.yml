@@ -1,10 +1,9 @@
 image:
   - Ubuntu
   - Visual Studio 2019
-
+skip_tags: true
 pull_requests:
   do_not_increment_build_number: true
-skip_branch_with_pr: true
 matrix:
   fast_finish: true
 environment:
@@ -20,14 +19,6 @@ environment:
 
 install:
   - sh: sudo apt-get update && sudo apt-get install -y libgit2-dev
-  - pwsh: |
-      if ($env:APPVEYOR_REPO_TAG -eq "true") {
-        $currentBranch = git branch --show-current
-        git switch master
-        if ($currentBranch) {
-          git branch -d $currentBranch
-        }
-      }
 
 build_script:
   - ps: .\build.ps1 --target=Init --verbosity=Diagnostic

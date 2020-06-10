@@ -56,7 +56,7 @@ namespace Codecov.Program
 
         private ISourceCode SourceCode => new SourceCode(VersionControlSystem);
 
-        private IUpload Upload => new Uploads(Url, Report);
+        private IUpload Upload => new Uploads(Url, Report, CommandLineCommandLineOptions.Features);
 
         private IVersionControlSystem VersionControlSystem => VersionControlSystemFactory.Create(CommandLineCommandLineOptions, Terminals[TerminalName.Generic]);
 

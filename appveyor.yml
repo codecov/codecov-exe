@@ -11,7 +11,7 @@ environment:
   APPVEYOR_YML_DISABLE_PS_LINUX: true
   NUGET_API_KEY:
     secure: yBUbV2hX9g4oJCmJxZKOszcGAHi34RYzJedDIpyysIvXVpUKYZSzoWtTSqasi+Ou
-  NUGET_SOURCE: https://www.nuget.org/api/v2/package
+  NUGET_SOURCE: https://api.nuget.org/v3/index.json
   GITHUB_TOKEN:
     secure: 3bqzyVjmzE137kZ0lmMBKqM725nQd0hKAATVeE2trpWaPS+5bOpZfjy6zD5INfjV
   CHOCOLATEY_API_KEY:

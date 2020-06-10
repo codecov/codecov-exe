@@ -101,6 +101,10 @@ All types of contributions are welcome! Feel free to open an [issue](https://git
 
 - Specifiyng file paths with spaces is currently not possible without a workaround.
   This is expected to be fixed when a new major release of codecov-exe is released (See issue [#71](https://github.com/codecov/codecov-exe/issues/71) for possible workaround and tracking).
+  
+- If you're seeing an **HTTP 400 error when uploading reports to S3**, make sure you've updated to at least version 1.11.0. 
+
+
 
 ## Maintainers
 

@@ -12,7 +12,7 @@ export:
   include-created-date-in-title: true
   created-date-string-format: yyyy-MM-dd
   perform-regex-removal: true
-  regex-text: '### Where to get it(\r\n)*You can .*\)'
+  regex-text: '### Where to get it([\r\n]+)*You can .*([\r\n]+.*)*$'
   multiline-regex: true
 close:
   use-issue-comments: true

@@ -51,28 +51,15 @@ Setup<BuildVersion>((ctx) => {
             OutputType = GitVersionOutput.Json,
         });
 
-        var version = new BuildVersion
+        ctx.Information($"Building Codecove.exe version {gitVersion.SemVer}!");
+
+        return new BuildVersion
         {
             MajorMinorPatch      = gitVersion.MajorMinorPatch,
+            SemVersion           = gitVersion.SemVer,
+            SemVersionPadded     = gitVersion.LegacySemVerPadded,
+            InformationalVersion = gitVersion.InformationalVersion,
         };
-        var buildSystem = ctx.BuildSystem();
-        if (buildSystem.IsRunningOnAppVeyor && buildSystem.AppVeyor.Environment.Repository.Tag.IsTag)
-        {
-            // Workaround since gitversion don't seem to find the correct
-            // version on a tag release when not attached to a branch.
-            version.SemVersion = version.SemVersionPadded = gitVersion.MajorMinorPatch;
-            version.InformationalVersion = $"{gitVersion.MajorMinorPatch}+{gitVersion.FullBuildMetaData}";
-        }
-        else
-        {
-            version.SemVersion = gitVersion.SemVer;
-            version.SemVersionPadded = gitVersion.LegacySemVerPadded;
-            version.InformationalVersion = gitVersion.InformationalVersion;
-        }
-
-        ctx.Information($"Building Codecove.exe version {version.InformationalVersion}!");
-
-        return version;
 });
 
 Setup<DotNetCoreMSBuildSettings>((ctx) => {

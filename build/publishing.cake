@@ -45,7 +45,7 @@ var createTagTask = Task("Create-Tag")
         message = $"Unstable pre-release of upcoming {buildVersion.MajorMinorPatch} release ({buildVersion.SemVersion})";
     }
 
-    StartProcess("git", $"tag {buildVersion.SemVersion} --sign --message \"{message}\"");
+    StartProcess("git", $"tag master {buildVersion.SemVersion} --sign --message \"{message}\"");
 
     if (HasArgument("push"))
     {

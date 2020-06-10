@@ -20,6 +20,14 @@ environment:
 
 install:
   - sh: sudo apt-get update && sudo apt-get install -y libgit2-dev
+  - psws: |
+      if ($env:APPVEYOR_TAG) {
+        $currentBranch = git branch --show-current
+        git switch master
+        if ($currentBranch) {
+          git branch -d $currentBranch
+        }
+      }
 
 build_script:
   - ps: .\build.ps1 --target=Init --verbosity=Diagnostic

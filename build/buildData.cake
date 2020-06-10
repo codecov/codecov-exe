@@ -74,6 +74,8 @@ Setup<BuildData>((ctx) => {
         Configuration = ctx.Argument("configuration", "Release"),
         MSBuildSettings = ctx.Data.Get<DotNetCoreMSBuildSettings>(),
         PushTag = ctx.HasArgument("push"),
+        RepositoryName = "codecov-exe",
+        RepositoryOwner = "codecov",
         Version = ctx.Data.Get<BuildVersion>(),
     };
     data.Files.Milestone = data.Directories.Artifacts.CombineWithFilePath("Milestone.md");

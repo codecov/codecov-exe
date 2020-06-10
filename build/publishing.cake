@@ -98,6 +98,9 @@ var publishChocolateyPackagesTask = Task("Publish-ChocolateyPackages")
         Source = EnvironmentVariable("CHOCOLATEY_SOURCE"),
         ApiKey = EnvironmentVariable("CHOCOLATEY_API_KEY"),
     });
+}).OnError(exception =>
+{
+    Warning("Publishing Chocolatey package failed. Ignoring and continuing with other tasks");
 });
 
 var publishNuGetPackagesTask = Task("Publish-NuGetPackages")
@@ -116,6 +119,9 @@ var publishNuGetPackagesTask = Task("Publish-NuGetPackages")
         ApiKey = EnvironmentVariable("NUGET_API_KEY"),
         SkipDuplicate = true,
     });
+}).OnError(exception =>
+{
+    Warning("Publishing NuGet package failed. Ignoring and continuing with other tasks");
 });
 
 var publishDotNetToolTask = Task("Publish-DotNetToolPackage")
@@ -133,6 +139,9 @@ var publishDotNetToolTask = Task("Publish-DotNetToolPackage")
         Source = EnvironmentVariable("NUGET_SOURCE"),
         ApiKey = EnvironmentVariable("NUGET_API_KEY"),
     });
+}).OnError(exception =>
+{
+    Warning("Publishing .NET Core Tool package failed. Ignoring and continuing with other tasks");
 });
 
 var publishGitHubReleaseTask = Task("Publish-GitHubRelease")

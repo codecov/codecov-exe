@@ -5,5 +5,5 @@
 
 #tool dotnet:?package=dotnet-reportgenerator-globaltool&version=4.6.1
 #tool dotnet:?package=GitReleaseManager.Tool&version=0.11.0
-#tool dotnet:?package=GitVersion.Tool&version=5.3.5
+#tool dotnet:?package=GitVersion.Tool&version=5.3.4
 #tool nuget:?package=NuGet.Commandline&version=5.5.1

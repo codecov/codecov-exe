@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Codecov.Services.ContinuousIntegrationServers
 {
@@ -88,22 +88,16 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
             var branchRef = GetEnvironmentVariable("GITHUB_REF");
 
-            if (string.IsNullOrEmpty(branchRef))
-            {
-                return string.Empty;
-            }
-
-            return ExtractSubstring(branchRef, "refs/pull/", "/merge");
+            return string.IsNullOrEmpty(branchRef)
+                ? string.Empty
+                : ExtractSubstring(branchRef, "refs/pull/", "/merge");
         }
 
         private string LoadBuildUrl()
         {
-            if (string.IsNullOrWhiteSpace(Slug) || string.IsNullOrWhiteSpace(Build))
-            {
-                return string.Empty;
-            }
-
-            return $"https://github.com/{Slug}/actions/runs/{Build}";
+            return (string.IsNullOrWhiteSpace(Slug) || string.IsNullOrWhiteSpace(Build))
+                ? string.Empty
+                : $"https://github.com/{Slug}/actions/runs/{Build}";
         }
     }
 }

@@ -101,10 +101,9 @@ var createNuGetPackagesTask = Task("Create-NuGetPackages")
 
     NuGetPack(nuspecFiles, new NuGetPackSettings {
         Version                 = data.Version.SemVersion,
-        Symbols                 = true,
+        Symbols                 = false,
         BasePath                = basePath,
         OutputDirectory         = outputDirectory,
-        ArgumentCustomization   = args=>args.AppendSwitch("-SymbolPackageFormat", "snupkg"),
     });
 });
 

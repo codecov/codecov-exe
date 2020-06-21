@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>codecov</id>
@@ -18,7 +18,6 @@
     <tags>coverage codecov</tags>
     <summary>Codecov global executable uploader.</summary>
     <description>A global executable uploader for PowerShell and Windows Command Line (cmd), which allows users to upload code coverage reports to [Codecov](https://codecov.io). This uploader supports Windows 7 (x64) and above.</description>
-    <releaseNotes>All release notes for Codecov can be found on the GitHub site - https://github.com/codecov/codecov-exe/releases/tag/$version$</releaseNotes>
   </metadata>
   <files />
 </package>

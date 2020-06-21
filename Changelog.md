@@ -1,3 +1,14 @@
+## 1.11.2 (2020-06-21)
+
+
+As part of this release we had [2 commits](https://github.com/codecov/codecov-exe/compare/1.11.1...1.11.2) which resulted in [1 issue](https://github.com/codecov/codecov-exe/milestone/23?closed=1) being closed.
+
+
+__Bug__
+
+- [__#71__](https://github.com/codecov/codecov-exe/issues/71) --file cannot handle paths with spaces
+
+
 ## 1.11.1 (2020-06-10)
 
 

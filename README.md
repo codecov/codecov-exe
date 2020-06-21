@@ -117,6 +117,4 @@ All types of contributions are welcome! Feel free to open an [issue](https://git
 To create a relase, please do the following:
 
 -   Push the latest changes to the master branch on github
--   Navigate to the release page and view the drafted release.
--   Make any necessary changes.
--   Publish the draft release on GitHub, targeting the master branch.
+-   The release procedure starts automatically.

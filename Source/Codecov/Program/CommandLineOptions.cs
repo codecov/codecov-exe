@@ -62,7 +62,7 @@ namespace Codecov.Program
         /// A value specifing the enviornment variables to be included with this build. (1)
         /// CODECOV_ENV=VAR1,VAR2. (2) -e VAR1 VAR2.
         /// </value>
-        [Option('e', "env", Separator = ' ', HelpText = "Specify enviornment variables to be included with this build. (1) CODECOV_ENV=VAR1,VAR2. (2) -e VAR1 VAR2.")]
+        [Option('e', "env", HelpText = "Specify enviornment variables to be included with this build. (1) CODECOV_ENV=VAR1,VAR2. (2) -e VAR1 VAR2.")]
         public IEnumerable<string> Envs { get; set; }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Codecov.Program
         /// A value specifing the target file(s) to upload. (1) -f 'path/to/file'. Only upload this
         /// file. (2) -f 'path/to/file1 path/to/file2'. Only upload these files.
         /// </value>
-        [Option('f', "file", Separator = ' ', HelpText = "Target file(s) to upload. (1) -f 'path/to/file'. Only upload this file. (2) -f 'path/to/file1 path/to/file2'. Only upload these files.")]
+        [Option('f', "file", HelpText = "Target file(s) to upload.\n(1) -f \"path/to/file\". Only upload this file.\n(2) -f \"path/to/file1\" \"path/to/file2\". Only upload these files.\nNOTE: Make sure to double quote paths if they contain spaces!")]
         public IEnumerable<string> Files { get; set; }
 
         /// <summary>

@@ -15,7 +15,7 @@ namespace Codecov.Factories
             var continuousServers = assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract && interfaceType.IsAssignableFrom(t) && t != typeof(ContinuousIntegrationServer));
             var buildServer = GetFirstDetectedCiServer(continuousServers);
 
-            return buildServer ?? new ContinuousIntegrationServer();
+            return buildServer;
         }
 
         private static IContinuousIntegrationServer GetFirstDetectedCiServer(IEnumerable<Type> supportedServers)
@@ -29,7 +29,7 @@ namespace Codecov.Factories
                 }
             }
 
-            return null;
+            return new ContinuousIntegrationServer();
         }
     }
 }

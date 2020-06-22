@@ -12,7 +12,7 @@ namespace Codecov.Factories
             var assembly = typeof(ContinuousIntegrationServerFactory).Assembly;
             var interfaceType = typeof(IContinuousIntegrationServer);
 
-            var continuousServers = assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract && interfaceType.IsAssignableFrom(t));
+            var continuousServers = assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract && interfaceType.IsAssignableFrom(t) && t != typeof(ContinuousIntegrationServer));
             var buildServer = GetFirstDetectedCiServer(continuousServers);
 
             return buildServer ?? new ContinuousIntegrationServer();

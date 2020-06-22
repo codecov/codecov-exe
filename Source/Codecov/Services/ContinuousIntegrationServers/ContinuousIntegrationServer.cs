@@ -6,12 +6,14 @@ namespace Codecov.Services.ContinuousIntegrationServers
 {
     internal class ContinuousIntegrationServer : IContinuousIntegrationServer
     {
+        private readonly IEnviornmentVariables _environmentVariables;
         private readonly Lazy<string> _build;
         private readonly Lazy<string> _buildUrl;
         private readonly Lazy<string> _job;
 
-        public ContinuousIntegrationServer()
+        public ContinuousIntegrationServer(IEnviornmentVariables environmentVariables)
         {
+            _environmentVariables = environmentVariables;
             _build = new Lazy<string>(() => GetEnvironmentVariable("CI_BUILD_ID"));
             _buildUrl = new Lazy<string>(() => GetEnvironmentVariable("CI_BUILD_URL"));
             _job = new Lazy<string>(() => GetEnvironmentVariable("CI_JOB_ID"));
@@ -43,15 +45,30 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
         public virtual string Tag => string.Empty;
 
-        public virtual string GetEnvironmentVariable(string name)
+        public string GetEnvironmentVariable(string name)
         {
-            if (UserEnvironmentVariables != null && UserEnvironmentVariables.ContainsKey(name))
+            var env = _environmentVariables.GetEnvironmentVariable(name);
+            if (string.IsNullOrEmpty(env))
             {
-                return UserEnvironmentVariables[name];
+                return string.Empty;
             }
 
-            var value = Environment.GetEnvironmentVariable(name);
-            return string.IsNullOrWhiteSpace(value) ? string.Empty : value;
+            return env;
+        }
+
+        protected string GetFirstExistingEnvironmentVariable(params string[] names)
+        {
+            foreach (var name in names)
+            {
+                var env = GetEnvironmentVariable(name);
+
+                if (!string.IsNullOrWhiteSpace(env))
+                {
+                    return env;
+                }
+            }
+
+            return string.Empty;
         }
 
         protected bool CheckEnvironmentVariables(params string[] environmentVariables)

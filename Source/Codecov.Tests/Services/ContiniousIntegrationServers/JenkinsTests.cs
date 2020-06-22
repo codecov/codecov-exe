@@ -1,22 +1,21 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Codecov.Services.ContinuousIntegrationServers;
 using FluentAssertions;
+using Moq;
 using Xunit;
 
 namespace Codecov.Tests.Services.ContiniousIntegrationServers
 {
-    public class JenkinsTests : IDisposable
+    public class JenkinsTests
     {
         [Fact]
         public void Branch_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exist()
         {
             // Given
-            Environment.SetEnvironmentVariable("ghprbSourceBranch", null);
-            Environment.SetEnvironmentVariable("GIT_BRANCH", null);
-            Environment.SetEnvironmentVariable("BRANCH_NAME", null);
-            var jenkins = new Jenkins();
+            var ev = new Mock<IEnviornmentVariables>();
+            var jenkins = new Jenkins(ev.Object);
 
             // When
             var branch = jenkins.Branch;
@@ -32,8 +31,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Branch_Should_Be_Set_When_Enviornment_Variable_Exist(string key, string value)
         {
             // Given
-            Environment.SetEnvironmentVariable(key, value);
-            var jenkins = new Jenkins();
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable(key)).Returns(value);
+            var jenkins = new Jenkins(ev.Object);
 
             // When
             var branch = jenkins.Branch;
@@ -46,9 +46,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Build_Should_Be_Empty_String_When_Environment_Variables_Do_Not_Exist()
         {
             // Given
-            Environment.SetEnvironmentVariable("BUILD_NUMBER", null);
-
-            var jenkins = new Jenkins();
+            var ev = new Mock<IEnviornmentVariables>();
+            var jenkins = new Jenkins(ev.Object);
 
             // When
             var build = jenkins.Build;
@@ -61,9 +60,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Build_Should_Not_Be_Empty_String_When_Environment_Variable_Exists()
         {
             // Given
-            Environment.SetEnvironmentVariable("BUILD_NUMBER", "111");
-
-            var jenkins = new Jenkins();
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("BUILD_NUMBER")).Returns("111");
+            var jenkins = new Jenkins(ev.Object);
 
             // When
             var build = jenkins.Build;
@@ -76,9 +75,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void BuildUrl_Should_Be_Empty_String_When_Environment_Variables_Do_Not_Exist()
         {
             // Given
-            Environment.SetEnvironmentVariable("BUILD_URL", null);
-
-            var jenkins = new Jenkins();
+            var ev = new Mock<IEnviornmentVariables>();
+            var jenkins = new Jenkins(ev.Object);
 
             // When
             var buildUrl = jenkins.BuildUrl;
@@ -91,9 +89,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void BuildUrl_Should_Not_Be_Empty_String_When_Environment_Variable_Exist()
         {
             // Given
-            Environment.SetEnvironmentVariable("BUILD_URL", "https://jenkins.yourcompany.com/some-job/1");
-
-            var jenkins = new Jenkins();
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("BUILD_URL")).Returns("https://jenkins.yourcompany.com/some-job/1");
+            var jenkins = new Jenkins(ev.Object);
 
             // When
             var buildUrl = jenkins.BuildUrl;
@@ -106,9 +104,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Commit_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exist()
         {
             // Given
-            Environment.SetEnvironmentVariable("ghprbActualCommit", null);
-            Environment.SetEnvironmentVariable("GIT_COMMIT", null);
-            var jenkins = new Jenkins();
+            var ev = new Mock<IEnviornmentVariables>();
+            var jenkins = new Jenkins(ev.Object);
 
             // When
             var commit = jenkins.Commit;
@@ -123,8 +120,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Commit_Should_Be_Set_When_Environment_Variable_Exists(string key, string pullId)
         {
             // Given
-            Environment.SetEnvironmentVariable(key, pullId);
-            var jenkins = new Jenkins();
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable(key)).Returns(pullId);
+            var jenkins = new Jenkins(ev.Object);
 
             // When
             var commit = jenkins.Commit;
@@ -137,8 +135,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Detecter_Should_Be_False_When_Jenkins_Environment_Variable_Does_Not_Exist()
         {
             // Given
-            Environment.SetEnvironmentVariable("JENKINS_URL", null);
-            var jenkins = new Jenkins();
+            var ev = new Mock<IEnviornmentVariables>();
+            var jenkins = new Jenkins(ev.Object);
 
             // When
             var detecter = jenkins.Detecter;
@@ -151,8 +149,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Detecter_Should_Be_True_When_Jenkins_Environment_Variable_Exists()
         {
             // Given
-            Environment.SetEnvironmentVariable("JENKINS_URL", "https://jenkins.yourcompany.com");
-            var jenkins = new Jenkins();
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("JENKINS_URL")).Returns("https://jenkins.yourcompany.com");
+            var jenkins = new Jenkins(ev.Object);
 
             // When
             var detecter = jenkins.Detecter;
@@ -165,9 +164,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Pr_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exist()
         {
             // Given
-            Environment.SetEnvironmentVariable("ghprbPullId", null);
-            Environment.SetEnvironmentVariable("CHANGE_ID", null);
-            var jenkins = new Jenkins();
+            var ev = new Mock<IEnviornmentVariables>();
+            var jenkins = new Jenkins(ev.Object);
 
             // When
             var pr = jenkins.Pr;
@@ -182,8 +180,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Pr_Should_Be_Set_When_Environment_Variable_Exists(string key, string pullId)
         {
             // Given
-            Environment.SetEnvironmentVariable(key, pullId);
-            var jenkins = new Jenkins();
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable(key)).Returns(pullId);
+            var jenkins = new Jenkins(ev.Object);
 
             // When
             var pr = jenkins.Pr;
@@ -196,36 +195,14 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Service_Name_Should_Be_Set()
         {
             // Given
-            var jenkins = new Jenkins();
+            var ev = new Mock<IEnviornmentVariables>();
+            var jenkins = new Jenkins(ev.Object);
 
             // When
             var service = jenkins.Service;
 
             // Then
             service.Should().Be("jenkins");
-        }
-
-        public void Dispose()
-        {
-            // We will remove all environment variables that could have been set during unit test
-            var envVariable = new[]
-            {
-                "ghprbSourceBranch",
-                "GIT_BRANCH",
-                "BRANCH_NAME",
-                "BUILD_NUMBER",
-                "BUILD_URL",
-                "ghprbActualCommit",
-                "GIT_COMMIT",
-                "JENKINS_URL",
-                "ghprbPullId",
-                "CHANGE_ID",
-            };
-
-            foreach (var variable in envVariable)
-            {
-                Environment.SetEnvironmentVariable(variable, null);
-            }
         }
     }
 }

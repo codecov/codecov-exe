@@ -26,9 +26,9 @@ namespace Codecov.Program
             CommandLineCommandLineOptions = commandLineOptions;
         }
 
-        private static IContinuousIntegrationServer ContinuousIntegrationServer => ContinuousIntegrationServerFactory.Create();
-
         private static IDictionary<TerminalName, ITerminal> Terminals => TerminalFactory.Create();
+
+        private IContinuousIntegrationServer ContinuousIntegrationServer => ContinuousIntegrationServerFactory.Create(EnviornmentVariables);
 
         private ICoverage Coverage => new Coverage.Tool.Coverage(CommandLineCommandLineOptions);
 

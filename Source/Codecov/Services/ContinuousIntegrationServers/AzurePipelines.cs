@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Codecov.Services.ContinuousIntegrationServers
 {
@@ -15,7 +15,8 @@ namespace Codecov.Services.ContinuousIntegrationServers
         private readonly Lazy<string> _serverUri;
         private readonly Lazy<string> _slug;
 
-        public AzurePipelines()
+        public AzurePipelines(IEnviornmentVariables environmentVariables)
+            : base(environmentVariables)
         {
             _branch = new Lazy<string>(LoadBranch);
             _build = new Lazy<string>(LoadBuild);

@@ -24,7 +24,7 @@ namespace Codecov.Factories
             {
                 var csi = t.GetConstructor(new[] { typeof(IVersionControlSystemOptions), typeof(ITerminal) });
 
-                if (csi == null)
+                if (csi is null)
                 {
                     continue;
                 }

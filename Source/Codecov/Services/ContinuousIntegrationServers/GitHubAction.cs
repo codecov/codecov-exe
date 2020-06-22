@@ -11,7 +11,8 @@ namespace Codecov.Services.ContinuousIntegrationServers
         private readonly Lazy<string> _pr;
         private readonly Lazy<string> _slug;
 
-        public GitHubAction()
+        public GitHubAction(IEnviornmentVariables environmentVariables)
+            : base(environmentVariables)
         {
             _branch = new Lazy<string>(LoadBranch);
             _build = new Lazy<string>(() => GetEnvironmentVariable("GITHUB_RUN_ID"));

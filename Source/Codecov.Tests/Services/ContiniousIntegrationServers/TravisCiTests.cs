@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Codecov.Services.ContinuousIntegrationServers;
 using FluentAssertions;
 using Moq;
@@ -12,9 +12,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Branch_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
-            var tr = new Mock<Travis>() { CallBase = true };
-            tr.Setup(s => s.GetEnvironmentVariable("TRAVIS_BRANCH")).Returns(string.Empty);
-            var travis = tr.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            var travis = new Travis(ev.Object);
 
             // When
             var branch = travis.Branch;
@@ -27,9 +26,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Branch_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
-            var tr = new Mock<Travis>() { CallBase = true };
-            tr.Setup(s => s.GetEnvironmentVariable("TRAVIS_BRANCH")).Returns("develop");
-            var travis = tr.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("TRAVIS_BRANCH")).Returns("develop");
+            var travis = new Travis(ev.Object);
 
             // When
             var branch = travis.Branch;
@@ -42,9 +41,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Build_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
-            var tr = new Mock<Travis>() { CallBase = true };
-            tr.Setup(s => s.GetEnvironmentVariable("TRAVIS_JOB_NUMBER")).Returns(string.Empty);
-            var travis = tr.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            var travis = new Travis(ev.Object);
 
             // When
             var build = travis.Build;
@@ -57,9 +55,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Build_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
-            var tr = new Mock<Travis>() { CallBase = true };
-            tr.Setup(s => s.GetEnvironmentVariable("TRAVIS_JOB_NUMBER")).Returns("5.2");
-            var travis = tr.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("TRAVIS_JOB_NUMBER")).Returns("5.2");
+            var travis = new Travis(ev.Object);
 
             // When
             var build = travis.Build;
@@ -72,9 +70,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Commit_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
-            var tr = new Mock<Travis>() { CallBase = true };
-            tr.Setup(s => s.GetEnvironmentVariable("TRAVIS_COMMIT")).Returns(string.Empty);
-            var travis = tr.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            var travis = new Travis(ev.Object);
 
             // When
             var commit = travis.Commit;
@@ -87,9 +84,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Commit_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
-            var tr = new Mock<Travis>() { CallBase = true };
-            tr.Setup(s => s.GetEnvironmentVariable("TRAVIS_COMMIT")).Returns("123");
-            var travis = tr.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("TRAVIS_COMMIT")).Returns("123");
+            var travis = new Travis(ev.Object);
 
             // When
             var commit = travis.Commit;
@@ -102,10 +99,10 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Detecter_Should_Be_False_When_Travis_Environment_Variable_Or_Ci_Environment_Variable_Does_Not_Exit_And_Both_Are_Not_Equal_To_True(string travisData, string ciData)
         {
             // Given
-            var tr = new Mock<Travis>() { CallBase = true };
-            tr.Setup(s => s.GetEnvironmentVariable("TRAVIS")).Returns(travisData);
-            tr.Setup(s => s.GetEnvironmentVariable("CI")).Returns(ciData);
-            var travis = tr.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("TRAVIS")).Returns(travisData);
+            ev.Setup(s => s.GetEnvironmentVariable("CI")).Returns(ciData);
+            var travis = new Travis(ev.Object);
 
             // When
             var detecter = travis.Detecter;
@@ -120,10 +117,10 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Detecter_Should_Be_True_When_Travis_Environment_Variable_And_Ci_Environment_Variable_Exist_And_Both_Are_Equal_To_True(string travisData, string ciData)
         {
             // Given
-            var tr = new Mock<Travis>() { CallBase = true };
-            tr.Setup(s => s.GetEnvironmentVariable("TRAVIS")).Returns(travisData);
-            tr.Setup(s => s.GetEnvironmentVariable("CI")).Returns(ciData);
-            var travis = tr.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("TRAVIS")).Returns(travisData);
+            ev.Setup(s => s.GetEnvironmentVariable("CI")).Returns(ciData);
+            var travis = new Travis(ev.Object);
 
             // When
             var detecter = travis.Detecter;
@@ -136,9 +133,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void BuildUrl_Should_Be_Empty_String_When_Environment_Variables_Do_Not_Exist()
         {
             // Given
-            var tr = new Mock<Travis>() { CallBase = true };
-            tr.Setup(s => s.GetEnvironmentVariable("TRAVIS_JOB_WEB_URL")).Returns(string.Empty);
-            var travis = tr.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            var travis = new Travis(ev.Object);
 
             // When
             var buildUrl = travis.BuildUrl;
@@ -151,9 +147,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void BuildUrl_Should_Not_Be_Empty_String_When_Environment_Variable_Exist()
         {
             // Given
-            var tr = new Mock<Travis>() { CallBase = true };
-            tr.Setup(s => s.GetEnvironmentVariable("TRAVIS_JOB_WEB_URL")).Returns("https://travis-ci.org/some-job");
-            var travis = tr.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("TRAVIS_JOB_WEB_URL")).Returns("https://travis-ci.org/some-job");
+            var travis = new Travis(ev.Object);
 
             // When
             var buildUrl = travis.BuildUrl;
@@ -166,9 +162,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Job_Should_Be_Empty_String_When_Environment_Variables_Do_Not_Exit()
         {
             // Given
-            var tr = new Mock<Travis>() { CallBase = true };
-            tr.Setup(s => s.GetEnvironmentVariable("TRAVIS_JOB_ID")).Returns(string.Empty);
-            var travis = tr.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            var travis = new Travis(ev.Object);
 
             // When
             var job = travis.Job;
@@ -181,9 +176,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Job_Should_Not_Be_Empty_String_When_Environment_Variables_Exit()
         {
             // Given
-            var tr = new Mock<Travis>() { CallBase = true };
-            tr.Setup(s => s.GetEnvironmentVariable("TRAVIS_JOB_ID")).Returns("15657");
-            var travis = tr.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("TRAVIS_JOB_ID")).Returns("15657");
+            var travis = new Travis(ev.Object);
 
             // When
             var job = travis.Job;
@@ -196,9 +191,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Pr_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
-            var tr = new Mock<Travis>() { CallBase = true };
-            tr.Setup(s => s.GetEnvironmentVariable("TRAVIS_PULL_REQUEST")).Returns(string.Empty);
-            var travis = tr.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            var travis = new Travis(ev.Object);
 
             // When
             var pr = travis.Pr;
@@ -211,9 +205,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Pr_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
-            var tr = new Mock<Travis>() { CallBase = true };
-            tr.Setup(s => s.GetEnvironmentVariable("TRAVIS_PULL_REQUEST")).Returns("123");
-            var travis = tr.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("TRAVIS_PULL_REQUEST")).Returns("123");
+            var travis = new Travis(ev.Object);
 
             // When
             var pr = travis.Pr;
@@ -226,9 +220,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Slug_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
-            var tr = new Mock<Travis>() { CallBase = true };
-            tr.Setup(s => s.GetEnvironmentVariable("TRAVIS_REPO_SLUG")).Returns(string.Empty);
-            var travis = tr.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            var travis = new Travis(ev.Object);
 
             // When
             var slug = travis.Slug;
@@ -241,10 +234,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Slug_Should_Be_Set_When_Environment_Variable_Exits()
         {
             // Given
-            Environment.SetEnvironmentVariable("TRAVIS_REPO_SLUG", "foo/bar");
-            var tr = new Mock<Travis>() { CallBase = true };
-            tr.Setup(s => s.GetEnvironmentVariable("TRAVIS_REPO_SLUG")).Returns("foo/bar");
-            var travis = tr.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("TRAVIS_REPO_SLUG")).Returns("foo/bar");
+            var travis = new Travis(ev.Object);
 
             // When
             var slug = travis.Slug;
@@ -257,9 +249,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Tag_Should_Empty_String_When_Environment_Variable_Does_Not_Exist()
         {
             // Given
-            var tr = new Mock<Travis>() { CallBase = true };
-            tr.Setup(s => s.GetEnvironmentVariable("TRAVIS_TAG")).Returns(string.Empty);
-            var travis = tr.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            var travis = new Travis(ev.Object);
 
             // When
             var tag = travis.Tag;
@@ -272,10 +263,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Tag_Should_Not_Be_Empty_String_When_Environment_Variable_Exist()
         {
             // Given
-            Environment.SetEnvironmentVariable("TRAVIS_TAG", "v1.2.4");
-            var tr = new Mock<Travis>() { CallBase = true };
-            tr.Setup(s => s.GetEnvironmentVariable("TRAVIS_TAG")).Returns("v1.2.4");
-            var travis = tr.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("TRAVIS_TAG")).Returns("v1.2.4");
+            var travis = new Travis(ev.Object);
 
             // When
             var tag = travis.Tag;

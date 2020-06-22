@@ -1,4 +1,4 @@
-﻿using Codecov.Services.ContinuousIntegrationServers;
+using Codecov.Services.ContinuousIntegrationServers;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -11,7 +11,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Branch_Should_Be_Empty_String()
         {
             // Given
-            var continuousIntegrationServer = new ContinuousIntegrationServer();
+            var continuousIntegrationServer = new ContinuousIntegrationServer(new Mock<IEnviornmentVariables>().Object);
 
             // When
             var branch = continuousIntegrationServer.Branch;
@@ -24,14 +24,10 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Build_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
         {
             // Given
-            var cis = new Mock<ContinuousIntegrationServer>
-            {
-                CallBase = true
-            };
-            cis.Setup(s => s.GetEnvironmentVariable("CI_BUILD_ID")).Returns(string.Empty);
+            var cis = new ContinuousIntegrationServer(new Mock<IEnviornmentVariables>().Object);
 
             // When
-            var build = cis.Object.Build;
+            var build = cis.Build;
 
             // Then
             build.Should().BeEmpty();
@@ -41,14 +37,12 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Build_Should_Be_Set_When_Enviornment_Variable_Exits()
         {
             // Given
-            var cis = new Mock<ContinuousIntegrationServer>
-            {
-                CallBase = true
-            };
-            cis.Setup(s => s.GetEnvironmentVariable("CI_BUILD_ID")).Returns("123");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("CI_BUILD_ID")).Returns("123");
+            var cis = new ContinuousIntegrationServer(ev.Object);
 
             // When
-            var build = cis.Object.Build;
+            var build = cis.Build;
             // Then
             build.Should().Be("123");
         }
@@ -57,14 +51,11 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void BuildUrl_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
         {
             // Given
-            var cis = new Mock<ContinuousIntegrationServer>
-            {
-                CallBase = true
-            };
-            cis.Setup(s => s.GetEnvironmentVariable("CI_BUILD_URL")).Returns(string.Empty);
+            var ev = new Mock<IEnviornmentVariables>();
+            var cis = new ContinuousIntegrationServer(ev.Object);
 
             // When
-            var buildUrl = cis.Object.BuildUrl;
+            var buildUrl = cis.BuildUrl;
 
             // Then
             buildUrl.Should().BeEmpty();
@@ -74,14 +65,12 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void BuildUrl_Should_Be_Set_When_Enviornment_Variable_Exits()
         {
             // Given
-            var cis = new Mock<ContinuousIntegrationServer>
-            {
-                CallBase = true
-            };
-            cis.Setup(s => s.GetEnvironmentVariable("CI_BUILD_URL")).Returns("www.google.com");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("CI_BUILD_URL")).Returns("www.google.com");
+            var cis = new ContinuousIntegrationServer(ev.Object);
 
             // When
-            var buildUrl = cis.Object.BuildUrl;
+            var buildUrl = cis.BuildUrl;
             // Then
             buildUrl.Should().Be("www.google.com");
         }
@@ -90,7 +79,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Commit_Should_Empty_String()
         {
             // Given
-            var continuousIntegrationServer = new ContinuousIntegrationServer();
+            var continuousIntegrationServer = new ContinuousIntegrationServer(new Mock<IEnviornmentVariables>().Object);
 
             // When
             var commit = continuousIntegrationServer.Commit;
@@ -103,7 +92,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Detecter_Should_False()
         {
             // Given
-            var continuousIntegrationServer = new ContinuousIntegrationServer();
+            var continuousIntegrationServer = new ContinuousIntegrationServer(new Mock<IEnviornmentVariables>().Object);
 
             // when
             var detecter = continuousIntegrationServer.Detecter;
@@ -116,7 +105,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void GetEnviornmentVariables_Should_Empty_Dictionary()
         {
             // Given
-            var continuousIntegrationServer = new ContinuousIntegrationServer();
+            var continuousIntegrationServer = new ContinuousIntegrationServer(new Mock<IEnviornmentVariables>().Object);
 
             // When
             var enviornmentVariables = continuousIntegrationServer.UserEnvironmentVariables;
@@ -129,14 +118,12 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Job_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
         {
             // Given
-            var cis = new Mock<ContinuousIntegrationServer>
-            {
-                CallBase = true
-            };
-            cis.Setup(s => s.GetEnvironmentVariable("CI_JOB_ID")).Returns(string.Empty);
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("CI_JOB_ID")).Returns(string.Empty);
+            var cis = new ContinuousIntegrationServer(ev.Object);
 
             // When
-            var job = cis.Object.Job;
+            var job = cis.Job;
 
             // Then
             job.Should().BeEmpty();
@@ -146,14 +133,12 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Job_Should_Be_Set_When_Enviornment_Variable_Exits()
         {
             // Given
-            var cis = new Mock<ContinuousIntegrationServer>
-            {
-                CallBase = true
-            };
-            cis.Setup(s => s.GetEnvironmentVariable("CI_JOB_ID")).Returns("123");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("CI_JOB_ID")).Returns("123");
+            var cis = new ContinuousIntegrationServer(ev.Object);
 
             // When
-            var job = cis.Object.Job;
+            var job = cis.Job;
 
             // Then
             job.Should().Be("123");
@@ -163,7 +148,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Pr_Should_Empty_String()
         {
             // Given
-            var continuousIntegrationServer = new ContinuousIntegrationServer();
+            var continuousIntegrationServer = new ContinuousIntegrationServer(new Mock<IEnviornmentVariables>().Object);
 
             // when
             var pr = continuousIntegrationServer.Pr;
@@ -176,7 +161,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Service_Should_Empty_String()
         {
             // Given
-            var continuousIntegrationServer = new ContinuousIntegrationServer();
+            var continuousIntegrationServer = new ContinuousIntegrationServer(new Mock<IEnviornmentVariables>().Object);
 
             // When
             var service = continuousIntegrationServer.Service;
@@ -189,7 +174,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Slug_Should_Empty_String()
         {
             // Given
-            var continuousIntegrationServer = new ContinuousIntegrationServer();
+            var continuousIntegrationServer = new ContinuousIntegrationServer(new Mock<IEnviornmentVariables>().Object);
 
             // When
             var slug = continuousIntegrationServer.Slug;
@@ -202,7 +187,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Tag_Should_Empty_String()
         {
             // Given
-            var continuousIntegrationServer = new ContinuousIntegrationServer();
+            var continuousIntegrationServer = new ContinuousIntegrationServer(new Mock<IEnviornmentVariables>().Object);
 
             // When
             var slug = continuousIntegrationServer.Tag;

@@ -1,7 +1,7 @@
-using System;
 using Codecov.Factories;
 using Codecov.Services.ContinuousIntegrationServers;
 using FluentAssertions;
+using Moq;
 using Xunit;
 
 namespace Codecov.Tests.Factories
@@ -13,10 +13,10 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldNotDetectAppVeyorWhenAppveyorIsNull()
         {
-            ResetVariables();
-            Environment.SetEnvironmentVariable("APPVEYOR", "True");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("CI")).Returns("True");
 
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().NotBeOfType<AppVeyor>().And.BeOfType<ContinuousIntegrationServer>();
         }
@@ -24,10 +24,11 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldNotDetectAppVeyorWhenAppveyorIsFalse()
         {
-            ResetVariables();
-            Environment.SetEnvironmentVariable("APPVEYOR", "False");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR")).Returns("False");
+            ev.Setup(s => s.GetEnvironmentVariable("CI")).Returns("True");
 
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().NotBeOfType<AppVeyor>().And.BeOfType<ContinuousIntegrationServer>();
         }
@@ -35,10 +36,10 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldNotDetectAppVeyorWhenCiIsNull()
         {
-            ResetVariables();
-            Environment.SetEnvironmentVariable("CI", "True");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR")).Returns("True");
 
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().NotBeOfType<AppVeyor>().And.BeOfType<ContinuousIntegrationServer>();
         }
@@ -46,10 +47,11 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldNotDetectAppVeyorWhenCiIsFalse()
         {
-            ResetVariables();
-            Environment.SetEnvironmentVariable("CI", "False");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR")).Returns("True");
+            ev.Setup(s => s.GetEnvironmentVariable("CI")).Returns("False");
 
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().NotBeOfType<AppVeyor>().And.BeOfType<ContinuousIntegrationServer>();
         }
@@ -57,11 +59,11 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldDetectAppVeyorWhenCiAndAppVeyorIsTrue()
         {
-            ResetVariables();
-            Environment.SetEnvironmentVariable("CI", "True");
-            Environment.SetEnvironmentVariable("APPVEYOR", "True");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR")).Returns("True");
+            ev.Setup(s => s.GetEnvironmentVariable("CI")).Returns("True");
 
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().BeOfType<AppVeyor>();
         }
@@ -73,8 +75,9 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldNotDetectAzurePipelinesWhenTfBuildIsNull()
         {
-            ResetVariables();
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ev = new Mock<IEnviornmentVariables>();
+
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().NotBeOfType<AzurePipelines>().And.BeOfType<ContinuousIntegrationServer>();
         }
@@ -82,10 +85,10 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldNotDetectAzurePipelinesWhenTfBuildIsFalse()
         {
-            ResetVariables();
-            Environment.SetEnvironmentVariable("TF_BUILD", "False");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("TF_BUILD")).Returns("False");
 
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().NotBeOfType<AzurePipelines>().And.BeOfType<ContinuousIntegrationServer>();
         }
@@ -93,10 +96,10 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldDetectAzurePipelinesWhenTfBuildIsTrue()
         {
-            ResetVariables();
-            Environment.SetEnvironmentVariable("TF_BUILD", "True");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("TF_BUILD")).Returns("True");
 
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().BeOfType<AzurePipelines>();
         }
@@ -108,8 +111,9 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldNotDetectGitHubActionWhenGitHubActionsAndGitHubActionIsNull()
         {
-            ResetVariables();
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ev = new Mock<IEnviornmentVariables>();
+
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().NotBeOfType<GitHubAction>().And.BeOfType<ContinuousIntegrationServer>();
         }
@@ -117,10 +121,10 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldNotDetectGitHubActionWhenGitHubActionsIsFalse()
         {
-            ResetVariables();
-            Environment.SetEnvironmentVariable("GITHUB_ACTIONS", "False");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTIONS")).Returns("False");
 
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().NotBeOfType<GitHubAction>().And.BeOfType<ContinuousIntegrationServer>();
         }
@@ -128,10 +132,10 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldDetectGitHubActionWhenGitHubActionsIsTrue()
         {
-            ResetVariables();
-            Environment.SetEnvironmentVariable("GITHUB_ACTIONS", "True");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTIONS")).Returns("True");
 
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().BeOfType<GitHubAction>();
         }
@@ -139,10 +143,10 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldDetectGitHubActionWhenGitHubActionIsNotNull()
         {
-            ResetVariables();
-            Environment.SetEnvironmentVariable("GITHUB_ACTION", "Some-Kind-Of-Value");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTION")).Returns("Some-kind-of-value");
 
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().BeOfType<GitHubAction>();
         }
@@ -154,8 +158,9 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldNotDetectJenkinsWhenJenkinsUrlIsNull()
         {
-            ResetVariables();
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ev = new Mock<IEnviornmentVariables>();
+
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().NotBeOfType<Jenkins>().And.BeOfType<ContinuousIntegrationServer>();
         }
@@ -163,10 +168,10 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldDetectJenkinsWhenJenkinsUrlIsNotNull()
         {
-            ResetVariables();
-            Environment.SetEnvironmentVariable("JENKINS_URL", "https://example.org");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("JENKINS_URL")).Returns("https://example.org");
 
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().BeOfType<Jenkins>();
         }
@@ -178,8 +183,9 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldNotDetectTeamcityWhenTeamcityVersionIsNull()
         {
-            ResetVariables();
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ev = new Mock<IEnviornmentVariables>();
+
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().NotBeOfType<TeamCity>().And.BeOfType<ContinuousIntegrationServer>();
         }
@@ -187,10 +193,10 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldDetectTeamcityWhenTeamcityVersionIsNotNull()
         {
-            ResetVariables();
-            Environment.SetEnvironmentVariable("TEAMCITY_VERSION", "1.0.0");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("TEAMCITY_VERSION")).Returns("1.0.0");
 
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().BeOfType<TeamCity>();
         }
@@ -202,10 +208,10 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldNotDetectTravisWhenTravisIsNull()
         {
-            ResetVariables();
-            Environment.SetEnvironmentVariable("TRAVIS", "True");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("CI")).Returns("True");
 
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().NotBeOfType<Travis>().And.BeOfType<ContinuousIntegrationServer>();
         }
@@ -213,10 +219,11 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldNotDetectTravisWhenTravisIsFalse()
         {
-            ResetVariables();
-            Environment.SetEnvironmentVariable("TRAVIS", "False");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("TRAVIS")).Returns("False");
+            ev.Setup(s => s.GetEnvironmentVariable("CI")).Returns("True");
 
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().NotBeOfType<Travis>().And.BeOfType<ContinuousIntegrationServer>();
         }
@@ -224,10 +231,10 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldNotDetectTravisWhenCiIsNull()
         {
-            ResetVariables();
-            Environment.SetEnvironmentVariable("CI", "True");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("TRAVIS")).Returns("True");
 
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().NotBeOfType<Travis>().And.BeOfType<ContinuousIntegrationServer>();
         }
@@ -235,10 +242,11 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldNotDetectTravisWhenCiIsFalse()
         {
-            ResetVariables();
-            Environment.SetEnvironmentVariable("CI", "False");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("TRAVIS")).Returns("True");
+            ev.Setup(s => s.GetEnvironmentVariable("CI")).Returns("False");
 
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().NotBeOfType<Travis>().And.BeOfType<ContinuousIntegrationServer>();
         }
@@ -246,34 +254,15 @@ namespace Codecov.Tests.Factories
         [Fact]
         public void Create_ShouldDetectTravisWhenCiAndTravisIsTrue()
         {
-            ResetVariables();
-            Environment.SetEnvironmentVariable("CI", "True");
-            Environment.SetEnvironmentVariable("TRAVIS", "True");
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("TRAVIS")).Returns("True");
+            ev.Setup(s => s.GetEnvironmentVariable("CI")).Returns("True");
 
-            var ci = ContinuousIntegrationServerFactory.Create();
+            var ci = ContinuousIntegrationServerFactory.Create(ev.Object);
 
             ci.Should().BeOfType<Travis>();
         }
 
         #endregion Travis Detection
-
-        private void ResetVariables()
-        {
-            var environmentVariables = new[] {
-                "CI",
-                "APPVEYOR",
-                "TF_BUILD",
-                "GITHUB_ACTIONS",
-                "GITHUB_ACTION",
-                "JENKINS_URL",
-                "TEAMCITY_VERSION",
-                "TRAVIS"
-            };
-
-            foreach (var environmentVariable in environmentVariables)
-            {
-                Environment.SetEnvironmentVariable(environmentVariable, null, EnvironmentVariableTarget.Process);
-            }
-        }
     }
 }

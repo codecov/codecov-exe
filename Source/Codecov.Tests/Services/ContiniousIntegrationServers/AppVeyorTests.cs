@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Codecov.Services.ContinuousIntegrationServers;
 using FluentAssertions;
 using Moq;
@@ -38,9 +38,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Branch_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
         {
             // Given
-            var av = new Mock<AppVeyor>() { CallBase = true };
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_REPO_BRANCH")).Returns(string.Empty);
-            var appVeyor = av.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_REPO_BRANCH")).Returns(string.Empty);
+            var appVeyor = new AppVeyor(ev.Object);
 
             // When
             var branch = appVeyor.Branch;
@@ -53,9 +53,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Branch_Should_Be_Set_When_Enviornment_Variable_Exits()
         {
             // Given
-            var av = new Mock<AppVeyor>() { CallBase = true };
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_REPO_BRANCH")).Returns("develop");
-            var appVeyor = av.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_REPO_BRANCH")).Returns("develop");
+            var appVeyor = new AppVeyor(ev.Object);
 
             // When
             var branch = appVeyor.Branch;
@@ -68,9 +68,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Build_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
         {
             // Given
-            var av = new Mock<AppVeyor>() { CallBase = true };
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_JOB_ID")).Returns(string.Empty);
-            var appVeyor = av.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_JOB_ID")).Returns(string.Empty);
+            var appVeyor = new AppVeyor(ev.Object);
 
             // When
             var build = appVeyor.Build;
@@ -83,9 +83,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Build_Should_Be_Set_When_Enviornment_Variable_Exits()
         {
             // Given
-            var av = new Mock<AppVeyor>() { CallBase = true };
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_JOB_ID")).Returns("Job 123");
-            var appVeyor = av.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_JOB_ID")).Returns("Job 123");
+            var appVeyor = new AppVeyor(ev.Object);
 
             // When
             var build = appVeyor.Build;
@@ -98,9 +98,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Commit_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
         {
             // Given
-            var av = new Mock<AppVeyor>() { CallBase = true };
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_REPO_COMMIT")).Returns(string.Empty);
-            var appVeyor = av.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_REPO_COMMIT")).Returns(string.Empty);
+            var appVeyor = new AppVeyor(ev.Object);
 
             // When
             var commit = appVeyor.Commit;
@@ -113,9 +113,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Commit_Should_Be_Set_When_Enviornment_Variable_Exits()
         {
             // Given
-            var av = new Mock<AppVeyor>() { CallBase = true };
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_REPO_COMMIT")).Returns("123");
-            var appVeyor = av.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_REPO_COMMIT")).Returns("123");
+            var appVeyor = new AppVeyor(ev.Object);
 
             // When
             var commit = appVeyor.Commit;
@@ -128,10 +128,10 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Detecter_Should_Be_False_When_AppVeyor_Enviornment_Variable_Or_Ci_Enviornment_Variable_Does_Not_Exit_And_Both_Are_Not_Equal_To_True(string appveyorData, string ciData)
         {
             // Given
-            var av = new Mock<AppVeyor>() { CallBase = true };
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR")).Returns(appveyorData);
-            av.Setup(s => s.GetEnvironmentVariable("CI")).Returns(ciData);
-            var appVeyor = av.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR")).Returns(appveyorData);
+            ev.Setup(s => s.GetEnvironmentVariable("CI")).Returns(ciData);
+            var appVeyor = new AppVeyor(ev.Object);
 
             // When
             var detecter = appVeyor.Detecter;
@@ -146,10 +146,10 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Detecter_Should_Be_True_When_AppVeyor_Enviornment_Variable_And_Ci_Enviornment_Variable_Exist_And_Both_Are_Equal_To_True(string appveyorData, string ciData)
         {
             // Given
-            var av = new Mock<AppVeyor>() { CallBase = true };
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR")).Returns(appveyorData);
-            av.Setup(s => s.GetEnvironmentVariable("CI")).Returns(ciData);
-            var appVeyor = av.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR")).Returns(appveyorData);
+            ev.Setup(s => s.GetEnvironmentVariable("CI")).Returns(ciData);
+            var appVeyor = new AppVeyor(ev.Object);
 
             // When
             var detecter = appVeyor.Detecter;
@@ -162,15 +162,15 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void BuildUrl_Should_Be_Empty_String_When_Environment_Variables_Do_Not_Exist(string appveyorUrl, string accountData, string slugData, string jobId)
         {
             // Given
-            var av = new Mock<AppVeyor>() { CallBase = true };
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_URL")).Returns(appveyorUrl);
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME")).Returns(accountData);
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG")).Returns(slugData);
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_JOB_ID")).Returns(jobId);
-            var appveyor = av.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_URL")).Returns(appveyorUrl);
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME")).Returns(accountData);
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG")).Returns(slugData);
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_JOB_ID")).Returns(jobId);
+            var appVeyor = new AppVeyor(ev.Object);
 
             // When
-            var buildUrl = appveyor.BuildUrl;
+            var buildUrl = appVeyor.BuildUrl;
 
             // Then
             buildUrl.Should().BeEmpty();
@@ -180,15 +180,15 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void BuildUrl_Should_Not_Empty_String_When_Environment_Variable_Exists()
         {
             // Given
-            var av = new Mock<AppVeyor>() { CallBase = true };
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_URL")).Returns("https://ci.appveyor.com");
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME")).Returns("foo");
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG")).Returns("bar");
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_JOB_ID")).Returns("xyz");
-            var appveyor = av.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_URL")).Returns("https://ci.appveyor.com");
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME")).Returns("foo");
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG")).Returns("bar");
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_JOB_ID")).Returns("xyz");
+            var appVeyor = new AppVeyor(ev.Object);
 
             // When
-            var buildUrl = appveyor.BuildUrl;
+            var buildUrl = appVeyor.BuildUrl;
 
             // Then
             buildUrl.Should().Be("https://ci.appveyor.com/project/foo/bar/build/job/xyz");
@@ -198,15 +198,15 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void BuildUrl_Should_Be_Empty_When_Appveyor_Url_Is_Invalid_Domain(string urlData)
         {
             // Given
-            var av = new Mock<AppVeyor>() { CallBase = true };
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_URL")).Returns(urlData);
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME")).Returns("foo");
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG")).Returns("bar");
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_JOB_ID")).Returns("xyz");
-            var appveyor = av.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_URL")).Returns(urlData);
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME")).Returns("foo");
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG")).Returns("bar");
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_JOB_ID")).Returns("xyz");
+            var appVeyor = new AppVeyor(ev.Object);
 
             // When
-            var buildUrl = appveyor.BuildUrl;
+            var buildUrl = appVeyor.BuildUrl;
 
             // Then
             buildUrl.Should().BeEmpty();
@@ -216,11 +216,11 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Job_Should_Be_Empty_String_When_Enviornment_Variables_Do_Not_Exit(string accountData, string slugData, string versionData)
         {
             // Given
-            var av = new Mock<AppVeyor>() { CallBase = true };
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME")).Returns(accountData);
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG")).Returns(slugData);
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_BUILD_VERSION")).Returns(versionData);
-            var appVeyor = av.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME")).Returns(accountData);
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG")).Returns(slugData);
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_BUILD_VERSION")).Returns(versionData);
+            var appVeyor = new AppVeyor(ev.Object);
 
             // When
             var job = appVeyor.Job;
@@ -233,11 +233,11 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Job_Should_Not_Be_Empty_String_When_Enviornment_Variables_Exit()
         {
             // Given
-            var av = new Mock<AppVeyor>() { CallBase = true };
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME")).Returns("foo");
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG")).Returns("bar");
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_BUILD_VERSION")).Returns("bang");
-            var appVeyor = av.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME")).Returns("foo");
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG")).Returns("bar");
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_BUILD_VERSION")).Returns("bang");
+            var appVeyor = new AppVeyor(ev.Object);
 
             // When
             var job = appVeyor.Job;
@@ -250,9 +250,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Pr_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
         {
             // Given
-            var av = new Mock<AppVeyor>() { CallBase = true };
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER")).Returns(string.Empty);
-            var appVeyor = av.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER")).Returns(string.Empty);
+            var appVeyor = new AppVeyor(ev.Object);
 
             // When
             var pr = appVeyor.Pr;
@@ -265,9 +265,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Pr_Should_Be_Set_When_Enviornment_Variable_Exits()
         {
             // Given
-            var av = new Mock<AppVeyor>() { CallBase = true };
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER")).Returns("123");
-            var appVeyor = av.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER")).Returns("123");
+            var appVeyor = new AppVeyor(ev.Object);
 
             // When
             var pr = appVeyor.Pr;
@@ -280,9 +280,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Slug_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
         {
             // Given
-            var av = new Mock<AppVeyor>() { CallBase = true };
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_REPO_NAME")).Returns(string.Empty);
-            var appVeyor = av.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_REPO_NAME")).Returns(string.Empty);
+            var appVeyor = new AppVeyor(ev.Object);
 
             // When
             var slug = appVeyor.Slug;
@@ -295,9 +295,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Slug_Should_Be_Set_When_Enviornment_Variable_Exits()
         {
             // Given
-            var av = new Mock<AppVeyor>() { CallBase = true };
-            av.Setup(s => s.GetEnvironmentVariable("APPVEYOR_REPO_NAME")).Returns("foo/bar");
-            var appVeyor = av.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_REPO_NAME")).Returns("foo/bar");
+            var appVeyor = new AppVeyor(ev.Object);
 
             // When
             var slug = appVeyor.Slug;

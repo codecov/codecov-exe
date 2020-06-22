@@ -11,10 +11,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Branch_Should_Be_Empty_When_Environment_Variable_Does_Not_Exist()
         {
             // Given
-            var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REF")).Returns(string.Empty);
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_HEAD_REF")).Returns(string.Empty);
-            var githubAction = ga.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            var githubAction = new GitHubAction(ev.Object);
 
             // When
             var branch = githubAction.Branch;
@@ -27,10 +25,10 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Branch_Should_Be_Set_From_Head_Ref_When_Environment_Variable_Exist()
         {
             // Given
-            var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REF")).Returns("refs/pull/234/merge");
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_HEAD_REF")).Returns("develop");
-            var githubAction = ga.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("GITHUB_REF")).Returns("refs/pull/234/merge");
+            ev.Setup(s => s.GetEnvironmentVariable("GITHUB_HEAD_REF")).Returns("develop");
+            var githubAction = new GitHubAction(ev.Object);
 
             // When
             var branch = githubAction.Branch;
@@ -43,10 +41,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Branch_Should_Be_Set_When_Enviornment_Variable_Exits()
         {
             // Given
-            var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REF")).Returns("refs/heads/develop");
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_HEAD_REF")).Returns(string.Empty);
-            var githubAction = ga.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("GITHUB_REF")).Returns("refs/heads/develop");
+            var githubAction = new GitHubAction(ev.Object);
 
             // When
             var branch = githubAction.Branch;
@@ -59,9 +56,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Build_Should_Be_Empty_When_Environment_Variable_Does_Not_Exist()
         {
             // Given
-            var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_RUN_ID")).Returns(string.Empty);
-            var githubAction = ga.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            var githubAction = new GitHubAction(ev.Object);
 
             // When
             var build = githubAction.Build;
@@ -74,9 +70,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Build_Should_Be_Set_When_Enviornment_Variable_Exits()
         {
             // Given
-            var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_RUN_ID")).Returns("32402849");
-            var githubAction = ga.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("GITHUB_RUN_ID")).Returns("32402849");
+            var githubAction = new GitHubAction(ev.Object);
 
             // When
             var build = githubAction.Build;
@@ -89,10 +85,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void BuildUrl_Should_Be_Empty_When_Build_Is_Empty()
         {
             // Given
-            var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REPOSITORY")).Returns("codecov/codecov-exe");
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_RUN_ID")).Returns(string.Empty);
-            var githubAction = ga.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("GITHUB_REPOSITORY")).Returns("codecov/codecov-exe");
+            var githubAction = new GitHubAction(ev.Object);
 
             // When
             var buildUrl = githubAction.BuildUrl;
@@ -105,10 +100,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void BuildUrl_Should_Be_Empty_When_Slug_Is_Empty()
         {
             // Given
-            var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REPOSITORY")).Returns(string.Empty);
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_RUN_ID")).Returns("some-id");
-            var githubAction = ga.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("GITHUB_RUN_ID")).Returns("some-id");
+            var githubAction = new GitHubAction(ev.Object);
 
             // When
             var buildUrl = githubAction.BuildUrl;
@@ -121,10 +115,10 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void BuildUrl_Should_Not_Be_Empty_When_Environment_Variables_Exist()
         {
             // Given
-            var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REPOSITORY")).Returns("codecov/codecov-exe");
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_RUN_ID")).Returns("23432");
-            var githubAction = ga.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("GITHUB_REPOSITORY")).Returns("codecov/codecov-exe");
+            ev.Setup(s => s.GetEnvironmentVariable("GITHUB_RUN_ID")).Returns("23432");
+            var githubAction = new GitHubAction(ev.Object);
 
             // When
             var buildUrl = githubAction.BuildUrl;
@@ -137,9 +131,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Commit_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
         {
             // Given
-            var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_SHA")).Returns(string.Empty);
-            var githubAction = ga.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            var githubAction = new GitHubAction(ev.Object);
 
             // When
             var commit = githubAction.Commit;
@@ -152,9 +145,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Commit_Should_Be_Set_When_Enviornment_Variable_Exits()
         {
             // Given
-            var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_SHA")).Returns("123");
-            var githubAction = ga.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("GITHUB_SHA")).Returns("123");
+            var githubAction = new GitHubAction(ev.Object);
 
             // When
             var commit = githubAction.Commit;
@@ -167,10 +160,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Detecter_Should_Be_False_When_Action_Environment_Variable_Is_Null_Or_Empty()
         {
             // Given
-            var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTION")).Returns(string.Empty);
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTIONS")).Returns(string.Empty);
-            var githubAction = ga.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            var githubAction = new GitHubAction(ev.Object);
 
             // When
             var detecter = githubAction.Detecter;
@@ -183,10 +174,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Detecter_Should_Be_False_When_Actions_And_Action_Environment_Variable_Does_Not_Exist_Or_Is_Not_True(string environmentData)
         {
             // Given
-            var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTIONS")).Returns(environmentData);
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTION")).Returns(string.Empty);
-            var githubAction = ga.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTIONS")).Returns(environmentData);
+            var githubAction = new GitHubAction(ev.Object);
 
             // When
             var detecter = githubAction.Detecter;
@@ -199,13 +189,12 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Detecter_Should_Be_True_When_Action_Environment_Variable_Exist_And_Is_Not_Empty()
         {
             // Given
-            var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTION")).Returns("my-awesome-github-action");
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTIONS")).Returns(string.Empty);
-            var githubActions = ga.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTION")).Returns("my-awesome-github-action");
+            var githubAction = new GitHubAction(ev.Object);
 
             // When
-            var detecter = githubActions.Detecter;
+            var detecter = githubAction.Detecter;
 
             // Then
             detecter.Should().BeTrue();
@@ -215,10 +204,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Detecter_Should_Be_True_When_Actions_Environment_Variable_Exist_And_Is_True(string environmentData)
         {
             // Given
-            var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTIONS")).Returns(environmentData);
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTION")).Returns(string.Empty);
-            var githubAction = ga.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("GITHUB_ACTIONS")).Returns(environmentData);
+            var githubAction = new GitHubAction(ev.Object);
 
             // When
             var detecter = githubAction.Detecter;
@@ -231,10 +219,10 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void PR_Should_Not_Be_Empty_When_Environment_Variables_Exist()
         {
             // Given
-            var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_HEAD_REF")).Returns("patch-2");
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REF")).Returns("refs/pull/7/merge");
-            var githubAction = ga.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("GITHUB_HEAD_REF")).Returns("patch-2");
+            ev.Setup(s => s.GetEnvironmentVariable("GITHUB_REF")).Returns("refs/pull/7/merge");
+            var githubAction = new GitHubAction(ev.Object);
 
             // When
             var pr = githubAction.Pr;
@@ -249,9 +237,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void PR_Should_Not_be_Set_If_Head_Ref_Is_Empyt()
         {
             // Given
-            var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_HEAD_REF")).Returns(string.Empty);
-            var githubAction = ga.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            var githubAction = new GitHubAction(ev.Object);
 
             // When
             var pr = githubAction.Pr;
@@ -264,7 +251,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Service_Should_Be_Set_To_GitHubActions()
         {
             // Given
-            var githubAction = new GitHubAction();
+            var ev = new Mock<IEnviornmentVariables>();
+            var githubAction = new GitHubAction(ev.Object);
 
             // When
             var service = githubAction.Service;
@@ -277,9 +265,8 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Slug_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exist()
         {
             // Given
-            var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REPOSITORY")).Returns(string.Empty);
-            var githubAction = ga.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            var githubAction = new GitHubAction(ev.Object);
 
             // When
             var slug = githubAction.Slug;
@@ -292,9 +279,9 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         public void Slug_Should_Be_Set_When_Environment_Variable_Exist()
         {
             // Given
-            var ga = new Mock<GitHubAction>() { CallBase = true };
-            ga.Setup(s => s.GetEnvironmentVariable("GITHUB_REPOSITORY")).Returns("foo/bar");
-            var githubAction = ga.Object;
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("GITHUB_REPOSITORY")).Returns("foo/bar");
+            var githubAction = new GitHubAction(ev.Object);
 
             // When
             var slug = githubAction.Slug;

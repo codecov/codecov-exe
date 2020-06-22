@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Codecov.Exceptions;
 using GlobExpressions;
 
 namespace Codecov.Coverage.Tool
@@ -37,19 +38,14 @@ namespace Codecov.Coverage.Tool
                 || path.Contains('!')
                 || path.Contains(','))
             {
-                // Logger.Log.Information($"Using wildcard path {path}");
                 var matches = Glob.Files(Environment.CurrentDirectory, path, GlobOptions.Compiled | GlobOptions.CaseInsensitive)?.ToList();
                 if (matches?.Any() != true)
                 {
-                    // Logger.Log.Warning($"There are no files that match the wildcard {path}.");
                     return false;
                 }
 
                 expanded.Clear();
-                matches.ForEach(_ =>
-
-                    // Logger.Log.Information($"Adding file {_} that matches wildcard path {path}");
-                    expanded.Add(_));
+                matches.ForEach(_ => expanded.Add(_));
 
                 return true;
             }
@@ -72,7 +68,7 @@ namespace Codecov.Coverage.Tool
                 .Select(x => new ReportFile(x, File.ReadAllText(x))).ToArray();
             if (report?.Any() != true)
             {
-                throw new Exception("No Report detected.");
+                throw new CoverageException("No Report detected.");
             }
 
             return report;

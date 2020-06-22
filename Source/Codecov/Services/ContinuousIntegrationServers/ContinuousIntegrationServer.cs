@@ -30,12 +30,19 @@ namespace Codecov.Services.ContinuousIntegrationServers
         public virtual bool Detecter => false;
 
         public virtual string Job => _job.Value;
+
         public virtual string Pr => string.Empty;
+
         public virtual string Project => string.Empty;
+
         public virtual string ServerUri => string.Empty;
+
         public virtual string Service => string.Empty;
+
         public virtual string Slug => string.Empty;
+
         public virtual string Tag => string.Empty;
+
         public virtual IDictionary<string, string> UserEnvironmentVariables => new Dictionary<string, string>();
 
         public string GetEnvironmentVariable(string name)

@@ -34,19 +34,20 @@ namespace Codecov.Upload
             using (var request = new HttpRequestMessage(new HttpMethod("POST"), url))
             {
                 Log.Information("Uploading to Codecov");
-                var response = CreateResponse(request);
-
-                if (response.IsSuccessStatusCode)
+                using (var response = CreateResponse(request))
                 {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    Log.Information($"View reports at: {GetReportUrl(content)}");
-                }
-                else
-                {
-                    ReportFailure(response);
-                }
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = response.Content.ReadAsStringAsync().Result;
+                        Log.Information($"View reports at: {GetReportUrl(content)}");
+                    }
+                    else
+                    {
+                        ReportFailure(response);
+                    }
 
-                return response.IsSuccessStatusCode;
+                    return response.IsSuccessStatusCode;
+                }
             }
         }
 

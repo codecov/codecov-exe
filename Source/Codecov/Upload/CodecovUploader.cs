@@ -13,16 +13,9 @@ namespace Codecov.Upload
 {
     internal class CodecovUploader : Upload
     {
-        private static HttpClient _client;
-
-        static CodecovUploader()
-        {
-            if (_client == null)
-            {
-                _client = new HttpClient();
-                _client.DefaultRequestHeaders.UserAgent.ParseAdd($"codecove-exe/{Assembly.GetExecutingAssembly().GetName().Version}");
-            }
-        }
+#pragma warning disable DF0025 // Marks undisposed objects assinged to a field, originated from method invocation.
+        private static HttpClient _client = CreateHttpClient();
+#pragma warning restore DF0025 // Marks undisposed objects assinged to a field, originated from method invocation.
 
         public CodecovUploader(IUrl url, IReport report)
             : base(url, report)
@@ -49,6 +42,11 @@ namespace Codecov.Upload
         protected virtual HttpResponseMessage CreateResponse(HttpRequestMessage request)
         {
             ConfigureRequest(request);
+
+            if (request.Content is object)
+            {
+                request.Content.Dispose();
+            }
 
             request.Content = new ByteArrayContent(GetReportBytes());
 
@@ -118,6 +116,13 @@ namespace Codecov.Upload
             {
                 Log.Warning("Unknown reason. Possible reason being invalid parameters.");
             }
+        }
+
+        private static HttpClient CreateHttpClient()
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.UserAgent.ParseAdd($"codecove-exe/{Assembly.GetExecutingAssembly().GetName().Version}");
+            return client;
         }
 
         private byte[] GetReportBytes()

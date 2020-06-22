@@ -119,11 +119,10 @@ namespace Codecov.Url
 
         private void SetFlags()
         {
-            QueryParameters["flags"] = string.Empty;
-
             var flags = Options.Flags;
             if (string.IsNullOrWhiteSpace(flags))
             {
+                QueryParameters["flags"] = string.Empty;
                 return;
             }
 

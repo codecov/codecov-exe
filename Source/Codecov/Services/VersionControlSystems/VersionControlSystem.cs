@@ -35,7 +35,9 @@ namespace Codecov.Services.VersionControlSystems
         public virtual string Project => string.Empty;
 
         public virtual string RepoRoot => _repoRoot.Value;
+
         public virtual string ServerUri => string.Empty;
+
         public virtual string Slug => _slug.Value;
 
         public virtual IEnumerable<string> SourceCode => _sourceCode.Value;

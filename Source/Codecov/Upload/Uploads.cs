@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Codecov.Coverage.Report;
+using Codecov.Exceptions;
 using Codecov.Logger;
 using Codecov.Url;
 
@@ -31,7 +32,7 @@ namespace Codecov.Upload
                 Log.Verboase("Uploader failed.");
             }
 
-            throw new Exception("Failed to upload the report.");
+            throw new UploadException("Failed to upload the report.");
         }
 
         private static IEnumerable<IUpload> SetUploaders(IUrl url, IReport report, IEnumerable<string> features)

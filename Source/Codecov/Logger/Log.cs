@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Serilog;
 
 namespace Codecov.Logger
@@ -13,7 +13,9 @@ namespace Codecov.Logger
             _loggerConfig = new LoggerConfiguration();
             SetLogLevelIsVerboase(isVerbose);
             SetLogOutputHasColor(noColor);
+#pragma warning disable DF0025 // Marks undisposed objects assinged to a field, originated from method invocation.
             _logger = _loggerConfig.CreateLogger();
+#pragma warning restore DF0025 // Marks undisposed objects assinged to a field, originated from method invocation.
         }
 
         public static void Error(string message) => _logger.Error(message);
@@ -30,7 +32,7 @@ namespace Codecov.Logger
 
         internal static void Cleanup()
         {
-            if (_logger != null && _logger is IDisposable disposable)
+            if (_logger is IDisposable disposable)
             {
                 disposable.Dispose();
             }

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Codecov.Services.ContinuousIntegrationServers;
 
@@ -7,9 +9,27 @@ namespace Codecov.Factories
     {
         public static IContinuousIntegrationServer Create()
         {
-            var continuousIntegrationServers = new IContinuousIntegrationServer[] { new AppVeyor(), new Travis(), new TeamCity(), new AzurePipelines(), new Jenkins(), new GitHubAction() };
-            var buildServer = continuousIntegrationServers.FirstOrDefault(x => x.Detecter);
+            var assembly = typeof(ContinuousIntegrationServerFactory).Assembly;
+            var interfaceType = typeof(IContinuousIntegrationServer);
+
+            var continuousServers = assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract && interfaceType.IsAssignableFrom(t));
+            var buildServer = GetFirstDetectedCiServer(continuousServers);
+
             return buildServer ?? new ContinuousIntegrationServer();
+        }
+
+        private static IContinuousIntegrationServer GetFirstDetectedCiServer(IEnumerable<Type> supportedServers)
+        {
+            foreach (var t in supportedServers)
+            {
+                var buildServer = (IContinuousIntegrationServer)Activator.CreateInstance(t);
+                if (buildServer.Detecter)
+                {
+                    return buildServer;
+                }
+            }
+
+            return null;
         }
     }
 }

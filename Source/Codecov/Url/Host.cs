@@ -5,8 +5,8 @@ namespace Codecov.Url
 {
     internal class Host : IHost
     {
-        private readonly Lazy<string> _getHost;
         private readonly IEnviornmentVariables _environmentVariables;
+        private readonly Lazy<string> _getHost;
 
         public Host(IHostOptions options, IEnviornmentVariables environmentVariables)
         {

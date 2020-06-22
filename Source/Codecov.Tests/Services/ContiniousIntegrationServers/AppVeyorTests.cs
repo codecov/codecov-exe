@@ -94,6 +94,60 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
             build.Should().Be("Job%20123");
         }
 
+        [Theory, MemberData(nameof(Build_Url_Empty_Data))]
+        public void BuildUrl_Should_Be_Empty_String_When_Environment_Variables_Do_Not_Exist(string appveyorUrl, string accountData, string slugData, string jobId)
+        {
+            // Given
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_URL")).Returns(appveyorUrl);
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME")).Returns(accountData);
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG")).Returns(slugData);
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_JOB_ID")).Returns(jobId);
+            var appVeyor = new AppVeyor(ev.Object);
+
+            // When
+            var buildUrl = appVeyor.BuildUrl;
+
+            // Then
+            buildUrl.Should().BeEmpty();
+        }
+
+        [Theory, InlineData("http://"), InlineData("http://."), InlineData("http://.."), InlineData("http://../"), InlineData("http://?"), InlineData("http://??"), InlineData("http://#"), InlineData("http://##"), InlineData("//"), InlineData("//a"), InlineData("///a"), InlineData("///"), InlineData("foo.com"), InlineData("rdar://1234"), InlineData("h://test"), InlineData("http:// shouldfail.com"), InlineData(":// should fail"), InlineData("ftps://foo.bar/"), InlineData("http://.www.foo.bar/")]
+        public void BuildUrl_Should_Be_Empty_When_Appveyor_Url_Is_Invalid_Domain(string urlData)
+        {
+            // Given
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_URL")).Returns(urlData);
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME")).Returns("foo");
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG")).Returns("bar");
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_JOB_ID")).Returns("xyz");
+            var appVeyor = new AppVeyor(ev.Object);
+
+            // When
+            var buildUrl = appVeyor.BuildUrl;
+
+            // Then
+            buildUrl.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void BuildUrl_Should_Not_Empty_String_When_Environment_Variable_Exists()
+        {
+            // Given
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_URL")).Returns("https://ci.appveyor.com");
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME")).Returns("foo");
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG")).Returns("bar");
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_JOB_ID")).Returns("xyz");
+            var appVeyor = new AppVeyor(ev.Object);
+
+            // When
+            var buildUrl = appVeyor.BuildUrl;
+
+            // Then
+            buildUrl.Should().Be("https://ci.appveyor.com/project/foo/bar/build/job/xyz");
+        }
+
         [Fact]
         public void Commit_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
         {
@@ -156,60 +210,6 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
 
             // Then
             detecter.Should().BeTrue();
-        }
-
-        [Theory, MemberData(nameof(Build_Url_Empty_Data))]
-        public void BuildUrl_Should_Be_Empty_String_When_Environment_Variables_Do_Not_Exist(string appveyorUrl, string accountData, string slugData, string jobId)
-        {
-            // Given
-            var ev = new Mock<IEnviornmentVariables>();
-            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_URL")).Returns(appveyorUrl);
-            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME")).Returns(accountData);
-            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG")).Returns(slugData);
-            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_JOB_ID")).Returns(jobId);
-            var appVeyor = new AppVeyor(ev.Object);
-
-            // When
-            var buildUrl = appVeyor.BuildUrl;
-
-            // Then
-            buildUrl.Should().BeEmpty();
-        }
-
-        [Fact]
-        public void BuildUrl_Should_Not_Empty_String_When_Environment_Variable_Exists()
-        {
-            // Given
-            var ev = new Mock<IEnviornmentVariables>();
-            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_URL")).Returns("https://ci.appveyor.com");
-            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME")).Returns("foo");
-            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG")).Returns("bar");
-            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_JOB_ID")).Returns("xyz");
-            var appVeyor = new AppVeyor(ev.Object);
-
-            // When
-            var buildUrl = appVeyor.BuildUrl;
-
-            // Then
-            buildUrl.Should().Be("https://ci.appveyor.com/project/foo/bar/build/job/xyz");
-        }
-
-        [Theory, InlineData("http://"), InlineData("http://."), InlineData("http://.."), InlineData("http://../"), InlineData("http://?"), InlineData("http://??"), InlineData("http://#"), InlineData("http://##"), InlineData("//"), InlineData("//a"), InlineData("///a"), InlineData("///"), InlineData("foo.com"), InlineData("rdar://1234"), InlineData("h://test"), InlineData("http:// shouldfail.com"), InlineData(":// should fail"), InlineData("ftps://foo.bar/"), InlineData("http://.www.foo.bar/")]
-        public void BuildUrl_Should_Be_Empty_When_Appveyor_Url_Is_Invalid_Domain(string urlData)
-        {
-            // Given
-            var ev = new Mock<IEnviornmentVariables>();
-            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_URL")).Returns(urlData);
-            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME")).Returns("foo");
-            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG")).Returns("bar");
-            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_JOB_ID")).Returns("xyz");
-            var appVeyor = new AppVeyor(ev.Object);
-
-            // When
-            var buildUrl = appVeyor.BuildUrl;
-
-            // Then
-            buildUrl.Should().BeEmpty();
         }
 
         [Theory, InlineData(null, null, null), InlineData("", "", ""), InlineData("foo", "bar", ""), InlineData("", "foo", "bar"), InlineData("foo", "", "bar"), InlineData("", "", "foo"), InlineData("foo", "", ""), InlineData("", "foo", "")]

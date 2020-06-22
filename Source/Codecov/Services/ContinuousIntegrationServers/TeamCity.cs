@@ -1,5 +1,4 @@
 using System;
-using Codecov.Utilities;
 
 namespace Codecov.Services.ContinuousIntegrationServers
 {

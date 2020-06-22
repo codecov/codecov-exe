@@ -48,12 +48,12 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Branch_Should_Be_Set_When_PR_Enviornment_Variable_Exits()
+        public void Branch_Should_Be_Set_When_Branch_Enviornment_Variable_Exits()
         {
             // Given
             var ev = new Mock<IEnviornmentVariables>();
-            ev.Setup(s => s.GetEnvironmentVariable("SYSTEM_PULLREQUEST_TARGETBRANCH")).Returns("develop");
-            ev.Setup(s => s.GetEnvironmentVariable("BUILD_SOURCEBRANCHNAME")).Returns(string.Empty);
+            ev.Setup(s => s.GetEnvironmentVariable("SYSTEM_PULLREQUEST_TARGETBRANCH")).Returns(string.Empty);
+            ev.Setup(s => s.GetEnvironmentVariable("BUILD_SOURCEBRANCHNAME")).Returns("develop");
             var pipelines = new AzurePipelines(ev.Object);
 
             // When
@@ -64,12 +64,12 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
-        public void Branch_Should_Be_Set_When_Branch_Enviornment_Variable_Exits()
+        public void Branch_Should_Be_Set_When_PR_Enviornment_Variable_Exits()
         {
             // Given
             var ev = new Mock<IEnviornmentVariables>();
-            ev.Setup(s => s.GetEnvironmentVariable("SYSTEM_PULLREQUEST_TARGETBRANCH")).Returns(string.Empty);
-            ev.Setup(s => s.GetEnvironmentVariable("BUILD_SOURCEBRANCHNAME")).Returns("develop");
+            ev.Setup(s => s.GetEnvironmentVariable("SYSTEM_PULLREQUEST_TARGETBRANCH")).Returns("develop");
+            ev.Setup(s => s.GetEnvironmentVariable("BUILD_SOURCEBRANCHNAME")).Returns(string.Empty);
             var pipelines = new AzurePipelines(ev.Object);
 
             // When
@@ -125,6 +125,57 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
             build.Should().Be("123");
         }
 
+        [Theory, MemberData(nameof(Build_Url_Empty_Data))]
+        public void BuildUrl_Should_Be_Empty_String_When_Environment_Variables_Do_Not_Exist(string serverUrl, string project, string build)
+        {
+            // Given
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("SYSTEM_TEAMFOUNDATIONSERVERURI")).Returns(serverUrl);
+            ev.Setup(s => s.GetEnvironmentVariable("SYSTEM_TEAMPROJECT")).Returns(project);
+            ev.Setup(s => s.GetEnvironmentVariable("BUILD_BUILDID")).Returns(build);
+            var pipelines = new AzurePipelines(ev.Object);
+
+            // When
+            var buildUrl = pipelines.BuildUrl;
+
+            // Then
+            buildUrl.Should().BeEmpty();
+        }
+
+        [Theory, InlineData("http://"), InlineData("http://."), InlineData("http://.."), InlineData("http://../"), InlineData("http://?"), InlineData("http://??"), InlineData("http://#"), InlineData("http://##"), InlineData("//"), InlineData("//a"), InlineData("///a"), InlineData("///"), InlineData("foo.com"), InlineData("rdar://1234"), InlineData("h://test"), InlineData("http:// shouldfail.com"), InlineData(":// should fail"), InlineData("ftps://foo.bar/"), InlineData("http://.www.foo.bar/")]
+        public void BuildUrl_Should_Be_Empty_When_Appveyor_Url_Is_Invalid_Domain(string urlData)
+        {
+            // Given
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("SYSTEM_TEAMFOUNDATIONSERVERURI")).Returns(urlData);
+            ev.Setup(s => s.GetEnvironmentVariable("SYSTEM_TEAMPROJECT")).Returns("project");
+            ev.Setup(s => s.GetEnvironmentVariable("BUILD_BUILDID")).Returns("build");
+            var pipelines = new AzurePipelines(ev.Object);
+
+            // When
+            var buildUrl = pipelines.BuildUrl;
+
+            // Then
+            buildUrl.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void BuildUrl_Should_Not_Empty_String_When_Environment_Variable_Exists()
+        {
+            // Given
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("SYSTEM_TEAMFOUNDATIONSERVERURI")).Returns("https://dev.azure.com/");
+            ev.Setup(s => s.GetEnvironmentVariable("SYSTEM_TEAMPROJECT")).Returns("project");
+            ev.Setup(s => s.GetEnvironmentVariable("BUILD_BUILDID")).Returns("build");
+            var pipelines = new AzurePipelines(ev.Object);
+
+            // When
+            var buildUrl = pipelines.BuildUrl;
+
+            // Then
+            buildUrl.Should().Be("https://dev.azure.com/project/_build/results?buildId=build");
+        }
+
         [Fact]
         public void Commit_Should_Be_Empty_String_When_Enviornment_Variable_Does_Not_Exits()
         {
@@ -168,57 +219,6 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
 
             // Then
             detecter.Should().BeFalse();
-        }
-
-        [Theory, MemberData(nameof(Build_Url_Empty_Data))]
-        public void BuildUrl_Should_Be_Empty_String_When_Environment_Variables_Do_Not_Exist(string serverUrl, string project, string build)
-        {
-            // Given
-            var ev = new Mock<IEnviornmentVariables>();
-            ev.Setup(s => s.GetEnvironmentVariable("SYSTEM_TEAMFOUNDATIONSERVERURI")).Returns(serverUrl);
-            ev.Setup(s => s.GetEnvironmentVariable("SYSTEM_TEAMPROJECT")).Returns(project);
-            ev.Setup(s => s.GetEnvironmentVariable("BUILD_BUILDID")).Returns(build);
-            var pipelines = new AzurePipelines(ev.Object);
-
-            // When
-            var buildUrl = pipelines.BuildUrl;
-
-            // Then
-            buildUrl.Should().BeEmpty();
-        }
-
-        [Fact]
-        public void BuildUrl_Should_Not_Empty_String_When_Environment_Variable_Exists()
-        {
-            // Given
-            var ev = new Mock<IEnviornmentVariables>();
-            ev.Setup(s => s.GetEnvironmentVariable("SYSTEM_TEAMFOUNDATIONSERVERURI")).Returns("https://dev.azure.com/");
-            ev.Setup(s => s.GetEnvironmentVariable("SYSTEM_TEAMPROJECT")).Returns("project");
-            ev.Setup(s => s.GetEnvironmentVariable("BUILD_BUILDID")).Returns("build");
-            var pipelines = new AzurePipelines(ev.Object);
-
-            // When
-            var buildUrl = pipelines.BuildUrl;
-
-            // Then
-            buildUrl.Should().Be("https://dev.azure.com/project/_build/results?buildId=build");
-        }
-
-        [Theory, InlineData("http://"), InlineData("http://."), InlineData("http://.."), InlineData("http://../"), InlineData("http://?"), InlineData("http://??"), InlineData("http://#"), InlineData("http://##"), InlineData("//"), InlineData("//a"), InlineData("///a"), InlineData("///"), InlineData("foo.com"), InlineData("rdar://1234"), InlineData("h://test"), InlineData("http:// shouldfail.com"), InlineData(":// should fail"), InlineData("ftps://foo.bar/"), InlineData("http://.www.foo.bar/")]
-        public void BuildUrl_Should_Be_Empty_When_Appveyor_Url_Is_Invalid_Domain(string urlData)
-        {
-            // Given
-            var ev = new Mock<IEnviornmentVariables>();
-            ev.Setup(s => s.GetEnvironmentVariable("SYSTEM_TEAMFOUNDATIONSERVERURI")).Returns(urlData);
-            ev.Setup(s => s.GetEnvironmentVariable("SYSTEM_TEAMPROJECT")).Returns("project");
-            ev.Setup(s => s.GetEnvironmentVariable("BUILD_BUILDID")).Returns("build");
-            var pipelines = new AzurePipelines(ev.Object);
-
-            // When
-            var buildUrl = pipelines.BuildUrl;
-
-            // Then
-            buildUrl.Should().BeEmpty();
         }
 
         [Theory, InlineData("", ""), InlineData("foo", "")]

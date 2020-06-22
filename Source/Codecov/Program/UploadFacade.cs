@@ -26,17 +26,13 @@ namespace Codecov.Program
             CommandLineCommandLineOptions = commandLineOptions;
         }
 
+        private ICoverage Coverage => new Coverage.Tool.Coverage(CommandLineCommandLineOptions);
+        private IUrl Url => new Url.Url(new Host(CommandLineCommandLineOptions, EnviornmentVariables), new Route(), new Query(CommandLineCommandLineOptions, Repositories, ContinuousIntegrationServer, Yaml, EnviornmentVariables));
+        private IYaml Yaml => new Yaml.Yaml(SourceCode);
         private static IDictionary<TerminalName, ITerminal> Terminals => TerminalFactory.Create();
 
-        private IContinuousIntegrationServer ContinuousIntegrationServer => ContinuousIntegrationServerFactory.Create(EnviornmentVariables);
-
-        private ICoverage Coverage => new Coverage.Tool.Coverage(CommandLineCommandLineOptions);
-
-        private IUrl Url => new Url.Url(new Host(CommandLineCommandLineOptions, EnviornmentVariables), new Route(), new Query(CommandLineCommandLineOptions, Repositories, ContinuousIntegrationServer, Yaml, EnviornmentVariables));
-
-        private IYaml Yaml => new Yaml.Yaml(SourceCode);
-
         private CommandLineOptions CommandLineCommandLineOptions { get; }
+        private IContinuousIntegrationServer ContinuousIntegrationServer => ContinuousIntegrationServerFactory.Create(EnviornmentVariables);
 
         private string DisplayUrl
         {

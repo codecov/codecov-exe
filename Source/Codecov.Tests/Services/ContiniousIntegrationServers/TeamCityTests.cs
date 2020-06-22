@@ -1,4 +1,3 @@
-using System;
 using Codecov.Services.ContinuousIntegrationServers;
 using FluentAssertions;
 using Moq;

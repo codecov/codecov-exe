@@ -79,6 +79,13 @@ namespace Codecov.Services.ContinuousIntegrationServers
             return ExtractSubstring(branch, "refs/heads/", null);
         }
 
+        private string LoadBuildUrl()
+        {
+            return (string.IsNullOrWhiteSpace(Slug) || string.IsNullOrWhiteSpace(Build))
+                ? string.Empty
+                : $"https://github.com/{Slug}/actions/runs/{Build}";
+        }
+
         private string LoadPullRequest()
         {
             var headRef = GetEnvironmentVariable("GITHUB_HEAD_REF");
@@ -92,13 +99,6 @@ namespace Codecov.Services.ContinuousIntegrationServers
             return string.IsNullOrEmpty(branchRef)
                 ? string.Empty
                 : ExtractSubstring(branchRef, "refs/pull/", "/merge");
-        }
-
-        private string LoadBuildUrl()
-        {
-            return (string.IsNullOrWhiteSpace(Slug) || string.IsNullOrWhiteSpace(Build))
-                ? string.Empty
-                : $"https://github.com/{Slug}/actions/runs/{Build}";
         }
     }
 }

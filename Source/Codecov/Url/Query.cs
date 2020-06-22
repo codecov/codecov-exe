@@ -12,9 +12,8 @@ namespace Codecov.Url
 {
     internal class Query : IQuery
     {
-        private readonly Lazy<string> _getQuery;
-
         private readonly IEnviornmentVariables _environmentVariables;
+        private readonly Lazy<string> _getQuery;
 
         public Query(IQueryOptions options, IEnumerable<IRepository> repositories, IBuild build, IYaml yaml, IEnviornmentVariables environmentVariables)
         {

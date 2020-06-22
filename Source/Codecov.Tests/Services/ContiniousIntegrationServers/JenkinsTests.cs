@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Codecov.Services.ContinuousIntegrationServers;
 using FluentAssertions;
 using Moq;

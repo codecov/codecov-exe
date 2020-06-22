@@ -1,4 +1,3 @@
-using System;
 using Codecov.Services.ContinuousIntegrationServers;
 using FluentAssertions;
 using Moq;
@@ -67,6 +66,35 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Fact]
+        public void BuildUrl_Should_Be_Empty_String_When_Environment_Variables_Do_Not_Exist()
+        {
+            // Given
+            var ev = new Mock<IEnviornmentVariables>();
+            var travis = new Travis(ev.Object);
+
+            // When
+            var buildUrl = travis.BuildUrl;
+
+            // Then
+            buildUrl.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void BuildUrl_Should_Not_Be_Empty_String_When_Environment_Variable_Exist()
+        {
+            // Given
+            var ev = new Mock<IEnviornmentVariables>();
+            ev.Setup(s => s.GetEnvironmentVariable("TRAVIS_JOB_WEB_URL")).Returns("https://travis-ci.org/some-job");
+            var travis = new Travis(ev.Object);
+
+            // When
+            var buildUrl = travis.BuildUrl;
+
+            // Then
+            buildUrl.Should().Be("https://travis-ci.org/some-job");
+        }
+
+        [Fact]
         public void Commit_Should_Be_Empty_String_When_Environment_Variable_Does_Not_Exits()
         {
             // Given
@@ -127,35 +155,6 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
 
             // Then
             detecter.Should().BeTrue();
-        }
-
-        [Fact]
-        public void BuildUrl_Should_Be_Empty_String_When_Environment_Variables_Do_Not_Exist()
-        {
-            // Given
-            var ev = new Mock<IEnviornmentVariables>();
-            var travis = new Travis(ev.Object);
-
-            // When
-            var buildUrl = travis.BuildUrl;
-
-            // Then
-            buildUrl.Should().BeEmpty();
-        }
-
-        [Fact]
-        public void BuildUrl_Should_Not_Be_Empty_String_When_Environment_Variable_Exist()
-        {
-            // Given
-            var ev = new Mock<IEnviornmentVariables>();
-            ev.Setup(s => s.GetEnvironmentVariable("TRAVIS_JOB_WEB_URL")).Returns("https://travis-ci.org/some-job");
-            var travis = new Travis(ev.Object);
-
-            // When
-            var buildUrl = travis.BuildUrl;
-
-            // Then
-            buildUrl.Should().Be("https://travis-ci.org/some-job");
         }
 
         [Fact]

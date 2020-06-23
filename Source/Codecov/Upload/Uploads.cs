@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Codecov.Coverage.Report;
 using Codecov.Exceptions;
-using Codecov.Logger;
 using Codecov.Url;
+using Serilog;
 
 namespace Codecov.Upload
 {
@@ -29,7 +29,7 @@ namespace Codecov.Upload
                     return response;
                 }
 
-                Log.Verboase("Uploader failed.");
+                Log.Verbose("Uploader failed.");
             }
 
             throw new UploadException("Failed to upload the report.");

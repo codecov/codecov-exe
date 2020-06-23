@@ -7,7 +7,6 @@ using Codecov.Coverage.Report;
 using Codecov.Coverage.SourceCode;
 using Codecov.Coverage.Tool;
 using Codecov.Factories;
-using Codecov.Logger;
 using Codecov.Services;
 using Codecov.Services.ContinuousIntegrationServers;
 using Codecov.Services.VersionControlSystems;
@@ -16,6 +15,7 @@ using Codecov.Upload;
 using Codecov.Url;
 using Codecov.Utilities;
 using Codecov.Yaml;
+using Serilog;
 
 namespace Codecov.Program
 {
@@ -73,7 +73,7 @@ namespace Codecov.Program
             }
             else if (ci.Equals("TeamCity"))
             {
-                Log.Information("TeamCity detected.");
+                Log.Information($"{ci} detected.");
                 if (string.IsNullOrWhiteSpace(ContinuousIntegrationServer.Branch))
                 {
                     Log.Warning("Teamcity does not automatically make build parameters available as environment variables.\nAdd the following environment parameters to the build configuration.\nenv.TEAMCITY_BUILD_BRANCH = %teamcity.build.branch%.\nenv.TEAMCITY_BUILD_ID = %teamcity.build.id%.\nenv.TEAMCITY_BUILD_URL = %teamcity.serverUrl%/viewLog.html?buildId=%teamcity.build.id%.\nenv.TEAMCITY_BUILD_COMMIT = %system.build.vcs.number%.\nenv.TEAMCITY_BUILD_REPOSITORY = %vcsroot.<YOUR TEAMCITY VCS NAME>.url%.");
@@ -130,7 +130,7 @@ namespace Codecov.Program
             Log.Information($"query: {DisplayUrl}");
 
             var response = Upload.Uploader();
-            Log.Verboase($"response: {response}");
+            Log.Verbose($"response: {response}");
             var splitResponse = response.Split('\n');
             if (splitResponse.Length > 1)
             {

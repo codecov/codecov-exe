@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using Codecov.Exceptions;
-using Codecov.Logger;
+using Serilog;
 
 namespace Codecov.Terminal
 {
@@ -78,7 +78,7 @@ namespace Codecov.Terminal
             }
             catch (TerminalException ex)
             {
-                Log.VerboaseException(ex);
+                Log.Verbose(ex, "Exception while running the terminal.");
                 return string.Empty;
             }
         }

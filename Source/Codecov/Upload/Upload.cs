@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using Codecov.Coverage.Report;
-using Codecov.Logger;
 using Codecov.Url;
+using Serilog;
 
 namespace Codecov.Upload
 {
@@ -28,7 +28,7 @@ namespace Codecov.Upload
                 var response = Post();
                 if (string.IsNullOrWhiteSpace(response))
                 {
-                    Log.Verboase("Failed to ping codecov.");
+                    Log.Verbose("Failed to ping codecov.");
                     return string.Empty;
                 }
 
@@ -43,7 +43,7 @@ namespace Codecov.Upload
             }
             catch (Exception ex)
             {
-                Log.VerboaseException(ex);
+                Log.Verbose(ex, "Error during uploading.");
                 return string.Empty;
             }
         }

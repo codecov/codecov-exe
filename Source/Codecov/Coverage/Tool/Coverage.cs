@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Codecov.Exceptions;
 using GlobExpressions;
+using Serilog;
 
 namespace Codecov.Coverage.Tool
 {
@@ -29,7 +30,7 @@ namespace Codecov.Coverage.Tool
             expandedPath = expanded;
             if (string.IsNullOrWhiteSpace(path))
             {
-                Logger.Log.Warning("Invalid report path.");
+                Log.Warning("Invalid report path.");
                 return false;
             }
 
@@ -51,7 +52,7 @@ namespace Codecov.Coverage.Tool
             }
             else if (!File.Exists(path))
             {
-                Logger.Log.Warning($"The file {path} does not exist.");
+                Log.Warning($"The file {path} does not exist.");
                 return false;
             }
 

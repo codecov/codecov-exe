@@ -6,8 +6,8 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using Codecov.Coverage.Report;
-using Codecov.Logger;
 using Codecov.Url;
+using Serilog;
 
 namespace Codecov.Upload
 {
@@ -58,7 +58,7 @@ namespace Codecov.Upload
 
         protected override string Post()
         {
-            Log.Verboase("Trying to upload using HttpClient");
+            Log.Verbose("Trying to upload using HttpClient");
             using (var request = new HttpRequestMessage(new HttpMethod("POST"), Url.GetUrl))
             {
                 request.Headers.TryAddWithoutValidation("X-Reduced-Redundancy", "false");

@@ -1,8 +1,8 @@
 using System;
 using System.Net.Http;
 using Codecov.Coverage.Report;
-using Codecov.Logger;
 using Codecov.Url;
+using Serilog;
 
 namespace Codecov.Upload
 {

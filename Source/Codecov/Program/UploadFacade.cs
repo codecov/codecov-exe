@@ -127,7 +127,6 @@ namespace Codecov.Program
 
             Log.Information("Uploading Reports.");
             Log.Information($"url: {Url.GetUrl.Scheme}://{Url.GetUrl.Authority}");
-            Log.Verboase($"api endpoint: {Url.GetUrl}");
             Log.Information($"query: {DisplayUrl}");
 
             var response = Upload.Uploader();

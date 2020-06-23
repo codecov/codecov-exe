@@ -68,15 +68,7 @@ namespace Codecov.Upload
                 var response = _client.SendAsync(request).Result;
                 if (!response.IsSuccessStatusCode)
                 {
-                    Log.Warning($"Unable to ping Codecov. Server returned: ({(int)response.StatusCode}) {response.ReasonPhrase}");
-                    if (string.Equals(response.Content.Headers.ContentType.MediaType, "text/plain", StringComparison.OrdinalIgnoreCase))
-                    {
-                        Log.Warning(response.Content.ReadAsStringAsync().Result);
-                    }
-                    else
-                    {
-                        Log.Warning("Unknown reason. Possible reason being invalid parameters.");
-                    }
+                    ReportFailure(response);
 
                     return string.Empty;
                 }
@@ -106,6 +98,7 @@ namespace Codecov.Upload
 
         protected void ReportFailure(HttpResponseMessage message)
         {
+            Log.Warning("Unable to upload coverage report to Codecov. Server returned: ({StatusCode}) {ReasonPhrase}", (int)message.StatusCode, message.ReasonPhrase);
             Log.Warning($"Unable to upload coverage report to Codecov. Server returned: ({(int)message.StatusCode}) {message.ReasonPhrase}");
 
             if (string.Equals(message.Content.Headers.ContentType.MediaType, "text/plain", StringComparison.OrdinalIgnoreCase))

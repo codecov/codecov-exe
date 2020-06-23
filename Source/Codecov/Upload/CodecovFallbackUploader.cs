@@ -39,7 +39,7 @@ namespace Codecov.Upload
                     if (response.IsSuccessStatusCode)
                     {
                         var content = response.Content.ReadAsStringAsync().Result;
-                        Log.Information($"View reports at: {GetReportUrl(content)}");
+                        Log.Information("View reports at: {GetReportUrl}", GetReportUrl(content));
                     }
                     else
                     {

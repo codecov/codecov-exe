@@ -10,7 +10,7 @@ namespace Codecov.Logging
     {
         private const string ConsoleFullTemplate = "[{Level:u3}] " + ConsoleInfoTemplate;
         private const string ConsoleInfoTemplate = "{Message:l}{NewLine}{Exception}";
-        private static readonly ConsoleTheme _consoleTheme = AnsiConsoleTheme.Code;
+        private static readonly ConsoleTheme _consoleTheme = SystemConsoleTheme.Colored;
         private static readonly ConsoleTheme _noColorTheme = ConsoleTheme.None;
 
         public static void ConfigureLogging(CommandLineOptions options)

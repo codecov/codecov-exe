@@ -35,7 +35,7 @@ namespace Codecov.Upload
                 var s3 = GetPutUrlFromPostResponse(response);
                 if (!Put(s3))
                 {
-                    Log.Warning($"Failed to upload the report with {GetType().Name}.");
+                    Log.Warning("Failed to upload the report with {Name}.", GetType().Name);
                     return string.Empty;
                 }
 

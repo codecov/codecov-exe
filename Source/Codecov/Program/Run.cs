@@ -22,7 +22,7 @@ namespace Codecov.Program
             }
             catch (Exception e)
             {
-                Log.Fatal($"{e.Message}\n{e.StackTrace}");
+                Log.Fatal(e, e.Message);
 
                 return _kill;
             }

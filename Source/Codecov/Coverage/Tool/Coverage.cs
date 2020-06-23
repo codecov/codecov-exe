@@ -52,7 +52,7 @@ namespace Codecov.Coverage.Tool
             }
             else if (!File.Exists(path))
             {
-                Log.Warning($"The file {path} does not exist.");
+                Log.Warning("The file {path} does not exist.", path);
                 return false;
             }
 

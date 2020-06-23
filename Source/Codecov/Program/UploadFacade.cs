@@ -24,6 +24,10 @@ namespace Codecov.Program
         public UploadFacade(CommandLineOptions commandLineOptions)
         {
             CommandLineCommandLineOptions = commandLineOptions;
+            var envVars = new EnviornmentVariables(commandLineOptions);
+            ContinuousIntegrationServer = ContinuousIntegrationServerFactory.Create(envVars);
+            envVars.LoadEnviornmentVariables(ContinuousIntegrationServer);
+            EnviornmentVariables = envVars;
         }
 
         private static IDictionary<TerminalName, ITerminal> Terminals => TerminalFactory.Create();
@@ -36,7 +40,7 @@ namespace Codecov.Program
 
         private CommandLineOptions CommandLineCommandLineOptions { get; }
 
-        private IContinuousIntegrationServer ContinuousIntegrationServer => ContinuousIntegrationServerFactory.Create(EnviornmentVariables);
+        private IContinuousIntegrationServer ContinuousIntegrationServer { get; }
 
         private string DisplayUrl
         {
@@ -48,7 +52,7 @@ namespace Codecov.Program
             }
         }
 
-        private IEnviornmentVariables EnviornmentVariables => new EnviornmentVariables(CommandLineCommandLineOptions, ContinuousIntegrationServer);
+        private IEnviornmentVariables EnviornmentVariables { get; }
 
         private IReport Report => new Report(CommandLineCommandLineOptions, EnviornmentVariables, SourceCode, Coverage);
 

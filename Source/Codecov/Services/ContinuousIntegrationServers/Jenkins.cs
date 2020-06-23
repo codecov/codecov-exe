@@ -1,18 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Codecov.Utilities;
+using System;
 
 namespace Codecov.Services.ContinuousIntegrationServers
 {
     internal class Jenkins : ContinuousIntegrationServer
     {
-        private readonly Lazy<string> _branch = new Lazy<string>(() => EnviornmentVariable.GetFirstExistingEnvironmentVariable("ghprbSourceBranch", "GIT_BRANCH", "BRANCH_NAME"));
-        private readonly Lazy<string> _build = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("BUILD_NUMBER"));
-        private readonly Lazy<string> _buildUrl = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("BUILD_URL"));
-        private readonly Lazy<string> _commit = new Lazy<string>(() => EnviornmentVariable.GetFirstExistingEnvironmentVariable("ghprbActualCommit", "GIT_COMMIT"));
-        private readonly Lazy<bool> _detecter = new Lazy<bool>(() => !string.IsNullOrWhiteSpace(EnviornmentVariable.GetEnviornmentVariable("JENKINS_URL")));
-        private readonly Lazy<string> _pr = new Lazy<string>(() => EnviornmentVariable.GetFirstExistingEnvironmentVariable("ghprbPullId", "CHANGE_ID"));
+        private readonly Lazy<string> _branch;
+        private readonly Lazy<string> _build;
+        private readonly Lazy<string> _buildUrl;
+        private readonly Lazy<string> _commit;
+        private readonly Lazy<bool> _detecter;
+        private readonly Lazy<string> _pr;
+
+        public Jenkins(IEnviornmentVariables environmentVariables)
+            : base(environmentVariables)
+        {
+            _branch = new Lazy<string>(() => GetFirstExistingEnvironmentVariable("ghprbSourceBranch", "GIT_BRANCH", "BRANCH_NAME"));
+            _build = new Lazy<string>(() => GetEnvironmentVariable("BUILD_NUMBER"));
+            _buildUrl = new Lazy<string>(() => GetEnvironmentVariable("BUILD_URL"));
+            _commit = new Lazy<string>(() => GetFirstExistingEnvironmentVariable("ghprbActualCommit", "GIT_COMMIT"));
+            _detecter = new Lazy<bool>(() => !string.IsNullOrWhiteSpace(GetEnvironmentVariable("JENKINS_URL")));
+            _pr = new Lazy<string>(() => GetFirstExistingEnvironmentVariable("ghprbPullId", "CHANGE_ID"));
+        }
 
         public override string Branch => _branch.Value;
 

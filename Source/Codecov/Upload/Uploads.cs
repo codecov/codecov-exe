@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Codecov.Coverage.Report;
-using Codecov.Logger;
+using Codecov.Exceptions;
 using Codecov.Url;
+using Serilog;
 
 namespace Codecov.Upload
 {
@@ -28,10 +29,10 @@ namespace Codecov.Upload
                     return response;
                 }
 
-                Log.Verboase("Uploader failed.");
+                Log.Verbose("Uploader failed.");
             }
 
-            throw new Exception("Failed to upload the report.");
+            throw new UploadException("Failed to upload the report.");
         }
 
         private static IEnumerable<IUpload> SetUploaders(IUrl url, IReport report, IEnumerable<string> features)

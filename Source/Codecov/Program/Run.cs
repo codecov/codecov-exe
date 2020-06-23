@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using Codecov.Logger;
 using Codecov.Upload;
 using Codecov.Utilities;
 using CommandLine;
+using Serilog;
 
 namespace Codecov.Program
 {
@@ -22,7 +22,7 @@ namespace Codecov.Program
             }
             catch (Exception e)
             {
-                Log.Fatal($"{e.Message}\n{e.StackTrace}");
+                Log.Fatal(e, e.Message);
 
                 return _kill;
             }
@@ -30,7 +30,7 @@ namespace Codecov.Program
             {
                 // Cleaning up undisposed fields/Properties
                 CodecovUploader.Cleanup();
-                Log.Cleanup();
+                Log.CloseAndFlush();
             }
         }
 
@@ -41,7 +41,7 @@ namespace Codecov.Program
         {
             ParseAndSetCommandLineArgs(args);
             ConfigureHowProgramExitsOnFail();
-            Log.Create(_commandLineOptions.Verbose, _commandLineOptions.NoColor);
+            Logging.LogConfiguration.ConfigureLogging(_commandLineOptions);
             About.DisplayFiglet();
         }
 

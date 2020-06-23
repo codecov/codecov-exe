@@ -11,7 +11,8 @@ namespace Codecov.Services.ContinuousIntegrationServers
         private readonly Lazy<string> _pr;
         private readonly Lazy<string> _slug;
 
-        public GitHubAction()
+        public GitHubAction(IEnviornmentVariables environmentVariables)
+            : base(environmentVariables)
         {
             _branch = new Lazy<string>(LoadBranch);
             _build = new Lazy<string>(() => GetEnvironmentVariable("GITHUB_RUN_ID"));
@@ -78,6 +79,13 @@ namespace Codecov.Services.ContinuousIntegrationServers
             return ExtractSubstring(branch, "refs/heads/", null);
         }
 
+        private string LoadBuildUrl()
+        {
+            return (string.IsNullOrWhiteSpace(Slug) || string.IsNullOrWhiteSpace(Build))
+                ? string.Empty
+                : $"https://github.com/{Slug}/actions/runs/{Build}";
+        }
+
         private string LoadPullRequest()
         {
             var headRef = GetEnvironmentVariable("GITHUB_HEAD_REF");
@@ -91,13 +99,6 @@ namespace Codecov.Services.ContinuousIntegrationServers
             return string.IsNullOrEmpty(branchRef)
                 ? string.Empty
                 : ExtractSubstring(branchRef, "refs/pull/", "/merge");
-        }
-
-        private string LoadBuildUrl()
-        {
-            return (string.IsNullOrWhiteSpace(Slug) || string.IsNullOrWhiteSpace(Build))
-                ? string.Empty
-                : $"https://github.com/{Slug}/actions/runs/{Build}";
         }
     }
 }

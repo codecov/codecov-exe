@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Codecov.Terminal;
@@ -34,9 +34,9 @@ namespace Codecov.Services.VersionControlSystems
 
         public virtual string Project => string.Empty;
 
-        public virtual string ServerUri => string.Empty;
-
         public virtual string RepoRoot => _repoRoot.Value;
+
+        public virtual string ServerUri => string.Empty;
 
         public virtual string Slug => _slug.Value;
 

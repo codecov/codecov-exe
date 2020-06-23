@@ -7,7 +7,6 @@ using Codecov.Coverage.Report;
 using Codecov.Coverage.SourceCode;
 using Codecov.Coverage.Tool;
 using Codecov.Factories;
-using Codecov.Logger;
 using Codecov.Services;
 using Codecov.Services.ContinuousIntegrationServers;
 using Codecov.Services.VersionControlSystems;
@@ -16,6 +15,7 @@ using Codecov.Upload;
 using Codecov.Url;
 using Codecov.Utilities;
 using Codecov.Yaml;
+using Serilog;
 
 namespace Codecov.Program
 {
@@ -24,9 +24,11 @@ namespace Codecov.Program
         public UploadFacade(CommandLineOptions commandLineOptions)
         {
             CommandLineCommandLineOptions = commandLineOptions;
+            var envVars = new EnviornmentVariables(commandLineOptions);
+            ContinuousIntegrationServer = ContinuousIntegrationServerFactory.Create(envVars);
+            envVars.LoadEnviornmentVariables(ContinuousIntegrationServer);
+            EnviornmentVariables = envVars;
         }
-
-        private static IContinuousIntegrationServer ContinuousIntegrationServer => ContinuousIntegrationServerFactory.Create();
 
         private static IDictionary<TerminalName, ITerminal> Terminals => TerminalFactory.Create();
 
@@ -38,6 +40,8 @@ namespace Codecov.Program
 
         private CommandLineOptions CommandLineCommandLineOptions { get; }
 
+        private IContinuousIntegrationServer ContinuousIntegrationServer { get; }
+
         private string DisplayUrl
         {
             get
@@ -48,7 +52,7 @@ namespace Codecov.Program
             }
         }
 
-        private IEnviornmentVariables EnviornmentVariables => new EnviornmentVariables(CommandLineCommandLineOptions, ContinuousIntegrationServer);
+        private IEnviornmentVariables EnviornmentVariables { get; }
 
         private IReport Report => new Report(CommandLineCommandLineOptions, EnviornmentVariables, SourceCode, Coverage);
 
@@ -69,7 +73,7 @@ namespace Codecov.Program
             }
             else if (ci.Equals("TeamCity"))
             {
-                Log.Information("TeamCity detected.");
+                Log.Information("{ci} detected.", ci);
                 if (string.IsNullOrWhiteSpace(ContinuousIntegrationServer.Branch))
                 {
                     Log.Warning("Teamcity does not automatically make build parameters available as environment variables.\nAdd the following environment parameters to the build configuration.\nenv.TEAMCITY_BUILD_BRANCH = %teamcity.build.branch%.\nenv.TEAMCITY_BUILD_ID = %teamcity.build.id%.\nenv.TEAMCITY_BUILD_URL = %teamcity.serverUrl%/viewLog.html?buildId=%teamcity.build.id%.\nenv.TEAMCITY_BUILD_COMMIT = %system.build.vcs.number%.\nenv.TEAMCITY_BUILD_REPOSITORY = %vcsroot.<YOUR TEAMCITY VCS NAME>.url%.");
@@ -77,7 +81,7 @@ namespace Codecov.Program
             }
             else
             {
-                Log.Information($"{ci} detected.");
+                Log.Information("{ci} detected.", ci);
             }
 
             var vcs = VersionControlSystem.GetType().Name;
@@ -87,13 +91,13 @@ namespace Codecov.Program
             }
             else
             {
-                Log.Information($"{vcs} detected.");
+                Log.Information("{vcs} detected.", vcs);
             }
 
-            Log.Information($"Project root: {VersionControlSystem.RepoRoot}");
+            Log.Information("Project root: {RepoRoot}", VersionControlSystem.RepoRoot);
             if (string.IsNullOrWhiteSpace(Yaml.FileName))
             {
-                Log.Information("Yaml not found, that's ok! Learn more at http://docs.codecov.io/docs/codecov-yaml");
+                Log.Information("Yaml not found, that's ok! Learn more at {CodecovUrl}", "https://docs.codecov.io/docs/codecov-yaml");
             }
 
             Log.Information("Reading reports.");
@@ -108,7 +112,7 @@ namespace Codecov.Program
             if (CommandLineCommandLineOptions.Dump)
             {
                 Log.Warning("Skipping upload and dumping contents.");
-                Log.Information($"url: {Url.GetUrl}");
+                Log.Information("url: {GetUrl}", Url.GetUrl);
                 Log.Information(Report.Reporter);
                 return;
             }
@@ -117,24 +121,23 @@ namespace Codecov.Program
             var fileSizes = Coverage.CoverageReports.Sum(x => FileSystem.GetFileSize(x.File));
             if (fileSizes > 20_971_520)
             {
-                Log.Warning($"Total file size of reports is above 20MB, this may prevent report being shown on {Url.GetUrl.Host}");
+                Log.Warning("Total file size of reports is above 20MB, this may prevent report being shown on {Host}", Url.GetUrl.Host);
                 Log.Warning("Reduce the total upload size if this occurs");
             }
 
             Log.Information("Uploading Reports.");
-            Log.Information($"url: {Url.GetUrl.Scheme}://{Url.GetUrl.Authority}");
-            Log.Verboase($"api endpoint: {Url.GetUrl}");
-            Log.Information($"query: {DisplayUrl}");
+            Log.Information("url: {Scheme}://{Authority}", Url.GetUrl.Scheme, Url.GetUrl.Authority);
+            Log.Information("query: {DisplayUrl}", DisplayUrl);
 
             var response = Upload.Uploader();
-            Log.Verboase($"response: {response}");
+            Log.Verbose("response: {response}", response);
             var splitResponse = response.Split('\n');
             if (splitResponse.Length > 1)
             {
                 var s3 = new Uri(splitResponse[1]);
                 var reportUrl = splitResponse[0];
-                Log.Information($"Uploading to S3 {s3.Scheme}://{s3.Authority}");
-                Log.Information($"View reports at: {reportUrl}");
+                Log.Information("Uploading to S3 {Scheme}://{Authority}", s3.Scheme, s3.Authority);
+                Log.Information("View reports at: {reportUrl}", reportUrl);
             }
         }
     }

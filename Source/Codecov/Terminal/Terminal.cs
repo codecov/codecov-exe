@@ -1,8 +1,8 @@
-﻿using System;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
-using Codecov.Logger;
+using Codecov.Exceptions;
+using Serilog;
 
 namespace Codecov.Terminal
 {
@@ -63,22 +63,22 @@ namespace Codecov.Terminal
                         const int timeout = 300000; // 5 mins
                         if (!process.WaitForExit(timeout) || !outputWaitHandle.WaitOne(timeout) || !errorWaitHandle.WaitOne(timeout))
                         {
-                            throw new Exception("Terminal process timed out.");
+                            throw new TerminalException("Terminal process timed out.");
                         }
 
                         var errorAsString = error.ToString().Trim();
                         if (!string.IsNullOrWhiteSpace(errorAsString))
                         {
-                            throw new Exception(errorAsString);
+                            throw new TerminalException(errorAsString);
                         }
 
                         return output.ToString().Trim();
                     }
                 }
             }
-            catch (Exception ex)
+            catch (TerminalException ex)
             {
-                Log.VerboaseException(ex);
+                Log.Verbose(ex, "Exception while running the terminal.");
                 return string.Empty;
             }
         }

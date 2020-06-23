@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Reflection;
+using Serilog;
 
 namespace Codecov.Utilities
 {
@@ -16,15 +17,17 @@ namespace Codecov.Utilities
 
         internal static void DisplayFiglet()
         {
-            Console.WriteLine($@"
-              _____          _
-             / ____|        | |
+            Log.Information(
+            @"
+            _____          _
+            / ____|        | |
             | |     ___   __| | ___  ___ _____   __
             | |    / _ \ / _  |/ _ \/ __/ _ \ \ / /
             | |___| (_) | (_| |  __/ (_| (_) \ V /
-             \_____\___/ \____|\___|\___\___/ \_/
-                                         {Version}
-            ");
+            \_____\___/ \____|\___|\___\___/ \_/
+            {Version,38}
+            ",
+            Version);
         }
     }
 }

@@ -1,5 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
 using Codecov.Services.ContinuousIntegrationServers;
 using Codecov.Url;
 using FluentAssertions;

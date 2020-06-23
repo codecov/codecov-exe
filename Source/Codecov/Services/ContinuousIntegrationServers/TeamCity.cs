@@ -1,16 +1,26 @@
-﻿using System;
-using Codecov.Utilities;
+using System;
 
 namespace Codecov.Services.ContinuousIntegrationServers
 {
     internal class TeamCity : ContinuousIntegrationServer
     {
-        private readonly Lazy<string> _branch = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("TEAMCITY_BUILD_BRANCH"));
-        private readonly Lazy<string> _build = new Lazy<string>(() => EnviornmentVariable.GetEnviornmentVariable("TEAMCITY_BUILD_ID"));
-        private readonly Lazy<string> _buildUrl = new Lazy<string>(LoadBuildUrl);
-        private readonly Lazy<string> _commit = new Lazy<string>(LoadCommit);
-        private readonly Lazy<bool> _detecter = new Lazy<bool>(LoadDetecter);
-        private readonly Lazy<string> _slug = new Lazy<string>(LoadSlug);
+        private readonly Lazy<string> _branch;
+        private readonly Lazy<string> _build;
+        private readonly Lazy<string> _buildUrl;
+        private readonly Lazy<string> _commit;
+        private readonly Lazy<bool> _detecter;
+        private readonly Lazy<string> _slug;
+
+        public TeamCity(IEnviornmentVariables environmentVariables)
+            : base(environmentVariables)
+        {
+            _branch = new Lazy<string>(() => GetEnvironmentVariable("TEAMCITY_BUILD_BRANCH"));
+            _build = new Lazy<string>(() => GetEnvironmentVariable("TEAMCITY_BUILD_ID"));
+            _buildUrl = new Lazy<string>(LoadBuildUrl);
+            _commit = new Lazy<string>(LoadCommit);
+            _detecter = new Lazy<bool>(LoadDetecter);
+            _slug = new Lazy<string>(LoadSlug);
+        }
 
         public override string Branch => _branch.Value;
 
@@ -26,27 +36,27 @@ namespace Codecov.Services.ContinuousIntegrationServers
 
         public override string Slug => _slug.Value;
 
-        private static string LoadBuildUrl()
+        private string LoadBuildUrl()
         {
-            var buildUrl = EnviornmentVariable.GetEnviornmentVariable("TEAMCITY_BUILD_URL");
+            var buildUrl = GetEnvironmentVariable("TEAMCITY_BUILD_URL");
             return !string.IsNullOrWhiteSpace(buildUrl) ? Uri.EscapeDataString(buildUrl) : string.Empty;
         }
 
-        private static string LoadCommit()
+        private string LoadCommit()
         {
-            var commit = EnviornmentVariable.GetEnviornmentVariable("TEAMCITY_BUILD_COMMIT");
-            return !string.IsNullOrWhiteSpace(commit) ? commit : EnviornmentVariable.GetEnviornmentVariable("BUILD_VCS_NUMBER");
+            var commit = GetEnvironmentVariable("TEAMCITY_BUILD_COMMIT");
+            return !string.IsNullOrWhiteSpace(commit) ? commit : GetEnvironmentVariable("BUILD_VCS_NUMBER");
         }
 
-        private static bool LoadDetecter()
+        private bool LoadDetecter()
         {
-            var teamCity = EnviornmentVariable.GetEnviornmentVariable("TEAMCITY_VERSION");
+            var teamCity = GetEnvironmentVariable("TEAMCITY_VERSION");
             return !string.IsNullOrWhiteSpace(teamCity);
         }
 
-        private static string LoadSlug()
+        private string LoadSlug()
         {
-            var buildRepository = EnviornmentVariable.GetEnviornmentVariable("TEAMCITY_BUILD_REPOSITORY");
+            var buildRepository = GetEnvironmentVariable("TEAMCITY_BUILD_REPOSITORY");
             if (string.IsNullOrWhiteSpace(buildRepository))
             {
                 return string.Empty;

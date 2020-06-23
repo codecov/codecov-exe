@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using Codecov.Coverage.SourceCode;
 using Codecov.Coverage.Tool;
+using Codecov.Exceptions;
 using Codecov.Services.ContinuousIntegrationServers;
 
 namespace Codecov.Coverage.Report
@@ -23,21 +24,7 @@ namespace Codecov.Coverage.Report
 
         public string Reporter => _reporter.Value;
 
-        private string CombinedCoverage
-        {
-            get
-            {
-                var codecovReport = string.Empty;
-                var coverages = Coverage.CoverageReports.ToArray();
-
-                if (!coverages.AsEnumerable().Any())
-                {
-                    throw new Exception("No coverage report discovered.");
-                }
-
-                return coverages.Aggregate(codecovReport, (current, coverage) => current + $"# path={coverage.File}\n{coverage.Content}\n<<<<<< EOF\n");
-            }
-        }
+        private string CombinedCoverage => GetCombinedCoverageReports();
 
         private ICoverage Coverage { get; }
 
@@ -72,5 +59,18 @@ namespace Codecov.Coverage.Report
 
         private string Convert2RelativePath(string absolutePath)
             => absolutePath.Replace(SourceCode.Directory + Path.DirectorySeparatorChar, string.Empty);
+
+        private string GetCombinedCoverageReports()
+        {
+            var codecovReport = string.Empty;
+            var coverages = Coverage.CoverageReports.ToArray();
+
+            if (!coverages.AsEnumerable().Any())
+            {
+                throw new CoverageException("No coverage report discovered.");
+            }
+
+            return coverages.Aggregate(codecovReport, (current, coverage) => current + $"# path={coverage.File}\n{coverage.Content}\n<<<<<< EOF\n");
+        }
     }
 }

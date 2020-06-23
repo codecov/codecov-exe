@@ -7,18 +7,12 @@ namespace Codecov.Coverage.EnviornmentVariables
 {
     internal class EnviornmentVariables : IEnviornmentVariables
     {
-        private readonly Lazy<IDictionary<string, string>> _getEnviornmentVariables;
-
-        public EnviornmentVariables(IEnviornmentVariablesOptions options, IContinuousIntegrationServer continuousIntegrationServer)
+        public EnviornmentVariables(IEnviornmentVariablesOptions options)
         {
             Options = options;
-            ContinuousIntegrationServer = continuousIntegrationServer;
-            _getEnviornmentVariables = new Lazy<IDictionary<string, string>>(LoadEnviornmentVariables);
         }
 
-        public IDictionary<string, string> UserEnvironmentVariables => _getEnviornmentVariables.Value;
-
-        private IContinuousIntegrationServer ContinuousIntegrationServer { get; }
+        public IDictionary<string, string> UserEnvironmentVariables { get; private set; } = new Dictionary<string, string>();
 
         private IEnviornmentVariablesOptions Options { get; }
 
@@ -38,9 +32,9 @@ namespace Codecov.Coverage.EnviornmentVariables
             return value; // We don't set the dictionary since it is used for user customized values
         }
 
-        private IDictionary<string, string> LoadEnviornmentVariables()
+        internal void LoadEnviornmentVariables(IContinuousIntegrationServer continuousIntegrationServer)
         {
-            var enviornmentVariables = new Dictionary<string, string>(ContinuousIntegrationServer.UserEnvironmentVariables);
+            var enviornmentVariables = new Dictionary<string, string>(continuousIntegrationServer.UserEnvironmentVariables);
 
             const string codecovName = "CODECOV_ENV";
             var codecovValue = EnviornmentVariable.GetEnviornmentVariable(codecovName);
@@ -66,7 +60,7 @@ namespace Codecov.Coverage.EnviornmentVariables
                 enviornmentVariables[enviornmentVariableName] = EnviornmentVariable.GetEnviornmentVariable(enviornmentVariableName);
             }
 
-            return enviornmentVariables;
+            UserEnvironmentVariables = enviornmentVariables;
         }
     }
 }

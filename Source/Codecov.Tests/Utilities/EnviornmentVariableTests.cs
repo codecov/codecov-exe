@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Codecov.Utilities;
 using FluentAssertions;
 using Xunit;
@@ -7,6 +7,21 @@ namespace Codecov.Tests.Utilities
 {
     public class EnviornmentVariableTests : IDisposable
     {
+        public void Dispose()
+        {
+            // We will remove all environment variables that could have been set during unit test
+            var envVariable = new[]
+            {
+                "foo",
+                "bar",
+            };
+
+            foreach (var variable in envVariable)
+            {
+                Environment.SetEnvironmentVariable(variable, null);
+            }
+        }
+
         [Fact]
         public void GetEnviornmentVariable_Should_Return_Empty_String_If_It_Does_Not_Exit()
         {
@@ -34,6 +49,20 @@ namespace Codecov.Tests.Utilities
         }
 
         [Fact]
+        public void GetFirstExistingEnvironmentVariable_Should_Return_Empty_String_If_None_Exist()
+        {
+            // Given
+            Environment.SetEnvironmentVariable("foo", null);
+            Environment.SetEnvironmentVariable("bar", null);
+
+            // When
+            var foo = EnviornmentVariable.GetFirstExistingEnvironmentVariable("foo", "bar");
+
+            // Then
+            foo.Should().BeEmpty();
+        }
+
+        [Fact]
         public void GetFirstExistingEnvironmentVariable_Should_Return_First_Value_If_Variable_Exists()
         {
             // Given
@@ -57,36 +86,6 @@ namespace Codecov.Tests.Utilities
 
             // Then
             foo.Should().Be("barValue");
-        }
-
-        [Fact]
-        public void GetFirstExistingEnvironmentVariable_Should_Return_Empty_String_If_None_Exist()
-        {
-            // Given
-            Environment.SetEnvironmentVariable("foo", null);
-            Environment.SetEnvironmentVariable("bar", null);
-
-            // When
-            var foo = EnviornmentVariable.GetFirstExistingEnvironmentVariable("foo", "bar");
-
-            // Then
-            foo.Should().BeEmpty();
-        }
-
-        public void Dispose()
-        {
-            // We will remove all environment variables that could have been set during unit test
-            var envVariable = new[]
-            {
-                "foo",
-                "bar",
-
-            };
-
-            foreach (var variable in envVariable)
-            {
-                Environment.SetEnvironmentVariable(variable, null);
-            }
         }
     }
 }

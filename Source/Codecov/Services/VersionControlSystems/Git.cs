@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace Codecov.Services.VersionControlSystems
         private readonly Lazy<string> _slug;
         private readonly Lazy<IEnumerable<string>> _sourceCode;
 
-        internal Git(IVersionControlSystemOptions options, ITerminal terminal)
+        public Git(IVersionControlSystemOptions options, ITerminal terminal)
             : base(options, terminal)
         {
             _branch = new Lazy<string>(LoadBranch);

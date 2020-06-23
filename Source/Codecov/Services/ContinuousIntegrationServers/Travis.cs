@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Codecov.Services.ContinuousIntegrationServers
 {
@@ -14,7 +14,8 @@ namespace Codecov.Services.ContinuousIntegrationServers
         private readonly Lazy<string> _slug;
         private readonly Lazy<string> _tag;
 
-        public Travis()
+        public Travis(IEnviornmentVariables environmentVariables)
+            : base(environmentVariables)
         {
             _branch = new Lazy<string>(() => GetEnvironmentVariable("TRAVIS_BRANCH"));
             _build = new Lazy<string>(() => GetEnvironmentVariable("TRAVIS_JOB_NUMBER"));

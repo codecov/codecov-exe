@@ -14,7 +14,8 @@ namespace Codecov.Services.ContinuousIntegrationServers
         private readonly Lazy<string> _pr;
         private readonly Lazy<string> _slug;
 
-        public AppVeyor()
+        public AppVeyor(IEnviornmentVariables environmentVariables)
+            : base(environmentVariables)
         {
             _branch = new Lazy<string>(() => GetEnvironmentVariable("APPVEYOR_REPO_BRANCH"));
             _build = new Lazy<string>(LoadBuild);

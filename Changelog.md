@@ -1,3 +1,16 @@
+## 1.12.0 (2020-06-23)
+
+
+As part of this release we had [16 commits](https://github.com/codecov/codecov-exe/compare/1.11.2...1.12.0) which resulted in [3 issues](https://github.com/codecov/codecov-exe/milestone/22?closed=1) being closed.
+
+
+__Improvements__
+
+- [__#118__](https://github.com/codecov/codecov-exe/issues/118) Remove time and date from logging
+- [__#115__](https://github.com/codecov/codecov-exe/issues/115) Load supported VCS providers using reflection
+- [__#114__](https://github.com/codecov/codecov-exe/issues/114) Load CI parsers using reflection
+
+
 ## 1.11.2 (2020-06-21)
 
 

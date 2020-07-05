@@ -36,3 +36,5 @@ cache:
   - .dotnet -> build.config
 artifacts:
   - path: "artifacts/archives/*.zip"
+  - path: "**/*.opencover.xml"
+  - path: "**/*.cobertura.xml"

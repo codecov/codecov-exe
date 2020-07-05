@@ -38,3 +38,6 @@ artifacts:
   - path: "artifacts/archives/*.zip"
   - path: "**/*.opencover.xml"
   - path: "**/*.cobertura.xml"
+  - path: "artifacts/packages/nuget/*.nupkg"
+  - path: "artifacts/packages/dotnet/*.nupkg"
+  - path: "artifacts/packages/dotnet/*.snupkg"

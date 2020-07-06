@@ -69,7 +69,8 @@ Setup<DotNetCoreMSBuildSettings>((ctx) => {
         .WithProperty("Version", version.SemVersion)
         .WithProperty("AssemblyVersion", version.MajorMinorPatch)
         .WithProperty("FileVersion", version.MajorMinorPatch)
-        .WithProperty("AssemblyInformationalVersion", version.InformationalVersion);
+        .WithProperty("AssemblyInformationalVersion", version.InformationalVersion)
+        .WithProperty("UseSourceLink", "true");
 
     if (!ctx.BuildSystem().IsLocalBuild)
     {

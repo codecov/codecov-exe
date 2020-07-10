@@ -46,7 +46,7 @@ foreach (var runtime in runtimes) {
             string value = string.Join(" ", kv.Value);
             msBuildSettings.WithProperty(kv.Key, value);
         }
-        msBuildSettings.WithProperty("PubllishSingleFile", "true")
+        msBuildSettings.WithProperty("PublishSingleFile", "true")
             .WithProperty("PublishTrimmed", "true");
 
         var outputDir = data.Directories.Compiled.Combine(runtime);

@@ -1,8 +1,22 @@
+## 1.12.1 (2020-07-10)
+
+
+As part of this release we had [2 commits](https://github.com/codecov/codecov-exe/compare/1.12.0...1.12.1) which resulted in [1 issue](https://github.com/codecov/codecov-exe/milestone/24?closed=1) being closed.
+
+
+__Bug__
+
+- [__#120__](https://github.com/codecov/codecov-exe/issues/120) Codecov package have not been packaged as a standalone executable
+
+
 ## 1.12.0 (2020-06-23)
 
 
-As part of this release we had [16 commits](https://github.com/codecov/codecov-exe/compare/1.11.2...1.12.0) which resulted in [3 issues](https://github.com/codecov/codecov-exe/milestone/22?closed=1) being closed.
+As part of this release we had [16 commits](https://github.com/codecov/codecov-exe/compare/1.11.2...1.12.0) which resulted in [5 issues](https://github.com/codecov/codecov-exe/milestone/22?closed=1) being closed.
 
+__Bug__
+
+- [__#117__](https://github.com/codecov/codecov/issues/117) Upload URL is reported twice when running with verbose debugging
 
 __Improvements__
 

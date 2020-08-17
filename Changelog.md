@@ -1,3 +1,14 @@
+## 1.12.2 (2020-08-17)
+
+
+As part of this release we had [2 commits](https://github.com/codecov/codecov-exe/compare/1.12.1...1.12.2) which resulted in [1 issue](https://github.com/codecov/codecov-exe/milestone/25?closed=1) being closed.
+
+
+__Bug__
+
+- [__#122__](https://github.com/codecov/codecov-exe/issues/122) Incorrect Build Url is created when running on appveyor
+
+
 ## 1.12.1 (2020-07-10)
 
 

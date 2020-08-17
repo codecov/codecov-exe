@@ -60,13 +60,14 @@ namespace Codecov.Services.ContinuousIntegrationServers
             var accountName = GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME");
             var slug = GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG");
             var jobId = GetEnvironmentVariable("APPVEYOR_JOB_ID");
+            var buildId = GetEnvironmentVariable("APPVEYOR_BUILD_ID");
 
-            if (IsNullOrEmpty(hostUrl, accountName, slug, jobId) || !Uri.TryCreate(hostUrl, UriKind.Absolute, out var uri) || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+            if (IsNullOrEmpty(hostUrl, accountName, slug, jobId, buildId) || !Uri.TryCreate(hostUrl, UriKind.Absolute, out var uri) || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
             {
                 return string.Empty;
             }
 
-            var jobUrl = $"{hostUrl}/project/{accountName}/{slug}/build/job/{jobId}";
+            var jobUrl = $"{hostUrl}/project/{accountName}/{slug}/builds/{buildId}/job/{jobId}";
             return jobUrl;
         }
 

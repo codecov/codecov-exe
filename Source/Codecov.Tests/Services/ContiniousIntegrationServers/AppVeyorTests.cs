@@ -23,9 +23,12 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
                         {
                             foreach (var job in possibleDummies)
                             {
-                                if (string.IsNullOrEmpty(domain) || string.IsNullOrEmpty(account) || string.IsNullOrEmpty(slug) || string.IsNullOrEmpty(job))
+                                foreach (var build in possibleDummies)
                                 {
-                                    yield return new object[] { domain, account, slug, job };
+                                    if (string.IsNullOrEmpty(domain) || string.IsNullOrEmpty(account) || string.IsNullOrEmpty(slug) || string.IsNullOrEmpty(job) || string.IsNullOrEmpty(build))
+                                    {
+                                        yield return new object[] { domain, account, slug, job, build };
+                                    }
                                 }
                             }
                         }
@@ -95,7 +98,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
         }
 
         [Theory, MemberData(nameof(Build_Url_Empty_Data))]
-        public void BuildUrl_Should_Be_Empty_String_When_Environment_Variables_Do_Not_Exist(string appveyorUrl, string accountData, string slugData, string jobId)
+        public void BuildUrl_Should_Be_Empty_String_When_Environment_Variables_Do_Not_Exist(string appveyorUrl, string accountData, string slugData, string jobId, string buildId)
         {
             // Given
             var ev = new Mock<IEnviornmentVariables>();
@@ -103,6 +106,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
             ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME")).Returns(accountData);
             ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG")).Returns(slugData);
             ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_JOB_ID")).Returns(jobId);
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_BUILD_ID")).Returns(buildId);
             var appVeyor = new AppVeyor(ev.Object);
 
             // When
@@ -121,6 +125,7 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
             ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME")).Returns("foo");
             ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG")).Returns("bar");
             ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_JOB_ID")).Returns("xyz");
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_BUILD_ID")).Returns("zyx");
             var appVeyor = new AppVeyor(ev.Object);
 
             // When
@@ -139,13 +144,14 @@ namespace Codecov.Tests.Services.ContiniousIntegrationServers
             ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_ACCOUNT_NAME")).Returns("foo");
             ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_PROJECT_SLUG")).Returns("bar");
             ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_JOB_ID")).Returns("xyz");
+            ev.Setup(s => s.GetEnvironmentVariable("APPVEYOR_BUILD_ID")).Returns("zyx");
             var appVeyor = new AppVeyor(ev.Object);
 
             // When
             var buildUrl = appVeyor.BuildUrl;
 
             // Then
-            buildUrl.Should().Be("https://ci.appveyor.com/project/foo/bar/build/job/xyz");
+            buildUrl.Should().Be("https://ci.appveyor.com/project/foo/bar/builds/zyx/job/xyz");
         }
 
         [Fact]

@@ -24,14 +24,12 @@ namespace Codecov.Coverage.Tool
 
         private ICoverageOptions CoverageOptions { get; }
 
-        private static bool VerifyReportFileAndExpandGlobPatterns(string path, out IEnumerable<string> expandedPath)
+        private static IEnumerable<string> VerifyReportFileAndExpandGlobPatterns(string path)
         {
-            var expanded = new HashSet<string> { path };
-            expandedPath = expanded;
             if (string.IsNullOrWhiteSpace(path))
             {
                 Log.Warning("Invalid report path.");
-                return false;
+                return Enumerable.Empty<string>();
             }
 
             if (path.Contains('*')
@@ -39,35 +37,38 @@ namespace Codecov.Coverage.Tool
                 || path.Contains('!')
                 || path.Contains(','))
             {
-                var matches = Glob.Files(Environment.CurrentDirectory, path, GlobOptions.Compiled | GlobOptions.CaseInsensitive)?.ToList();
-                if (matches?.Any() != true)
+                string directory;
+                string pattern;
+                if (Path.IsPathRooted(path))
                 {
-                    return false;
+                    directory = Path.GetPathRoot(path);
+                    pattern = path.Substring(directory.Length);
+                }
+                else
+                {
+                    directory = Environment.CurrentDirectory;
+                    pattern = path;
                 }
 
-                expanded.Clear();
-                matches.ForEach(_ => expanded.Add(_));
-
-                return true;
+                return Glob.Files(directory, pattern, GlobOptions.Compiled | GlobOptions.CaseInsensitive)
+                    .Select(x => Path.Combine(directory, x))
+                    .Distinct();
             }
             else if (!File.Exists(path))
             {
                 Log.Warning("The file {path} does not exist.", path);
-                return false;
+                return Enumerable.Empty<string>();
             }
 
-            return true;
+            return new[] { path };
         }
 
         private IEnumerable<ReportFile> LoadReportFile()
         {
             var report = CoverageOptions.Files?
-                .SelectMany(x =>
-                    VerifyReportFileAndExpandGlobPatterns(x, out var expanded)
-                        ? expanded
-                        : Enumerable.Empty<string>())
+                .SelectMany(x => VerifyReportFileAndExpandGlobPatterns(x))
                 .Select(x => new ReportFile(x, File.ReadAllText(x))).ToArray();
-            if (report?.Any() != true)
+            if (report.Length == 0)
             {
                 throw new CoverageException("No Report detected.");
             }

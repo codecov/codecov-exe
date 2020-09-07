@@ -31,6 +31,8 @@ build_script:
         ./build.sh --target=CI --runtimes=osx-x64 --verbosity=Diagnostic
       fi
 
+test: off
+
 cache:
   - tools -> build.config,build/tools_addins.cake
   - .dotnet -> build.config

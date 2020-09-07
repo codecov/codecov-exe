@@ -65,11 +65,22 @@ Setup<BuildVersion>((ctx) => {
 Setup<DotNetCoreMSBuildSettings>((ctx) => {
     var version = ctx.Data.Get<BuildVersion>();
 
-    return new DotNetCoreMSBuildSettings()
+    var buildSettings = new DotNetCoreMSBuildSettings()
         .WithProperty("Version", version.SemVersion)
         .WithProperty("AssemblyVersion", version.MajorMinorPatch)
         .WithProperty("FileVersion", version.MajorMinorPatch)
-        .WithProperty("AssemblyInformationalVersion", version.InformationalVersion);
+        .WithProperty("AssemblyInformationalVersion", version.InformationalVersion)
+        .WithProperty("UseSourceLink", "true");
+
+    if (!ctx.BuildSystem().IsLocalBuild)
+    {
+        buildSettings.WithProperty("ContinuousIntegrationBuild", "true")
+            .WithProperty("EmbedUntrackedSources", "true")
+            .WithProperty("PublishRepositoryUrl", "true")
+            .WithProperty("Deterministic", "true");
+    }
+
+    return buildSettings;
 });
 
 Setup<BuildData>((ctx) => {

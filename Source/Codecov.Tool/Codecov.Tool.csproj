@@ -24,7 +24,7 @@
     <Import Project="../Codecov/Codecov.csproj" />
     <ItemGroup>
     <PackageReference Update="CommandLineParser" Version="2.8.0" />
-    <PackageReference Update="Glob" Version="1.1.6" />
+    <PackageReference Update="Glob" Version="1.1.8" />
     <PackageReference Update="JetBrains.Annotations" Version="2020.1.0" />
     </ItemGroup>
 </Project>

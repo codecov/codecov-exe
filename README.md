@@ -48,10 +48,10 @@ For an AppVeyor build, the _appveyor.yml_ file would look something like
 
 ```yml
 before_build:
-    - choco install codecov # Can be changed to dotnet tool install --global Codecov.Tool
+  - choco install codecov # Can be changed to dotnet tool install --global Codecov.Tool
 test_script:
-    # Note that, a Codecov upload token is not required.
-    - codecov -f <path to coverage report>
+  # Note that, a Codecov upload token is not required.
+  - codecov -f <path to coverage report>
 ```
 
 You may also use globbing patterns for specifying files and codecov-exe will take care of resolving these paths, make sure to quote the path or depending on your shell it may be resolved before calling codecov-exe.
@@ -109,17 +109,31 @@ All types of contributions are welcome! Feel free to open an [issue](https://git
 
 ### Known Issues
 
--   Specifiyng file paths with spaces is currently not possible without a workaround.
-    This is expected to be fixed when a new major release of codecov-exe is released (See issue [#71](https://github.com/codecov/codecov-exe/issues/71) for possible workaround and tracking).
--   If you're seeing an **HTTP 400 error when uploading reports to S3**, make sure you've updated to at least version 1.11.0.
+- Specifiyng file paths with spaces is currently not possible without a workaround.
+  This is expected to be fixed when a new major release of codecov-exe is released (See issue [#71](https://github.com/codecov/codecov-exe/issues/71) for possible workaround and tracking).
+- If you're seeing an **HTTP 400 error when uploading reports to S3**, make sure you've updated to at least version 1.11.0.
 
 ## Maintainers
 
 To create a relase, please do the following:
 
--   Push the latest changes to the master branch on github
--   The release procedure starts automatically.
+- Creating hotfix releases
+  - Create a branch called `hotfix/version` locally (replace the version with the actual version to release) (Make sure that a milestone exist for this release, and all fixed/resolved issues are attached to that milestone)
+  - Make any changes that needs to be included in the release while targeting the hotfix branch
+  - Merge the hotfix branch into `master` using `git merge hotfix/version --no-ff`
+  - Push the merged branch upstream to github
+  - Wait for a new release and a tag have been created
+  - Backmerge the tag into the `develop` branch
+- Creating new feature releases
+  - Make sure that all commits have been targeted to the `develop` branch
+  - Create a new release branch using the name `release/version` locally (replace version with actual version to release) (Make sure that a milestone exist for this release, and all fixed/resolved issues are attached to that milestone)
+  - Make any additional changes that are necessary to this branch
+  - Merge the release branch into `master` using `git merge release/version --no-ff`
+  - Push the merged branch upstream to github
+  - Wait for a new release and a tag have been created
+  - Backmerge the tag into the `develop` branch
 
+**NOTE:** As soon as changes are pushed to the master branch the automated release procedure is started. This procedure will create Release notes, create a new github release, upload archived assets, upload chocolatey and nuget packages and comment on issues when the release have been completed.
 
 ## License
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fcodecov%2Fcodecov-exe.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fcodecov%2Fcodecov-exe?ref=badge_large)

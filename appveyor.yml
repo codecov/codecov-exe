@@ -31,8 +31,15 @@ build_script:
         ./build.sh --target=CI --runtimes=osx-x64 --verbosity=Diagnostic
       fi
 
+test: off
+
 cache:
   - tools -> build.config,build/tools_addins.cake
   - .dotnet -> build.config
 artifacts:
   - path: "artifacts/archives/*.zip"
+  - path: "**/*.opencover.xml"
+  - path: "**/*.cobertura.xml"
+  - path: "artifacts/packages/nuget/*.nupkg"
+  - path: "artifacts/packages/dotnet/*.nupkg"
+  - path: "artifacts/packages/dotnet/*.snupkg"

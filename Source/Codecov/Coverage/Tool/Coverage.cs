@@ -24,12 +24,14 @@ namespace Codecov.Coverage.Tool
 
         private ICoverageOptions CoverageOptions { get; }
 
-        private static IEnumerable<string> VerifyReportFileAndExpandGlobPatterns(string path)
+        private static bool VerifyReportFileAndExpandGlobPatterns(string path, out IEnumerable<string> expanded)
         {
+            expanded = null;
+
             if (string.IsNullOrWhiteSpace(path))
             {
                 Log.Warning("Invalid report path.");
-                return Enumerable.Empty<string>();
+                return false;
             }
 
             if (path.Contains('*')
@@ -50,25 +52,31 @@ namespace Codecov.Coverage.Tool
                     pattern = path;
                 }
 
-                return Glob.Files(directory, pattern, GlobOptions.Compiled | GlobOptions.CaseInsensitive)
+                expanded = Glob.Files(directory, pattern, GlobOptions.Compiled | GlobOptions.CaseInsensitive)
                     .Select(x => Path.Combine(directory, x))
                     .Distinct();
+
+                return true;
             }
             else if (!File.Exists(path))
             {
                 Log.Warning("The file {path} does not exist.", path);
-                return Enumerable.Empty<string>();
+                return false;
             }
 
-            return new[] { path };
+            expanded = new[] { path };
+            return true;
         }
 
         private IEnumerable<ReportFile> LoadReportFile()
         {
             var report = CoverageOptions.Files?
-                .SelectMany(x => VerifyReportFileAndExpandGlobPatterns(x))
+                .SelectMany(x =>
+                    VerifyReportFileAndExpandGlobPatterns(x, out var expanded)
+                        ? expanded
+                        : Enumerable.Empty<string>())
                 .Select(x => new ReportFile(x, File.ReadAllText(x))).ToArray();
-            if (report.Length == 0)
+            if (report?.Any() != true)
             {
                 throw new CoverageException("No Report detected.");
             }

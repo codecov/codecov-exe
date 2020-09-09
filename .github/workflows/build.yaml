@@ -30,7 +30,7 @@ jobs:
         with:
           dotnet-version: 3.1.300
       - name: Build with cake
-        uses: cake-build/cake-action@v1.1.1
+        uses: cake-build/cake-action@v1.2.0
         with:
           script-path: setup.cake
           target: CI

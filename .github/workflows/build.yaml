@@ -22,11 +22,11 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup .NET Core 2.1
-        uses: actions/setup-dotnet@v1.6.0
+        uses: actions/setup-dotnet@v1.7.1
         with:
           dotnet-version: 2.1.806
       - name: Setup .NET Core 3.1
-        uses: actions/setup-dotnet@v1.6.0
+        uses: actions/setup-dotnet@v1.7.1
         with:
           dotnet-version: 3.1.300
       - name: .net SxS Unix

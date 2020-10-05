@@ -2,6 +2,6 @@
 {
     internal interface IReportOptions
     {
-        bool DisableNetwork { get; set; }
+        bool DisableNetwork { get; }
     }
 }

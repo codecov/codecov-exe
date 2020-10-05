@@ -22,7 +22,7 @@ namespace Codecov.Tests.Coverage.Report
             var enviornmentVariables = Substitute.For<IEnviornmentVariables>();
             enviornmentVariables.UserEnvironmentVariables.Returns(new Dictionary<string, string> { { "foo", "bar" }, { "fizz", "bizz" } });
             var options = Substitute.For<IReportOptions>();
-            options.DisableNetwork = true;
+            options.DisableNetwork.Returns(true);
             var sourceCode = Substitute.For<ISourceCode>();
             sourceCode.GetAllButCodecovIgnored.Returns(new[] {
                 Path.Combine(_systemDrive, "foo", "Class.cs"),
@@ -47,7 +47,7 @@ namespace Codecov.Tests.Coverage.Report
             var enviornmentVariables = Substitute.For<IEnviornmentVariables>();
             enviornmentVariables.UserEnvironmentVariables.Returns(new Dictionary<string, string> { { "foo", "bar" }, { "fizz", "bizz" } });
             var options = Substitute.For<IReportOptions>();
-            options.DisableNetwork = false;
+            options.DisableNetwork.Returns(false);
             var sourceCode = Substitute.For<ISourceCode>();
             sourceCode.GetAllButCodecovIgnored.Returns(new[] {
                 Path.Combine(_systemDrive, "foo", "Class.cs"),

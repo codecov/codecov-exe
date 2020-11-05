@@ -39,7 +39,7 @@ jobs:
           xcopy /s /y /d %DOTNET_31_ROOT% %DOTNET_ROOT%
         shell: cmd
       - name: Build with cake
-        uses: cake-build/cake-action@v1.1.1
+        uses: cake-build/cake-action@v1.2.0
         with:
           script-path: setup.cake
           target: CI

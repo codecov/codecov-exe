@@ -17,7 +17,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         {
             // Given
             var terminal = Substitute.For<ITerminal>();
-            terminal.Run("git", $@"-C ""{Directory.GetCurrentDirectory()}"" rev-parse --abbrev-ref HEAD").Returns("develop");
+            terminal.Run("git", "-C", Directory.GetCurrentDirectory(), "rev-parse", "--abbrev-ref", "HEAD").Returns("develop");
             var options = Substitute.For<IVersionControlSystemOptions>();
             var git = new Git(options, terminal);
 
@@ -33,7 +33,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         {
             // Given
             var terminal = Substitute.For<ITerminal>();
-            terminal.Run("git", $@"-C ""{Directory.GetCurrentDirectory()}"" rev-parse --abbrev-ref HEAD").Returns(branchData);
+            terminal.Run("git", "-C", Directory.GetCurrentDirectory(), "rev-parse", "--abbrev-ref", "HEAD").Returns(branchData);
             var options = Substitute.For<IVersionControlSystemOptions>();
             var git = new Git(options, terminal);
 
@@ -49,7 +49,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         {
             // Given
             var terminal = Substitute.For<ITerminal>();
-            terminal.Run("git", $@"-C ""{Directory.GetCurrentDirectory()}"" rev-parse HEAD").Returns("11");
+            terminal.Run("git", "-C", Directory.GetCurrentDirectory(), "rev-parse", "HEAD").Returns("11");
             var options = Substitute.For<IVersionControlSystemOptions>();
             var git = new Git(options, terminal);
 
@@ -65,7 +65,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         {
             // Given
             var terminal = Substitute.For<ITerminal>();
-            terminal.Run("git", $@"-C ""{Directory.GetCurrentDirectory()}"" rev-parse HEAD").Returns(commitData);
+            terminal.Run("git", "-C", Directory.GetCurrentDirectory(), "rev-parse", "HEAD").Returns(commitData);
             var options = Substitute.For<IVersionControlSystemOptions>();
             var git = new Git(options, terminal);
 
@@ -137,7 +137,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         {
             // Given
             var terminal = Substitute.For<ITerminal>();
-            terminal.Run("git", "rev-parse --show-toplevel").Returns(terminalData);
+            terminal.Run("git", "rev-parse", "--show-toplevel").Returns(terminalData);
             var options = Substitute.For<IVersionControlSystemOptions>();
             options.RepoRoot.Returns(string.Empty);
             var git = new Git(options, terminal);
@@ -155,7 +155,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
             // Given
             var rootDir = Path.Combine(_systemDrive, "Fake");
             var terminal = Substitute.For<ITerminal>();
-            terminal.Run("git", "rev-parse --show-toplevel").Returns(rootDir);
+            terminal.Run("git", "rev-parse", "--show-toplevel").Returns(rootDir);
             var options = Substitute.For<IVersionControlSystemOptions>();
             options.RepoRoot.Returns(optionsData);
             var git = new Git(options, terminal);
@@ -189,7 +189,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         {
             // Given
             var terminal = Substitute.For<ITerminal>();
-            terminal.Run("git", $@"-C ""{Directory.GetCurrentDirectory()}"" ls-tree --full-tree -r HEAD --name-only").Returns("Class.cs");
+            terminal.Run("git", "-C", Directory.GetCurrentDirectory(), "ls-tree", "--full-tree", "-r", "HEAD", "--name-only").Returns("Class.cs");
             var options = Substitute.For<IVersionControlSystemOptions>();
             var git = new Git(options, terminal);
 
@@ -207,7 +207,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         {
             // Given
             var terminal = Substitute.For<ITerminal>();
-            terminal.Run("git", $@"-C ""{Directory.GetCurrentDirectory()}"" ls-tree --full-tree -r HEAD --name-only").Returns(terminalData);
+            terminal.Run("git", "-C", Directory.GetCurrentDirectory(), "ls-tree", "--full-tree", "-r", "HEAD", "--name-only").Returns(terminalData);
             var options = Substitute.For<IVersionControlSystemOptions>();
             var git = new Git(options, terminal);
 
@@ -227,7 +227,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         {
             // Given
             var terminal = Substitute.For<ITerminal>();
-            terminal.Run("git", $@"-C ""{Directory.GetCurrentDirectory()}"" ls-tree --full-tree -r HEAD --name-only").Returns(terminalData);
+            terminal.Run("git", "-C", Directory.GetCurrentDirectory(), "ls-tree", "--full-tree", "-r", "HEAD", "--name-only").Returns(terminalData);
             var options = Substitute.For<IVersionControlSystemOptions>();
             var git = new Git(options, terminal);
 
@@ -243,7 +243,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         {
             // Given
             var terminal = Substitute.For<ITerminal>();
-            terminal.Run("git", $@"-C ""{Directory.GetCurrentDirectory()}"" config --get remote.origin.url").Returns(slugData);
+            terminal.Run("git", "-C", Directory.GetCurrentDirectory(), "config", "--get", "remote.origin.url").Returns(slugData);
             var options = Substitute.For<IVersionControlSystemOptions>();
             var git = new Git(options, terminal);
 
@@ -259,7 +259,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         {
             // Given
             var terminal = Substitute.For<ITerminal>();
-            terminal.Run("git", $@"-C ""{Directory.GetCurrentDirectory()}"" config --get remote.origin.url").Returns(slugData);
+            terminal.Run("git", "-C", Directory.GetCurrentDirectory(), "config", "--get", "remote.origin.url").Returns(slugData);
             var options = Substitute.For<IVersionControlSystemOptions>();
             var git = new Git(options, terminal);
 
@@ -275,7 +275,7 @@ namespace Codecov.Tests.Services.VersionControlSystems
         {
             // Given
             var terminal = Substitute.For<ITerminal>();
-            terminal.Run("git", $@"-C ""{Directory.GetCurrentDirectory()}"" ls-tree --full-tree -r HEAD --name-only").Returns(terminalData);
+            terminal.Run("git", "-C", Directory.GetCurrentDirectory(), "ls-tree", "--full-tree", "-r", "HEAD", "--name-only").Returns(terminalData);
             var options = Substitute.For<IVersionControlSystemOptions>();
             var git = new Git(options, terminal);
 

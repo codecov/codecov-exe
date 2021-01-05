@@ -24,10 +24,10 @@ namespace Codecov.Coverage.Tool
 
         private ICoverageOptions CoverageOptions { get; }
 
-        private static bool VerifyReportFileAndExpandGlobPatterns(string path, out IEnumerable<string> expandedPath)
+        private static bool VerifyReportFileAndExpandGlobPatterns(string path, out IEnumerable<string> expanded)
         {
-            var expanded = new HashSet<string> { path };
-            expandedPath = expanded;
+            expanded = null;
+
             if (string.IsNullOrWhiteSpace(path))
             {
                 Log.Warning("Invalid report path.");
@@ -39,14 +39,22 @@ namespace Codecov.Coverage.Tool
                 || path.Contains('!')
                 || path.Contains(','))
             {
-                var matches = Glob.Files(Environment.CurrentDirectory, path, GlobOptions.Compiled | GlobOptions.CaseInsensitive)?.ToList();
-                if (matches?.Any() != true)
+                string directory;
+                string pattern;
+                if (Path.IsPathRooted(path))
                 {
-                    return false;
+                    directory = Path.GetPathRoot(path);
+                    pattern = path.Substring(directory.Length);
+                }
+                else
+                {
+                    directory = Environment.CurrentDirectory;
+                    pattern = path;
                 }
 
-                expanded.Clear();
-                matches.ForEach(_ => expanded.Add(_));
+                expanded = Glob.Files(directory, pattern, GlobOptions.Compiled | GlobOptions.CaseInsensitive)
+                    .Select(x => Path.Combine(directory, x))
+                    .Distinct();
 
                 return true;
             }
@@ -56,6 +64,7 @@ namespace Codecov.Coverage.Tool
                 return false;
             }
 
+            expanded = new[] { path };
             return true;
         }
 

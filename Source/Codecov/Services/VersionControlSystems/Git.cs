@@ -41,7 +41,7 @@ namespace Codecov.Services.VersionControlSystems
 
         private string LoadBranch()
         {
-            var branch = RunGit(@"rev-parse --abbrev-ref HEAD");
+            var branch = RunGit(@"rev-parse", "--abbrev-ref", "HEAD");
             return string.IsNullOrWhiteSpace(branch) || branch.Equals("HEAD")
                 ? string.Empty
                 : branch;
@@ -49,7 +49,7 @@ namespace Codecov.Services.VersionControlSystems
 
         private string LoadCommit()
         {
-            var commit = RunGit(@"rev-parse HEAD");
+            var commit = RunGit(@"rev-parse", "HEAD");
             return !string.IsNullOrWhiteSpace(commit) ? commit : string.Empty;
         }
 
@@ -64,13 +64,13 @@ namespace Codecov.Services.VersionControlSystems
                 return FileSystem.NormalizedPath(Options.RepoRoot);
             }
 
-            var root = Terminal.Run("git", "rev-parse --show-toplevel");
+            var root = Terminal.Run("git", "rev-parse", "--show-toplevel");
             return string.IsNullOrWhiteSpace(root) ? FileSystem.NormalizedPath(".") : FileSystem.NormalizedPath(root);
         }
 
         private string LoadSlug()
         {
-            var remote = RunGit("config --get remote.origin.url");
+            var remote = RunGit("config", "--get", "remote.origin.url");
 
             if (string.IsNullOrWhiteSpace(remote))
             {
@@ -93,12 +93,13 @@ namespace Codecov.Services.VersionControlSystems
 
         private IEnumerable<string> LoadSourceCode()
         {
-            var sourceCode = RunGit("ls-tree --full-tree -r HEAD --name-only");
+            var sourceCode = RunGit("ls-tree", "--full-tree", "-r", "HEAD", "--name-only");
             return string.IsNullOrWhiteSpace(sourceCode) ?
                 Enumerable.Empty<string>()
                 : sourceCode.Trim('\n').Split('\n').Select(file => FileSystem.NormalizedPath(Path.Combine(RepoRoot, file)));
         }
 
-        private string RunGit(string commandArguments) => Terminal.Run("git", $@"-C ""{RepoRoot}"" {commandArguments}");
+        private string RunGit(params string[] commandArguments) =>
+            Terminal.Run("git", new[] { "-C", RepoRoot }.Concat(commandArguments).ToArray());
     }
 }

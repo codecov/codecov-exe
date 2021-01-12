@@ -1,3 +1,14 @@
+## 1.12.4 (2021-01-12)
+
+
+As part of this release we had [10 commits](https://github.com/codecov/codecov-exe/compare/1.12.3...1.12.4) which resulted in [1 issue](https://github.com/codecov/codecov-exe/milestone/28?closed=1) being closed.
+
+
+__Bug__
+
+- [__#159__](https://github.com/codecov/codecov-exe/issues/159) Globbing pattern do not work with fully qualified paths
+
+
 ## 1.12.3 (2020-09-07)
 
 

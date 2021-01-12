@@ -107,6 +107,31 @@ namespace Codecov.Tests.Coverage.Tool
         }
 
         [Fact]
+        public void Should_Read_Multiple_Coverage_Reports_With_Rooted_WildCard_Path()
+        {
+            // Given
+            var options = Substitute.For<ICoverageOptions>();
+            options.Files.Returns(new[] { Path.Combine(Environment.CurrentDirectory, "*.opencover.xml"), });
+            File.WriteAllText("./coverageUnit.opencover.xml", "Unit Tests.");
+            File.WriteAllText("./coverageIntegration.opencover.xml", "Integration Tests.");
+            var coverage = new Codecov.Coverage.Tool.Coverage(options);
+
+            // When
+            var coverageReport = coverage.CoverageReports.OrderBy(_ => _.File).ToList();
+
+            // Then
+            coverageReport.Count.Should().Be(2);
+            coverageReport[0].File.Should().Contain("coverageIntegration.opencover.xml");
+            coverageReport[0].Content.Should().Be("Integration Tests.");
+            coverageReport[1].File.Should().Contain("coverageUnit.opencover.xml");
+            coverageReport[1].Content.Should().Be("Unit Tests.");
+
+            // Clean Up
+            File.Delete("./coverageUnit.opencover.xml");
+            File.Delete("./coverageIntegration.opencover.xml");
+        }
+
+        [Fact]
         public void Should_Read_No_Coverage_Reports_With_WildCard_Path()
         {
             // Given
@@ -149,11 +174,34 @@ namespace Codecov.Tests.Coverage.Tool
         }
 
         [Fact]
-        public void Should_Read_Single_Coverage_Reports_With_WildCard_Path()
+        public void Should_Read_Single_Coverage_Report_With_WildCard_Path()
         {
             // Given
             var options = Substitute.For<ICoverageOptions>();
             options.Files.Returns(new[] { "*.opencover.xml", });
+            File.WriteAllText("./coverageUnit.opencover.xml", "Unit Tests.");
+            File.WriteAllText("./coverageIntegration.xml", "Integration Tests.");
+            var coverage = new Codecov.Coverage.Tool.Coverage(options);
+
+            // When
+            var coverageReport = coverage.CoverageReports.OrderBy(_ => _.File).ToList();
+
+            // Then
+            coverageReport.Count.Should().Be(1);
+            coverageReport[0].File.Should().Contain("coverageUnit.opencover.xml");
+            coverageReport[0].Content.Should().Be("Unit Tests.");
+
+            // Clean Up
+            File.Delete("./coverageUnit.opencover.xml");
+            File.Delete("./coverageIntegration.xml");
+        }
+
+        [Fact]
+        public void Should_Read_Single_Coverage_Report_With_Rooted_WildCard_Path()
+        {
+            // Given
+            var options = Substitute.For<ICoverageOptions>();
+            options.Files.Returns(new[] { Path.Combine(Environment.CurrentDirectory, "*.opencover.xml"), });
             File.WriteAllText("./coverageUnit.opencover.xml", "Unit Tests.");
             File.WriteAllText("./coverageIntegration.xml", "Integration Tests.");
             var coverage = new Codecov.Coverage.Tool.Coverage(options);

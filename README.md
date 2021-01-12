@@ -12,6 +12,7 @@
 [![Chocolatey](https://img.shields.io/chocolatey/v/codecov.svg)](https://chocolatey.org/packages/codecov)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000&logo=gitter)](https://gitter.im/codecov-exe/community)
 [![codecov](https://codecov.io/gh/codecov/codecov-exe/branch/master/graph/badge.svg)](https://codecov.io/gh/codecov/codecov-exe)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fcodecov%2Fcodecov-exe.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fcodecov%2Fcodecov-exe?ref=badge_shield)
 
 1. This uploader supports Windows 7 (x64) and above, Linux (x64), and OS X (x64).
 
@@ -133,3 +134,6 @@ To create a relase, please do the following:
   - Backmerge the tag into the `develop` branch
 
 **NOTE:** As soon as changes are pushed to the master branch the automated release procedure is started. This procedure will create Release notes, create a new github release, upload archived assets, upload chocolatey and nuget packages and comment on issues when the release have been completed.
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fcodecov%2Fcodecov-exe.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fcodecov%2Fcodecov-exe?ref=badge_large)

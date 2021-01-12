@@ -22,11 +22,11 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup .NET Core 2.1
-        uses: actions/setup-dotnet@v1.6.0
+        uses: actions/setup-dotnet@v1.7.2
         with:
           dotnet-version: 2.1.806
       - name: Setup .NET Core 3.1
-        uses: actions/setup-dotnet@v1.6.0
+        uses: actions/setup-dotnet@v1.7.2
         with:
           dotnet-version: 3.1.300
       - name: .net SxS Unix
@@ -39,7 +39,7 @@ jobs:
           xcopy /s /y /d %DOTNET_31_ROOT% %DOTNET_ROOT%
         shell: cmd
       - name: Build with cake
-        uses: cake-build/cake-action@v1.1.1
+        uses: cake-build/cake-action@v1.2.0
         with:
           script-path: setup.cake
           target: CI

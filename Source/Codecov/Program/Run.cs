@@ -1,12 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Codecov.Coverage.EnviornmentVariables;
+using Codecov.Coverage.Report;
+using Codecov.Coverage.SourceCode;
+using Codecov.Factories;
+using Codecov.Terminal;
 using Codecov.Upload;
+using Codecov.Url;
 using Codecov.Utilities;
 using CommandLine;
 using Serilog;
 
 namespace Codecov.Program
 {
+    [ExcludeFromCodeCoverage]
     internal static class Run
     {
         private static CommandLineOptions _commandLineOptions;
@@ -63,8 +71,30 @@ namespace Codecov.Program
 
         private static void Uploader()
         {
-            var upload = new UploadFacade(_commandLineOptions);
-            upload.Uploader();
+            var coverage = new Coverage.Tool.Coverage(_commandLineOptions);
+            var envVars = new EnviornmentVariables(_commandLineOptions);
+            var continuousIntegrationServer = ContinuousIntegrationServerFactory.Create(envVars);
+            envVars.LoadEnviornmentVariables(continuousIntegrationServer);
+            var terminals = TerminalFactory.Create();
+            var versionControlSystem = VersionControlSystemFactory.Create(_commandLineOptions, terminals[TerminalName.Generic]);
+            var sourceCode = new SourceCode(versionControlSystem);
+            var yaml = new Yaml.Yaml(sourceCode);
+            var repositories = RepositoryFactory.Create(versionControlSystem, continuousIntegrationServer);
+            var url = new Url.Url(new Host(_commandLineOptions, envVars), new Route(), new Query(_commandLineOptions, repositories, continuousIntegrationServer, yaml, envVars));
+            var report = new Report(_commandLineOptions, envVars, sourceCode, coverage);
+            var upload = new Uploads(url, report, _commandLineOptions.Features);
+            var uploadFacade = new UploadFacade(continuousIntegrationServer, versionControlSystem, yaml, coverage, envVars, url, upload);
+
+            uploadFacade.LogContinuousIntegrationAndVersionControlSystem();
+            if (_commandLineOptions.Dump)
+            {
+                Log.Warning("Skipping upload and dumping contents.");
+                Log.Information("url: {GetUrl}", url.GetUrl);
+                Log.Information(report.Reporter);
+                return;
+            }
+
+            uploadFacade.UploadReports();
         }
     }
 }

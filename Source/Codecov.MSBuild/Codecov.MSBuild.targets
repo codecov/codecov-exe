@@ -1,0 +1,3 @@
+<Project>
+  <UsingTask TaskName="Codecov" AssemblyFile="$(MSBuildThisFileDirectory)../task/Codecov.MSBuild.dll" />
+</Project>

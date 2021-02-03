@@ -1,10 +1,8 @@
 ## 1.12.4 (2021-01-12)
 
-
 As part of this release we had [10 commits](https://github.com/codecov/codecov-exe/compare/1.12.3...1.12.4) which resulted in [1 issue](https://github.com/codecov/codecov-exe/milestone/28?closed=1) being closed.
 
-
-__Bug__
+//  Bug
 
 - [__#159__](https://github.com/codecov/codecov-exe/issues/159) Globbing pattern do not work with fully qualified paths
 
@@ -25,8 +23,7 @@ __Improvement__
 
 As part of this release we had [2 commits](https://github.com/codecov/codecov-exe/compare/1.12.1...1.12.2) which resulted in [1 issue](https://github.com/codecov/codecov-exe/milestone/25?closed=1) being closed.
 
-
-__Bug__
+//  Bug
 
 - [__#122__](https://github.com/codecov/codecov-exe/issues/122) Incorrect Build Url is created when running on appveyor
 
@@ -36,18 +33,15 @@ __Bug__
 
 As part of this release we had [2 commits](https://github.com/codecov/codecov-exe/compare/1.12.0...1.12.1) which resulted in [1 issue](https://github.com/codecov/codecov-exe/milestone/24?closed=1) being closed.
 
-
-__Bug__
+//  Bug
 
 - [__#120__](https://github.com/codecov/codecov-exe/issues/120) Codecov package have not been packaged as a standalone executable
 
-
 ## 1.12.0 (2020-06-23)
-
 
 As part of this release we had [16 commits](https://github.com/codecov/codecov-exe/compare/1.11.2...1.12.0) which resulted in [5 issues](https://github.com/codecov/codecov-exe/milestone/22?closed=1) being closed.
 
-__Bug__
+//  Bug
 
 - [__#117__](https://github.com/codecov/codecov/issues/117) Upload URL is reported twice when running with verbose debugging
 
@@ -63,8 +57,7 @@ __Improvements__
 
 As part of this release we had [2 commits](https://github.com/codecov/codecov-exe/compare/1.11.1...1.11.2) which resulted in [1 issue](https://github.com/codecov/codecov-exe/milestone/23?closed=1) being closed.
 
-
-__Bug__
+//  Bug
 
 - [__#71__](https://github.com/codecov/codecov-exe/issues/71) --file cannot handle paths with spaces
 
@@ -74,8 +67,7 @@ __Bug__
 
 As part of this release we had [15 commits](https://github.com/codecov/codecov-exe/compare/1.11.0...1.11.1) which resulted in [3 issues](https://github.com/codecov/codecov-exe/milestone/21?closed=1) being closed.
 
-
-__Bugs__
+//  Bugs
 
 - [__#112__](https://github.com/codecov/codecov-exe/issues/112) Chocolatey package includes invalid "Where to get it" section
 - [__#111__](https://github.com/codecov/codecov-exe/issues/111) Release Notes in codecov chocolatey package contains invalid links
@@ -87,8 +79,7 @@ __Bugs__
 
 As part of this release we had [41 commits](https://github.com/codecov/codecov-exe/compare/1.10.0...1.11.0) which resulted in [7 issues](https://github.com/codecov/codecov-exe/milestone/20?closed=1) being closed.
 
-
-__Bugs__
+//  Bugs
 
 - [__#108__](https://github.com/codecov/codecov-exe/issues/108) Github action CI detector is not added to pipeline check
 - [__#100__](https://github.com/codecov/codecov-exe/issues/100) GitHub Actions is not detected in 1.10
@@ -173,7 +164,7 @@ __Improvement__
 As part of this release we had [14 commits](https://github.com/codecov/codecov-exe/compare/1.7.1...1.7.2) which resulted in [3 issues](https://github.com/codecov/codecov-exe/milestone/16?closed=1) being closed.
 
 
-__Bugs__
+__  Bugs __
 
 - [__#87__](https://github.com/codecov/codecov-exe/issues/87) Travis CI service parser does not set the tag name from travis environment variables
 - [__#86__](https://github.com/codecov/codecov-exe/issues/86) invalid build url generated for travis-ci when repository slug have been overridden
@@ -186,7 +177,7 @@ __Bugs__
 As part of this release we had [6 commits](https://github.com/codecov/codecov-exe/compare/1.7.0...1.7.1) which resulted in [3 issues](https://github.com/codecov/codecov-exe/milestone/15?closed=1) being closed.
 
 
-__Bugs__
+__  Bugs __
 
 - [__#84__](https://github.com/codecov/codecov-exe/issues/84) Branch name do not properly encode slashes
 - [__#83__](https://github.com/codecov/codecov-exe/issues/83) nuget package places Linux and OSX binaries in incorrect directory
@@ -202,7 +193,7 @@ __Documentation__
 As part of this release we had [9 commits](https://github.com/codecov/codecov-exe/compare/1.6.1...1.7.0) which resulted in [2 issues](https://github.com/codecov/codecov-exe/milestone/14?closed=1) being closed.
 
 
-__Bug__
+__  Bug__
 
 - [__#79__](https://github.com/codecov/codecov-exe/issues/79) Slug generation is incorrect when using username and password in url.
 
@@ -217,7 +208,7 @@ __Improvement__
 As part of this release we had [1 commit](https://github.com/codecov/codecov-exe/compare/1.6.0...1.6.1) which resulted in [1 issue](https://github.com/codecov/codecov-exe/milestone/13?closed=1) being closed.
 
 
-__Bug__
+__  Bug __
 
 - [__#77__](https://github.com/codecov/codecov-exe/issues/77) Running on Unix returns a permission denied error
 
@@ -230,7 +221,7 @@ As part of this release we had [28 commits](https://github.com/codecov/codecov-e
 This release is expected to be the last release that will include any new features until the eventual release of 2.0.
 
 
-__Bug__
+__  Bug__
 
 - [__#52__](https://github.com/codecov/codecov-exe/issues/52) codecov.exe returns success on invalid arguments
 
@@ -257,7 +248,7 @@ This allows Codecov-exe to be used on either Linux or OS X.
 The recommended way is by installing the .NET Core tool ([Codecov.Tool](https://nuget.org/packages/Codecov.Tool/1.5.0)), or by downloading one of the platform specific archives provided with this release.
 
 
-__Bugs__
+__  Bugs__
 
 - [__#62__](https://github.com/codecov/codecov-exe/issues/62) SourceCode files are do not correctly ignore files on unix platform
 - [__#59__](https://github.com/codecov/codecov-exe/issues/59) codecov yaml not located
@@ -278,7 +269,7 @@ __Improvements__
 As part of this release we had [5 commits](https://github.com/codecov/codecov-exe/compare/1.3.0...1.4.0) which resulted in [2 issues](https://github.com/codecov/codecov-exe/milestone/8?closed=1) being closed.
 
 
-__Bug__
+__   Bug__
 
 - [__#55__](https://github.com/codecov/codecov-exe/issues/55) azure pipeline is broken
 
@@ -293,7 +284,7 @@ __Improvement__
 As part of this release we had [14 commits](https://github.com/codecov/codecov-exe/compare/1.2.0...1.3.0) which resulted in [2 issues](https://github.com/codecov/codecov-exe/milestone/6?closed=1) being closed.
 
 
-__Bug__
+__  Bug__
 
 - [__#49__](https://github.com/codecov/codecov-exe/pull/49) Fix terminal filter
 
@@ -323,7 +314,7 @@ __Improvement__
 As part of this release we had [4 commits](https://github.com/codecov/codecov-exe/compare/1.1.0...1.1.1) which resulted in [1 issue](https://github.com/codecov/codecov-exe/milestone/5?closed=1) being closed.
 
 
-__Bug__
+__  Bug__
 
 - [__#46__](https://github.com/codecov/codecov-exe/pull/46) -f and -e command line arguments don't accept multiple values as the docs suggest
 
@@ -346,7 +337,7 @@ __Improvements__
 As part of this release we had [3 commits](https://github.com/codecov/codecov-exe/compare/1.0.4...1.0.5) which resulted in [2 issues](https://github.com/codecov/codecov-exe/issues?milestone=3&state=closed) being closed.
 
 
-__Bugs__
+__  Bugs__
 
 - [__#37__](https://github.com/codecov/codecov-exe/issues/37) Codecov returns (404) Not Found
 - [__#36__](https://github.com/codecov/codecov-exe/issues/36) Report uploads fails on certain branches and/or job IDs
@@ -354,11 +345,10 @@ __Bugs__
 
 ## 1.0.4 (2018-06-17)
 
+## As part of this release we had [2 issues](https://github.com/codecov/codecov-exe/issues?milestone=1&state=closed) closed.
 
-As part of this release we had [2 issues](https://github.com/codecov/codecov-exe/issues?milestone=1&state=closed) closed.
 
-
-__Bugs__
+__   Bugs__
 
 - [__#36__](https://github.com/codecov/codecov-exe/issues/36) Report uploads fails on certain branches and/or job IDs
 - [__#32__](https://github.com/codecov/codecov-exe/issues/32) Bad request (400) with non-standard branch name
@@ -367,25 +357,27 @@ __Bugs__
 ## 1.0.3 (2017-08-11)
 
 
-### Bug
+///  Bug
 
-* (GH-26) Version 1.0.2 is freezing on appveyor.
+- (GH-26) Version 1.0.2 is freezing on appveyor.
 ## 1.0.2 (2017-08-07)
 
 
-### Bug
+///  Bug
 
-#20 Upload timed out for large files.
-#22 Git service fails if project located at path with spaces. ~ Dmitry Popov
+# 20 Upload timed out for large files.
+# 22 Git service fails if project located at path with spaces. ~ Dmitry Popov
 
 ### Improvement
 
-#19 Cleaned up Chocolatey package code.
+# 19 Cleaned up flag and spam of user accunt github
+  - Chocolatey package code.
+
 ## 1.0.1 (2017-06-03)
 
 
- ### Bug
-* #17 - `Required` commandline arg bug. ~ Kim J. Nordmo
+/// Bug
+###17 - `Required` commandline arg bug. ~ Kim J. Nordmo
 ## v1.0.0 (2017-05-25)
 
 

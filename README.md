@@ -9,6 +9,7 @@
 [![Build status](https://img.shields.io/appveyor/ci/AdmiringWorm/codecov-exe?logo=appveyor)](https://ci.appveyor.com/project/AdmiringWorm/codecov-exe)
 [![NuGet](https://img.shields.io/nuget/v/Codecov?logo=nuget)](https://www.nuget.org/packages/Codecov/)
 [![DotNet Tool](https://img.shields.io/nuget/v/Codecov.Tool?label=dotnet%20tool&logo=nuget)](https://www.nuget.org/packages/Codecov.Tool/)
+[![MSBuild Task](https://img.shields.io/nuget/v/Codecov.MSBuild?label=msbuild%20task&logo=nuget)](https://www.nuget.org/packages/Codecov.MSBuild/)
 [![Chocolatey](https://img.shields.io/chocolatey/v/codecov.svg)](https://chocolatey.org/packages/codecov)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000&logo=gitter)](https://gitter.im/codecov-exe/community)
 [![codecov](https://codecov.io/gh/codecov/codecov-exe/branch/master/graph/badge.svg)](https://codecov.io/gh/codecov/codecov-exe)
@@ -61,6 +62,20 @@ codecov -f "artifacts/coverage/**/*.xml" -t <Codecov upload token>
 ```
 
 You can see additional globbing patterns supported by codecov-exe by heading over to: https://github.com/kthompson/glob/#supported-pattern-expressions
+
+## MSBuild Integration
+
+Alternatively, you can use the [Codecov.MSBuild](https://www.nuget.org/packages/Codecov.MSBuild/) NuGet pacakge which provides the `Codecov` task for use in your project files.
+
+For example, to upload reports generated with the [coverlet.msbuild](https://github.com/coverlet-coverage/coverlet#msbuild-integration-suffers-of-possible-known-issue) task which produces the `CoverletReport` items:
+
+```xml
+<Target Name="UploadCoverageToCodecov" AfterTargets="GenerateCoverageResultAfterTest">
+  <Codecov ReportFiles="@(CoverletReport)" />
+</Target>
+```
+
+The only required parameter is `ReportFiles`, all other parameters are automatically guessed based on current environment variables and git repository status but you can override them if needed. See [Codecov.cs](https://github.com/codecov/codecov-exe/blob/master/Source/Codecov.MSBuild/Codecov.cs) for the complete list of supported parameters.
 
 ## Cake Addin
 

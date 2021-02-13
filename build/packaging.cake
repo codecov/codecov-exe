@@ -89,6 +89,22 @@ var createDotNetToolTask = Task("Create-DotNetToolPackage")
     });
 });
 
+var createMSBuildTaskPackageTask = Task("Create-MSBuildTaskPackage")
+    .IsDependentOn(buildTask)
+    .Does<BuildData>((data) =>
+{
+    var output = data.Directories.Packages.Combine("dotnet");
+
+    DotNetCorePack("./Source/Codecov.MSBuild", new DotNetCorePackSettings {
+        Configuration = data.Configuration,
+        NoBuild = true,
+        NoRestore = true,
+        OutputDirectory = output,
+        MSBuildSettings = data.MSBuildSettings,
+        IncludeSymbols = true,
+    });
+});
+
 var createNuGetPackagesTask = Task("Create-NuGetPackages")
     .WithCriteria(buildNuget)
     .IsDependentOn(createExecsTask)
@@ -109,5 +125,6 @@ var createNuGetPackagesTask = Task("Create-NuGetPackages")
 
 var createPackagesTask = Task("Create-Packages")
     .IsDependentOn(createDotNetToolTask)
+    .IsDependentOn(createMSBuildTaskPackageTask)
     .IsDependentOn(createNuGetPackagesTask)
     .IsDependentOn(createChocolateyPackagesTask);

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Codecov.Terminal;
 using Codecov.Utilities;
+using Serilog;
 
 namespace Codecov.Services.VersionControlSystems
 {
@@ -54,8 +55,8 @@ namespace Codecov.Services.VersionControlSystems
         }
 
         private bool LoadDetecter()
-            => !string.IsNullOrWhiteSpace(Terminal.Run("git", "--version"))
-                && Directory.Exists(Path.Combine(RepoRoot, ".git"));
+            => Directory.Exists(Path.Combine(RepoRoot, ".git")) &&
+               !string.IsNullOrWhiteSpace(Terminal.Run("git", "--version"));
 
         private string LoadRepoRoot()
         {
@@ -99,7 +100,17 @@ namespace Codecov.Services.VersionControlSystems
                 : sourceCode.Trim('\n').Split('\n').Select(file => FileSystem.NormalizedPath(Path.Combine(RepoRoot, file)));
         }
 
-        private string RunGit(params string[] commandArguments) =>
-            Terminal.Run("git", new[] { "-C", RepoRoot }.Concat(commandArguments).ToArray());
+        private string RunGit(params string[] commandArguments)
+        {
+            try
+            {
+                return Terminal.Run("git", new[] { "-C", RepoRoot }.Concat(commandArguments).ToArray());
+            }
+            catch (FileNotFoundException)
+            {
+                Log.Warning("Git repository was found, but no git executable is available on PATH!");
+                return string.Empty;
+            }
+        }
     }
 }

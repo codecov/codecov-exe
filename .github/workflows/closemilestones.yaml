@@ -21,5 +21,5 @@ jobs:
           script-path: setup.cake
           target: Close-Milestones
           verbosity: Diagnostic
-          cake-version: 0.38.1
+          cake-version: 1.0.0
           cake-bootstrap: true

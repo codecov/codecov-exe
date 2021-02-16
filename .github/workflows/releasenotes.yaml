@@ -26,7 +26,7 @@ jobs:
           script-path: setup.cake
           target: Build-ReleaseNotes
           verbosity: Diagnostic
-          cake-version: 0.38.1
+          cake-version: 1.0.0
           cake-bootstrap: true
       - name: Commit Changelog
         uses: EndBug/add-and-commit@v7

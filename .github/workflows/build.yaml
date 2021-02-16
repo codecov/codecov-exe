@@ -27,5 +27,4 @@ jobs:
           script-path: setup.cake
           target: CI
           verbosity: Diagnostic
-          cake-version: 0.38.1
-          cake-bootstrap: true
+          cake-version: 1.0.0

@@ -133,9 +133,6 @@ else {
     }
 }
 
-& "$CAKE_EXE" "$SCRIPT_DIR/setup.cake" --bootstrap
-if ($LASTEXITCODE -eq 0) {
-    & "$CAKE_EXE" "$SCRIPT_DIR/setup.cake" $args
-}
+& "$CAKE_EXE" "$SCRIPT_DIR/setup.cake" $args
 
 exit $LASTEXITCODE

@@ -445,3 +445,13 @@ Initial Beta Release
 
 Initial Beta Release
 
+
+
+
+- Added support for Travis Ci, AppVeyor, TeamCity (not tested), and Git.
+- Added a lot of the CLI options.
+## 0.1.0-beta (2017-02-21)
+
+
+Initial Beta Release
+

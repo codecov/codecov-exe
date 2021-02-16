@@ -10,18 +10,24 @@ namespace Codecov.Terminal
     {
         public virtual bool Exits => true;
 
-        public virtual string Run(string command, string commandArguments)
+        public virtual string Run(string command, params string[] commandArguments)
         {
             try
             {
                 using (var process = new Process())
                 {
-                    process.StartInfo = new ProcessStartInfo(command.Trim(), commandArguments.Trim())
+                    process.StartInfo = new ProcessStartInfo
                     {
+                        FileName = command.Trim(),
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         RedirectStandardError = true
                     };
+
+                    foreach (var arg in commandArguments)
+                    {
+                        process.StartInfo.ArgumentList.Add(arg);
+                    }
 
                     var output = new StringBuilder();
                     var error = new StringBuilder();

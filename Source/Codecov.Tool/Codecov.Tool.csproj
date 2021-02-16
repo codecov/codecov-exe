@@ -1,7 +1,7 @@
 <Project>
 
     <PropertyGroup>
-        <TargetFrameworks>netcoreapp2.1;netcoreapp3.0</TargetFrameworks>
+        <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
         <LangVersion>8.0</LangVersion>
         <CodeAnalysisRuleSet>.\Codecov.ruleset</CodeAnalysisRuleSet>
         <PackageId>Codecov.Tool</PackageId>
@@ -25,6 +25,6 @@
     <ItemGroup>
     <PackageReference Update="CommandLineParser" Version="2.8.0" />
     <PackageReference Update="Glob" Version="1.1.8" />
-    <PackageReference Update="JetBrains.Annotations" Version="2020.1.0" />
+    <PackageReference Update="JetBrains.Annotations" Version="2020.3.0" />
     </ItemGroup>
 </Project>

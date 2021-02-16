@@ -4,7 +4,7 @@
     {
         bool Exits { get; }
 
-        string Run(string command, string commandArguments);
+        string Run(string command, params string[] commandArguments);
 
         string RunScript(string script);
     }

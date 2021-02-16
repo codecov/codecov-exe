@@ -99,7 +99,7 @@ namespace Codecov.Url
         }
 
         private void SetBuildUrl()
-            => QueryParameters["build_url"] = Build.BuildUrl;
+            => QueryParameters["build_url"] = Build.BuildUrl.Replace("?", "%3F");
 
         private void SetCommit()
         {

@@ -28,7 +28,8 @@ Task("Default")
     .IsDependentOn("Cleanup")
     .IsDependentOn(testTask)
     .IsDependentOn(createExecsTask)
-    .IsDependentOn(createDotNetToolTask);
+    .IsDependentOn(createDotNetToolTask)
+    .IsDependentOn(createMSBuildTaskPackageTask);
 
 Task("CI")
     .IsDependentOn("Default")

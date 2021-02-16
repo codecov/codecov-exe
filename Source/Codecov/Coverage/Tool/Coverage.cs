@@ -20,8 +20,6 @@ namespace Codecov.Coverage.Tool
 
         public IEnumerable<ReportFile> CoverageReports => _coverageReports.Value;
 
-        public bool Detecter => false;
-
         private ICoverageOptions CoverageOptions { get; }
 
         private static bool VerifyReportFileAndExpandGlobPatterns(string path, out IEnumerable<string> expanded)

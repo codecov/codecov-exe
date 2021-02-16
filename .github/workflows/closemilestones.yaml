@@ -12,18 +12,14 @@ jobs:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
 
     steps:
-      - uses: actions/checkout@v2.2.0
+      - uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
-      - name: Setup .NET Core 3.1
-        uses: actions/setup-dotnet@v1.5.0
-        with:
-          dotnet-version: 3.1.x
       - name: Build with cake
-        uses: cake-build/cake-action@v1.1.1
+        uses: cake-build/cake-action@v1.3.0
         with:
           script-path: setup.cake
           target: Close-Milestones
           verbosity: Diagnostic
-          cake-version: 0.38.1
+          cake-version: 1.0.0
           cake-bootstrap: true

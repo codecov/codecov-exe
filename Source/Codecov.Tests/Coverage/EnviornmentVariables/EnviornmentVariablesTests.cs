@@ -38,7 +38,7 @@ namespace Codecov.Tests.Coverage.EnviornmentVariables
             var getEnviornmentVariables = enviornmentVariables.UserEnvironmentVariables;
 
             // Then
-            getEnviornmentVariables["CODECOV_ENV"].Should().Be("foo");
+            getEnviornmentVariables.Should().ContainKey("CODECOV_ENV").WhichValue.Should().Be("foo");
         }
 
         [Fact]
@@ -57,8 +57,8 @@ namespace Codecov.Tests.Coverage.EnviornmentVariables
             var getEnviornmentVariables = enviornmentVariables.UserEnvironmentVariables;
 
             // Then
-            getEnviornmentVariables["foo"].Should().Be("bar");
-            getEnviornmentVariables["fizz"].Should().Be("bizz");
+            getEnviornmentVariables.Should().ContainKey("foo").WhichValue.Should().Be("bar");
+            getEnviornmentVariables.Should().ContainKey("fizz").WhichValue.Should().Be("bizz");
         }
 
         [Fact]
@@ -77,8 +77,8 @@ namespace Codecov.Tests.Coverage.EnviornmentVariables
             var getEnviornmentVariables = enviornmentVariables.UserEnvironmentVariables;
 
             // Then
-            getEnviornmentVariables["foo"].Should().Be("bar");
-            getEnviornmentVariables["fizz"].Should().Be("bizz");
+            getEnviornmentVariables.Should().ContainKey("foo").WhichValue.Should().Be("bar");
+            getEnviornmentVariables.Should().ContainKey("fizz").WhichValue.Should().Be("bizz");
         }
     }
 }

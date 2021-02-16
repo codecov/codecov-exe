@@ -2,6 +2,10 @@ image:
   - Ubuntu
   - Visual Studio 2019
 skip_tags: true
+skip_commits:
+  files:
+    - .github/
+    - "*.md"
 pull_requests:
   do_not_increment_build_number: true
 matrix:
@@ -34,8 +38,4 @@ build_script:
 test: off
 
 cache:
-  - tools -> build.config,build/tools_addins.cake
-  - .dotnet -> build.config
-artifacts:
-  - path: "artifacts/packages/nuget/*.nupkg"
-  - path: "artifacts/packages/dotnet/*.nupkg"
+  - tools -> build/tools_addins.cake

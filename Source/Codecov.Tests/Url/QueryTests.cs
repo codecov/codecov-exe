@@ -57,6 +57,27 @@ namespace Codecov.Tests.Url
         }
 
         [Fact]
+        public void Should_Espace_Question_Mark()
+        {
+            // Given
+            var queryOptions = Substitute.For<IQueryOptions>();
+            var repository = Substitute.For<IEnumerable<IRepository>>();
+            var build = Substitute.For<IBuild>();
+            build.Build.Returns("20210215.3");
+            build.BuildUrl.Returns("https://dev.azure.com/cake-contrib/Cake.DotNetVersionDetector/_build/results?buildId=5691");
+            build.Job.Returns("5691");
+            var yaml = Substitute.For<IYaml>();
+            var envVariables = Substitute.For<IEnviornmentVariables>();
+            var query = new Query(queryOptions, repository, build, yaml, envVariables);
+
+            // When
+            var getQuery = query.GetQuery.Split('&');
+
+            // Then
+            getQuery.FirstOrDefault(x => x.StartsWith("build_url=")).Should().Be("build_url=https://dev.azure.com/cake-contrib/Cake.DotNetVersionDetector/_build/results%3FbuildId=5691");
+        }
+
+        [Fact]
         public void Should_Encode_Slashes_In_BranchName()
         {
             // Given

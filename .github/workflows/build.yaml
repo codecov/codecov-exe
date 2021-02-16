@@ -13,29 +13,18 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    env:
-      ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
 
     steps:
-      - uses: actions/checkout@v2.2.0
+      - uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
-      - name: Setup .NET Core 2.1
-        uses: actions/setup-dotnet@v1.7.2
-        with:
-          dotnet-version: 2.1.806
-      - name: Setup .NET Core 3.1
-        uses: actions/setup-dotnet@v1.7.2
-        with:
-          dotnet-version: 3.1.300
       - name: Build with cake
-        uses: cake-build/cake-action@v1.2.0
+        uses: cake-build/cake-action@v1.3.0
         with:
           script-path: setup.cake
           target: CI
           verbosity: Diagnostic
-          cake-version: 0.38.1
-          cake-bootstrap: true
+          cake-version: 1.0.0

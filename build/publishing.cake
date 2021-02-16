@@ -1,4 +1,6 @@
 #load "./packaging.cake"
+using Internal.Runtime.Augments;
+using System;
 // ^^ Make sure that the file is available before we try to
 // reference one of the tasks in that file
 
@@ -148,10 +150,17 @@ var publishDotNetToolTask = Task("Publish-DotNetToolPackage")
 {
     var packages = GetFiles("./artifacts/packages/dotnet/*.nupkg");
 
-    DotNetCoreNuGetPush(packages.First().ToString(), new DotNetCoreNuGetPushSettings {
-        Source = EnvironmentVariable("NUGET_SOURCE"),
-        ApiKey = EnvironmentVariable("NUGET_API_KEY"),
-    });
+    var source = EnvironmentVariableTarget("NUGET_SOURCE");
+    var apiKey = EnvironmentVariable("NUGET_API_KEY");
+
+    foreach (var package in packages)
+    {
+        DotNetCoreNuGetPush(package.ToString(), new DotNetCoreNuGetPushSettings {
+            Source = source,
+            ApiKey = apiKey,
+            SkipDuplicate = true
+        });
+    }
 }).OnError(exception =>
 {
     Warning("Publishing .NET Core Tool package failed. Ignoring and continuing with other tasks");

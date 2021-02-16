@@ -1,3 +1,25 @@
+## 1.13.0 (2021-02-16)
+
+
+As part of this release we had [20 issues](https://github.com/codecov/codecov-exe/milestone/27?closed=1) closed.
+
+
+__Bugs__
+
+- [__#170__](https://github.com/codecov/codecov-exe/issues/170) Running on azure fails due to question mark not being escaped in the `build_url` parameter
+- [__#146__](https://github.com/codecov/codecov-exe/issues/146) Execution broken with AppVeyor starting from codecov-exe v1.12.0
+
+__Features__
+
+- [__#172__](https://github.com/codecov/codecov-exe/issues/172) Add support for .NET 5.0
+- [__#135__](https://github.com/codecov/codecov-exe/pull/135) Add new Codecov.MSBuild package providing a `Codecov`MSBuild task
+
+__Improvements__
+
+- [__#154__](https://github.com/codecov/codecov-exe/pull/154) Bump JetBrains.Annotations from 2020.1.0 to 2020.3.0 in /Source
+- [__#133__](https://github.com/codecov/codecov-exe/pull/133) Bump Serilog from 2.9.0 to 2.10.0 in /Source
+
+
 ## 1.12.4 (2021-01-12)
 
 

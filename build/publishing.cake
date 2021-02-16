@@ -1,6 +1,4 @@
 #load "./packaging.cake"
-using Internal.Runtime.Augments;
-using System;
 // ^^ Make sure that the file is available before we try to
 // reference one of the tasks in that file
 

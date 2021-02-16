@@ -101,7 +101,7 @@ var createMSBuildTaskPackageTask = Task("Create-MSBuildTaskPackage")
         NoRestore = true,
         OutputDirectory = output,
         MSBuildSettings = data.MSBuildSettings,
-        IncludeSymbols = true,
+        IncludeSymbols = false,
     });
 });
 

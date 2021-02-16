@@ -3,7 +3,8 @@ create:
   footer-heading: Where to get it
   footer-content: >-
     You can download this release from [chocolatey](https://chocolatey.org/packages/codecov/{milestone}),
-    [nuget](https://nuget.org/packages/Codecov/{milestone})
+    [nuget](https://nuget.org/packages/Codecov/{milestone}),
+    [MSBuild Reference](https://nuget.org/packages/Codecov.MSBuild/{milestone})
     or as a [dotnet tool](https://nuget.org/packages/Codecov.Tool/{milestone})
   footer-includes-milestone: true
   milestone-replace-text: "{milestone}"
@@ -24,6 +25,7 @@ close:
     - [.NET Core Tool](https://nuget.org/packages/Codecov.Tool/{milestone})
     - [Chocolatey](https://chocolatey.org/packages/codecov/{milestone})
     - [GitHub release](https://github.com/{owner}/{repository}/releases/tag/{milestone})
+    - [MSBuild Reference](https://nuget.org/packages/Codecov.MSBuild/{milestone})
     - [NuGet](https://nuget.org/packages/Codecov/{milestone})
 
     Your friendly **[GitReleaseManager](https://github.com/GitTools/GitReleaseManager)** bot :package::rocket:
@@ -34,6 +36,7 @@ issue-labels-include:
   - Improvement
 issue-labels-exclude:
   - Build
+  - Internal/Refactoring
 issue-labels-alias:
   - name: Documentation
     header: Documentation

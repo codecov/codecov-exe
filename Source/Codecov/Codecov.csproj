@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup Condition="'$(TargetFrameworks)' == ''">
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
         <RuntimeIdentifiers>win7-x64;win7-x86;linux-x64;osx-x64</RuntimeIdentifiers>
         <LangVersion>8.0</LangVersion>
     </PropertyGroup>

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netcoreapp2.1;netcoreapp3.0</TargetFrameworks>
+        <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="coverlet.collector" Version="3.0.2">

@@ -150,7 +150,7 @@ var publishDotNetToolTask = Task("Publish-DotNetToolPackage")
 {
     var packages = GetFiles("./artifacts/packages/dotnet/*.nupkg");
 
-    var source = EnvironmentVariableTarget("NUGET_SOURCE");
+    var source = EnvironmentVariable("NUGET_SOURCE");
     var apiKey = EnvironmentVariable("NUGET_API_KEY");
 
     foreach (var package in packages)

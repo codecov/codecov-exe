@@ -38,5 +38,4 @@ build_script:
 test: off
 
 cache:
-  - tools -> build.config,build/tools_addins.cake
-  - .dotnet -> build.config
+  - tools -> build/tools_addins.cake

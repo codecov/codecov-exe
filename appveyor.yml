@@ -5,16 +5,12 @@ skip_tags: true
 skip_commits:
   files:
     - .github/
-    - "*.md"
 pull_requests:
   do_not_increment_build_number: true
 matrix:
   fast_finish: true
 environment:
   APPVEYOR_YML_DISABLE_PS_LINUX: true
-  NUGET_API_KEY:
-    secure: yBUbV2hX9g4oJCmJxZKOszcGAHi34RYzJedDIpyysIvXVpUKYZSzoWtTSqasi+Ou
-  NUGET_SOURCE: https://api.nuget.org/v3/index.json
   GITHUB_TOKEN:
     secure: 3bqzyVjmzE137kZ0lmMBKqM725nQd0hKAATVeE2trpWaPS+5bOpZfjy6zD5INfjV
   CHOCOLATEY_API_KEY:

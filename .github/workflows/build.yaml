@@ -22,7 +22,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Build with cake
-        uses: cake-build/cake-action@v1.3.0
+        uses: cake-build/cake-action@v1.4.0
         with:
           script-path: setup.cake
           target: CI
